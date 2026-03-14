@@ -1,0 +1,3290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DDNEX® Portal</title>
+    <meta name="description" content="DDNEX® Internal Management Portal">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/SD7QzyYw/favicon-white-ddnex.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           VARIABLES
+           ========================================= */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --primary-light: rgba(37, 99, 235, 0.08);
+            --primary-glow: rgba(37, 99, 235, 0.3);
+            
+            --accent-teal: #06b6d4;
+            --accent-purple: #7c3aed;
+            --accent-orange: #f97316;
+            --accent-slate: #0f172a;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            
+            --bg-body: #f1f5f9;
+            --bg-surface: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            
+            --text-main: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            
+            --border-light: #e2e8f0;
+            --border-glass: rgba(255, 255, 255, 0.5);
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --shadow-xl: 0 25px 50px -12px rgba(0,0,0,0.15);
+            --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+            --shadow-primary: 0 10px 30px -5px rgba(37, 99, 235, 0.3);
+            
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-heading: 'Outfit', system-ui, sans-serif;
+            
+            --sidebar-width: 280px;
+            --sidebar-collapsed: 72px;
+            --header-height: 64px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 24px;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            font-size: 15px;
+        }
+        a { text-decoration: none; color: inherit; transition: color 0.3s var(--ease); }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+        button { cursor: pointer; border: none; background: none; font-family: inherit; outline: none; -webkit-tap-highlight-color: transparent; }
+        input, select, textarea { font-family: inherit; font-size: 15px; }
+
+        /* =========================================
+           LOGIN PAGE
+           ========================================= */
+        .login-page {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f8fafc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            transition: opacity 0.5s var(--ease), visibility 0.5s var(--ease);
+        }
+        .login-page.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .login-bg-grid {
+            position: absolute;
+            inset: 0;
+            opacity: 0.4;
+            background-image: 
+                linear-gradient(to right, rgba(37, 99, 235, 0.04) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(37, 99, 235, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
+        }
+        .login-card {
+            position: relative;
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            padding: 48px 40px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-xl), 0 0 80px rgba(15, 98, 254, 0.1);
+            animation: slideUp 0.6s var(--ease-bounce);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .login-logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 32px; }
+        .login-logo img { height: 40px; }
+        .login-logo span { font-size: 24px; font-weight: 800; font-family: var(--font-heading); color: var(--text-main); }
+        .login-title { text-align: center; margin-bottom: 32px; }
+        .login-title h1 { font-size: 20px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; font-family: var(--font-heading); }
+        .login-title p { color: var(--text-muted); font-size: 14px; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .form-input-wrapper { position: relative; }
+        .form-input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+            color: var(--text-main);
+            transition: all 0.3s var(--ease);
+        }
+        .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); outline: none; }
+        .form-input:focus + i, .form-input-wrapper:has(.form-input:focus) i { color: var(--primary); }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.3s var(--ease);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+        .btn-login:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4); }
+        .btn-login:active { transform: translateY(0); }
+        .btn-login:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+        /* =========================================
+           DASHBOARD LAYOUT
+           ========================================= */
+        .dashboard-app { display: none; min-height: 100vh; }
+        .dashboard-app.visible { display: flex; }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--border-light);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s var(--ease), transform 0.3s var(--ease);
+            box-shadow: var(--shadow-sm);
+        }
+        .sidebar.collapsed { width: var(--sidebar-collapsed); }
+        .sidebar-header {
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .sidebar-logo { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+        .sidebar-logo img { height: 32px; flex-shrink: 0; }
+        .sidebar-logo span { font-weight: 800; font-size: 18px; font-family: var(--font-heading); white-space: nowrap; transition: opacity 0.2s; }
+        .sidebar.collapsed .sidebar-logo span { opacity: 0; width: 0; }
+        .sidebar-toggle {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .sidebar-toggle:hover { background: var(--bg-body); color: var(--primary); }
+        .sidebar.collapsed .sidebar-toggle i { transform: rotate(180deg); }
+        
+        .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+        .nav-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 12px;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity 0.2s;
+        }
+        .sidebar.collapsed .nav-section-title { opacity: 0; }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: all 0.2s var(--ease);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .nav-item i { font-size: 20px; flex-shrink: 0; width: 24px; text-align: center; }
+        .nav-item span { white-space: nowrap; transition: opacity 0.2s; }
+        .sidebar.collapsed .nav-item span { opacity: 0; width: 0; }
+        .nav-item:hover { background: var(--bg-body); color: var(--text-main); }
+        .nav-item.active { background: var(--primary-light); color: var(--primary); font-weight: 600; }
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 3px; height: 24px;
+            background: var(--primary);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sidebar-footer { padding: 16px 12px; border-top: 1px solid var(--border-light); }
+        .user-mini-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-body);
+            overflow: hidden;
+        }
+        .user-avatar {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .user-info-mini { white-space: nowrap; overflow: hidden; transition: opacity 0.2s; }
+        .sidebar.collapsed .user-info-mini { opacity: 0; width: 0; }
+        .user-info-mini .name { font-weight: 600; font-size: 14px; }
+        .user-info-mini .role { font-size: 12px; color: var(--text-muted); }
+        .btn-logout {
+            margin-top: 12px;
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+        .btn-logout:hover { border-color: var(--accent-red); color: var(--accent-red); background: #fef2f2; }
+        .btn-logout span { transition: opacity 0.2s; }
+        .sidebar.collapsed .btn-logout span { display: none; }
+
+        /* Main Content Area */
+        .main-wrapper { flex: 1; margin-left: var(--sidebar-width); transition: margin-left 0.3s var(--ease); min-height: 100vh; display: flex; flex-direction: column; }
+        .sidebar.collapsed ~ .main-wrapper { margin-left: var(--sidebar-collapsed); }
+
+        /* Top Header */
+        .top-header {
+            position: sticky;
+            top: 0;
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 900;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .page-title-header { font-size: 20px; font-weight: 700; font-family: var(--font-heading); }
+        .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+        .breadcrumb a:hover { color: var(--primary); }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-search { position: relative; }
+        .header-search input {
+            width: 240px;
+            padding: 10px 16px 10px 40px;
+            border: 1px solid var(--border-light);
+            border-radius: 100px;
+            background: var(--bg-body);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .header-search input:focus { width: 300px; border-color: var(--primary); background: white; outline: none; }
+        .header-search i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .header-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .header-btn:hover { background: var(--bg-body); color: var(--text-main); }
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 12px 6px 6px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .header-user:hover { background: var(--bg-body); }
+        .header-user img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+        .header-user-info { text-align: left; }
+        .header-user-info .name { font-weight: 600; font-size: 14px; line-height: 1.2; }
+        .header-user-info .role { font-size: 11px; color: var(--text-muted); }
+
+        /* Main Content */
+        .main-content { padding: 32px; flex: 1; }
+
+        /* Section Tabs */
+        .section-content { display: none; animation: fadeIn 0.4s var(--ease); }
+        .section-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Dashboard Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .stat-card {
+            background: white;
+            padding: 28px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            transition: all 0.3s var(--ease);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .stat-card:hover::after { opacity: 1; }
+        .stat-info h3 { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-info .value { font-size: 36px; font-weight: 800; line-height: 1; margin-bottom: 12px; font-family: var(--font-heading); color: var(--text-main); }
+        .stat-info .trend { font-size: 13px; display: flex; align-items: center; gap: 4px; font-weight: 600; }
+        .stat-info .trend.up { color: var(--accent-green); }
+        .stat-info .trend.down { color: var(--accent-red); }
+        .stat-icon {
+            width: 56px; height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .stat-icon.blue { background: #eff6ff; color: #2563eb; }
+        .stat-icon.green { background: #f0fdf4; color: #16a34a; }
+        .stat-icon.purple { background: #faf5ff; color: #9333ea; }
+        .stat-icon.orange { background: #fffbeb; color: #d97706; }
+
+        /* Content Grid */
+        .content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+        @media(max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
+
+        /* Cards */
+        .card { background: white; border-radius: var(--radius-lg); border: 1px solid var(--border-light); overflow: hidden; box-shadow: var(--shadow-sm); }
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fafafa;
+        }
+        .card-header h3 { font-size: 16px; font-weight: 700; font-family: var(--font-heading); }
+        .card-body { padding: 24px; }
+        .card-body.no-padding { padding: 0; }
+
+        /* Tables */
+        .data-table { width: 100%; border-collapse: collapse; }
+        .data-table th, .data-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-light); }
+        .data-table th {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--bg-body);
+        }
+        .data-table tbody tr { transition: background 0.2s; }
+        .data-table tbody tr:hover { background: #fafafa; }
+        .data-table td { font-size: 14px; }
+        
+        /* Status Badges */
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status.active { background: #dcfce7; color: #16a34a; }
+        .status.pending { background: #fef3c7; color: #d97706; }
+        .status.completed { background: #dbeafe; color: #2563eb; }
+        .status.overdue { background: #fef2f2; color: #dc2626; }
+        .status.suspended { background: #f1f5f9; color: #64748b; }
+        .status.unpaid { background: #fef2f2; color: #dc2626; }
+        .status.paid { background: #dcfce7; color: #16a34a; }
+        .status.website { background: #e0e7ff; color: #4f46e5; }
+        .status.activated { background: #dcfce7; color: #16a34a; }
+        .status i { font-size: 8px; }
+
+        /* Action Buttons */
+        .action-btn {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .action-btn:hover { background: var(--bg-body); color: var(--primary); }
+        .action-btn.danger:hover { background: #fef2f2; color: var(--accent-red); }
+
+        /* Filter/Search Bar */
+        .filter-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .search-box { position: relative; flex: 1; min-width: 200px; }
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+            font-size: 14px;
+        }
+        .search-box input:focus { border-color: var(--primary); outline: none; }
+        .search-box i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+            font-size: 14px;
+            min-width: 150px;
+            cursor: pointer;
+        }
+
+        /* Kanban Board */
+        .kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; min-height: 500px; }
+        @media(max-width: 900px) { .kanban-board { grid-template-columns: 1fr; } }
+        .kanban-column {
+            background: var(--bg-body);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .kanban-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .kanban-header h4 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; font-family: var(--font-heading); }
+        .kanban-header .count { background: white; padding: 2px 8px; border-radius: 100px; font-size: 12px; color: var(--text-muted); }
+        .kanban-cards { flex: 1; display: flex; flex-direction: column; gap: 12px; min-height: 100px; }
+        .kanban-card {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            cursor: grab;
+            transition: all 0.2s var(--ease);
+            box-shadow: var(--shadow-sm);
+        }
+        .kanban-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .kanban-card.dragging { opacity: 0.5; transform: rotate(3deg); }
+        .kanban-card h5 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .kanban-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+        .kanban-card .meta { display: flex; align-items: center; justify-content: space-between; }
+        .kanban-card .client { font-size: 12px; color: var(--primary); font-weight: 500; }
+        .kanban-card .value { font-size: 14px; font-weight: 700; }
+
+        /* Client Cards */
+        .client-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .client-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            padding: 24px;
+            transition: all 0.3s var(--ease);
+        }
+        .client-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .client-header { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+        .client-avatar {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .client-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; font-family: var(--font-heading); }
+        .client-info p { font-size: 13px; color: var(--text-muted); }
+        .client-details { margin-bottom: 16px; }
+        .client-details .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .client-details .detail-item i { color: var(--text-muted); width: 20px; }
+        .client-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; border-top: 1px solid var(--border-light); padding-top: 16px;}
+        .btn-sm {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-primary-sm { background: var(--primary); color: white; }
+        .btn-primary-sm:hover { background: var(--primary-dark); }
+        .btn-outline-sm { border: 1px solid var(--border-light); color: var(--text-secondary); }
+        .btn-outline-sm:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-whatsapp:hover { background: #128C7E; }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s var(--ease);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .btn-outline { border: 1px solid var(--border-light); background: white; color: var(--text-main); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-danger { background: var(--accent-red); color: white; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-success { background: var(--accent-green); color: white; }
+        .btn-success:hover { background: #059669; }
+
+        /* =========================================
+           DOCUMENT EDITOR PAGE (Invoice/Quotation)
+           ========================================= */
+        .doc-editor-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .doc-editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .doc-type-badge {
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .doc-type-badge.invoice { background: #dbeafe; color: #2563eb; }
+        .doc-type-badge.quotation { background: #fef3c7; color: #d97706; }
+        .doc-type-badge.website { background: #e0e7ff; color: #4f46e5; }
+        
+        .doc-editor-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 900px) {
+            .doc-editor-grid { grid-template-columns: 1fr; }
+        }
+        
+        .doc-preview-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border-light);
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .doc-preview-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .doc-preview-logo { font-size: 24px; font-weight: 800; font-family: var(--font-heading); }
+        .doc-preview-title { font-size: 28px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .doc-preview-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .doc-preview-meta-item label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+        .doc-preview-meta-item p { font-size: 16px; font-weight: 600; color: var(--text-main); margin-top: 4px; }
+        
+        .doc-preview-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+        .doc-preview-table th { text-align: left; padding: 12px 0; border-bottom: 2px solid var(--border-light); color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+        .doc-preview-table td { padding: 16px 0; border-bottom: 1px solid var(--border-light); }
+        .doc-preview-table .total-row td { font-weight: 700; font-size: 18px; border-bottom: none; }
+        
+        .doc-editor-form .form-group-modal { margin-bottom: 16px; }
+        
+        /* Payment Options UI */
+        .payment-options-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .payment-option-btn {
+            padding: 10px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .payment-option-btn:hover { border-color: var(--primary); }
+        .payment-option-btn.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+        .payment-option-btn strong { display: block; font-size: 14px; }
+        .payment-option-btn span { font-size: 11px; opacity: 0.8; }
+
+        .installment-info-box {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .installment-info-box.visible { display: block; }
+        .installment-stat { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 13px; }
+        .installment-stat strong { color: var(--primary); }
+
+        /* =========================================
+           PRICING SECTION (UPDATED)
+           ========================================= */
+        .pricing-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 40px;
+        }
+        
+        .pricing-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: 32px 24px;
+            width: 100%;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+            box-shadow: var(--shadow-primary);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            background: var(--primary);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pricing-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-header { margin-bottom: 20px; }
+        .pricing-header h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; font-family: var(--font-heading); }
+        .pricing-header p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+        
+        .pricing-price {
+            margin-bottom: 24px;
+        }
+        .pricing-price .currency { font-size: 18px; font-weight: 700; vertical-align: top; color: var(--text-secondary); }
+        .pricing-price .amount { font-size: 40px; font-weight: 800; font-family: var(--font-heading); }
+        .pricing-price .period { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+        
+        .pricing-features {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 32px;
+            flex-grow: 1;
+        }
+        
+        .pricing-features ul {
+            list-style: none;
+        }
+        
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-light);
+        }
+        .pricing-features li:last-child { border-bottom: none; }
+        .pricing-features li i { color: var(--accent-green); font-size: 18px; }
+        
+        .pricing-card .btn { width: 100%; margin-top: auto; }
+
+        /* =========================================
+           MODAL
+           ========================================= */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--radius-lg);
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s var(--ease-bounce);
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--border-light);
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
+        .modal-header h3 { font-size: 18px; font-weight: 700; font-family: var(--font-heading); }
+        .modal-close {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+        .modal-close:hover { background: var(--bg-body); color: var(--text-main); }
+        .modal-body { padding: 24px; }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* Form Elements */
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .form-group-modal { margin-bottom: 16px; }
+        .form-group-modal label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .form-group-modal input,
+        .form-group-modal select,
+        .form-group-modal textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .form-group-modal input:focus,
+        .form-group-modal select:focus,
+        .form-group-modal textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+            outline: none;
+        }
+
+        /* Settings */
+        .settings-section { background: white; border-radius: var(--radius-md); border: 1px solid var(--border-light); margin-bottom: 24px; }
+        .settings-section-header { padding: 20px 24px; border-bottom: 1px solid var(--border-light); }
+        .settings-section-header h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; font-family: var(--font-heading); }
+        .settings-section-header p { font-size: 13px; color: var(--text-muted); }
+        .settings-section-body { padding: 24px; }
+        .setting-item { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border-light); }
+        .setting-item:last-child { border-bottom: none; }
+        .setting-info h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .setting-info p { font-size: 13px; color: var(--text-muted); }
+        
+        /* Toggle Switch */
+        .toggle { position: relative; width: 48px; height: 26px; }
+        .toggle input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--border-light);
+            border-radius: 26px;
+            transition: 0.3s;
+        }
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 20px; width: 20px;
+            left: 3px; bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .toggle input:checked + .toggle-slider { background: var(--primary); }
+        .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+        /* =========================================
+           LOADING OVERLAY
+           ========================================= */
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .loading-overlay.active { opacity: 1; visibility: visible; }
+        .spinner-large {
+            width: 48px; height: 48px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        .loading-text { font-size: 14px; color: var(--text-muted); font-weight: 500; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* =========================================
+           POPUP
+           ========================================= */
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 4000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .popup-overlay.active { opacity: 1; pointer-events: auto; }
+        .popup-card {
+            background: white;
+            width: 90%;
+            max-width: 360px;
+            padding: 24px;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            text-align: center;
+            transform: scale(0.8) translateY(20px);
+            transition: transform 0.4s var(--ease-bounce);
+            position: relative;
+        }
+        .popup-overlay.active .popup-card { transform: scale(1) translateY(0); }
+        .popup-icon {
+            width: 56px; height: 56px;
+            background: #fee2e2;
+            color: #ef4444;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 20px;
+            box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.2);
+        }
+        .popup-card.success .popup-icon {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .popup-title { font-size: 18px; font-weight: 800; color: var(--text-main); margin-bottom: 12px; font-family: var(--font-heading); }
+        .popup-message { color: var(--text-secondary); font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+        .popup-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            width: 100%;
+            font-size: 15px;
+        }
+        .popup-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            .sidebar { transform: translateX(-100%); width: var(--sidebar-width); }
+            .sidebar.mobile-open { transform: translateX(0); }
+            .main-wrapper { margin-left: 0; }
+            .top-header { padding: 0 16px; }
+            .header-search { display: none; }
+            .main-content { padding: 16px; }
+            .form-row { grid-template-columns: 1fr; }
+            .kanban-board { grid-template-columns: 1fr; }
+            .doc-editor-grid { grid-template-columns: 1fr; }
+            .doc-preview-meta { grid-template-columns: 1fr; }
+            .payment-options-grid { grid-template-columns: 1fr; }
+            .pricing-container { flex-direction: column; align-items: center; }
+            .pricing-card { max-width: 100%; }
+        }
+        .mobile-menu-btn {
+            display: none;
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        @media(max-width: 768px) { .mobile-menu-btn { display: flex; } }
+        
+        /* Print Styles */
+        @media print {
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #printArea { position: absolute; left: 0; top: 0; width: 100%; background: white; padding: 40px; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-bg-grid"></div>
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX®">
+                <span>Portal</span>
+            </div>
+            <div class="login-title">
+                <h1>Internal Access</h1>
+                <p>Sign in to access DDNEX® Management System</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>User ID</label>
+                    <div class="form-input-wrapper">
+                        <input type="text" class="form-input" id="userId" placeholder="e.g. 001" required>
+                        <i class="ri-user-line"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="form-input-wrapper">
+                        <input type="password" class="form-input" id="password" placeholder="••••••••" required>
+                        <i class="ri-lock-line"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <span>Sign In</span>
+                    <i class="ri-arrow-right-line"></i>
+                </button>
+            </form>
+            
+            <div style="margin-top: 20px; text-align: center; font-size: 11px; color: var(--text-muted);">
+                <p>DDNEX® Internal Management System v2.5</p>
+                <p style="margin-top: 4px;">Authorized Personnel Only</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard App -->
+    <div class="dashboard-app" id="dashboardApp">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX®">
+                    <span>Portal</span>
+                </div>
+                <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle Sidebar">
+                    <i class="ri-arrow-left-s-line"></i>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Main Menu</div>
+                <div class="nav-item" data-route="/dashboard">
+                    <i class="ri-dashboard-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-route="/projects">
+                    <i class="ri-folder-line"></i>
+                    <span>Projects</span>
+                </div>
+                <div class="nav-item" data-route="/clients">
+                    <i class="ri-team-line"></i>
+                    <span>Clients</span>
+                </div>
+                <div class="nav-item" data-route="/sales">
+                    <i class="ri-pie-chart-line"></i>
+                    <span>Sales Pipeline</span>
+                </div>
+                <div class="nav-item" data-route="/cashbill">
+                    <i class="ri-file-list-3-line"></i>
+                    <span>Orders & Invoices</span>
+                </div>
+                
+                <div class="nav-section-title" style="margin-top: 24px;">Reference</div>
+                <div class="nav-item" data-route="/services">
+                    <i class="ri-price-tag-3-line"></i>
+                    <span>Services & Pricing</span>
+                </div>
+
+                <div class="nav-section-title" style="margin-top: 24px;">System</div>
+                <div class="nav-item" data-route="/settings">
+                    <i class="ri-settings-3-line"></i>
+                    <span>Settings</span>
+                </div>
+                <div class="nav-item" data-route="/profile">
+                    <i class="ri-user-settings-line"></i>
+                    <span>Profile</span>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-mini-card">
+                    <div class="user-avatar" id="sidebarAvatar">DD</div>
+                    <div class="user-info-mini">
+                        <div class="name" id="sidebarName">Loading...</div>
+                        <div class="role" id="sidebarRole">...</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="handleLogout()">
+                    <i class="ri-logout-box-line"></i>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+                        <i class="ri-menu-line"></i>
+                    </button>
+                    <div>
+                        <h1 class="page-title-header" id="pageTitle">Dashboard</h1>
+                        <div class="breadcrumb">
+                            <a href="#" onclick="navigateTo('/dashboard'); return false;">Home</a>
+                            <i class="ri-arrow-right-s-line"></i>
+                            <span id="breadcrumbCurrent">Dashboard</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-search">
+                        <input type="text" placeholder="Search...">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <div class="header-user">
+                        <div class="user-avatar" id="headerAvatar">DD</div>
+                        <div class="header-user-info">
+                            <div class="name" id="headerName">...</div>
+                            <div class="role" id="headerRole">...</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content" id="mainContent">
+                <!-- Content Injected via JS -->
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="modalSaveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Popup Overlay -->
+    <div class="popup-overlay" id="customPopup">
+        <div class="popup-card" id="popupCard">
+            <div class="popup-icon" id="popupIcon">
+                <i class="ri-checkbox-circle-fill"></i>
+            </div>
+            <h3 class="popup-title" id="popupTitle">Success</h3>
+            <p class="popup-message" id="popupMessage">Your request has been processed successfully.</p>
+            <button class="popup-btn" id="popupBtn" onclick="handlePopupAction()">Got it</button>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner-large"></div>
+        <div class="loading-text" id="loadingText">Loading...</div>
+    </div>
+
+    <!-- Hidden Print Area -->
+    <div id="printArea" style="display: none;"></div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, setDoc, orderBy, limit, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyAwf31b-wpYQwPbd-3DxnqGVRw8g3xq938",
+          authDomain: "ddnetwork-database.firebaseapp.com",
+          projectId: "ddnetwork-database",
+          storageBucket: "ddnetwork-database.firebasestorage.app",
+          messagingSenderId: "699127560990",
+          appId: "1:699127560990:web:50cfd61ff620bc85fb670f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseDB = db;
+        window.firebaseAuth = auth;
+
+        const getCol = (name) => collection(db, `${name}_ddnex`);
+
+        // --- SMART ID GENERATOR FOR USERS ---
+        window.generateUserIdSmart = async () => {
+            const snapshot = await getDocs(getCol('users'));
+            let maxNum = 0;
+            
+            snapshot.forEach(d => {
+                const data = d.data();
+                // Check if userId exists and is a number string
+                if (data.userId) {
+                    const numPart = parseInt(data.userId, 10);
+                    if (!isNaN(numPart) && numPart > maxNum) {
+                        maxNum = numPart;
+                    }
+                }
+            });
+
+            const nextNum = maxNum + 1;
+            // Pad with zeros to make it 3 digits (001, 002, ...)
+            return String(nextNum).padStart(3, '0');
+        };
+
+        // --- SMART ID GENERATOR FOR DOCS ---
+        window.generateSmartId = async (type) => {
+            let colName, prefix;
+            if (type === 'invoice' || type === 'order') {
+                colName = 'orders';
+                prefix = 'IDNX';
+            } else if (type === 'quotation') {
+                colName = 'quotation';
+                prefix = 'QDNX';
+            } else {
+                return null;
+            }
+
+            const snapshot = await getDocs(getCol(colName));
+            let maxNum = 0;
+            
+            snapshot.forEach(d => {
+                const data = d.data();
+                if (data.number && data.number.startsWith(prefix)) {
+                    const numPart = parseInt(data.number.replace(prefix + '-', ''), 10);
+                    if (!isNaN(numPart) && numPart > maxNum) {
+                        maxNum = numPart;
+                    }
+                }
+            });
+
+            const nextNum = maxNum + 1;
+            const paddedNum = String(nextNum).padStart(4, '0');
+            return `${prefix}-${paddedNum}`;
+        };
+
+        window.handleHardcodedLogin = async (userId, password) => {
+            // Check super admin first (001)
+            // We check if any user has userId 001 and role SuperAdmin
+            const qSuper = query(getCol('users'), where('userId', '==', '001'), where('role', '==', 'SuperAdmin'));
+            const superSnap = await getDocs(qSuper);
+            
+            // If no super admin exists yet, allow hardcoded creation
+            if (superSnap.empty && userId === '001' && password === '1234') {
+                 await setDoc(doc(db, 'users_ddnex', 'superadmin_001'), {
+                    userId: '001',
+                    name: 'Super Administrator',
+                    email: 'admin@ddnex.com',
+                    role: 'SuperAdmin',
+                    status: 'active',
+                    password: '1234', // Storing password for hardcoded check
+                    createdAt: new Date()
+                });
+                
+                const userMock = { 
+                    uid: 'superadmin_001', 
+                    displayName: 'Super Administrator', 
+                    email: 'admin@ddnex.com',
+                    role: 'SuperAdmin'
+                };
+                window.onUserLoggedIn(userMock);
+                return;
+            }
+
+            // Normal login check against DB
+            try {
+                const q = query(getCol('users'), where('userId', '==', userId));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    const userData = userDoc.data();
+                    
+                    if (userData.password === password) {
+                        if (userData.status === 'suspended') {
+                            window.showPopup("Access Denied", "Your account has been suspended.", false);
+                            return;
+                        }
+                        window.onUserLoggedIn({ 
+                            uid: userDoc.id, 
+                            displayName: userData.name, 
+                            email: userData.email,
+                            role: userData.role,
+                            userId: userData.userId
+                        });
+                    } else {
+                        window.showPopup("Login Failed", "Invalid User ID or Password.", false);
+                    }
+                } else {
+                    window.showPopup("Login Failed", "User not found.", false);
+                }
+            } catch (error) {
+                console.error(error);
+                window.showPopup("Error", "Connection error. Try again.", false);
+            }
+        };
+
+        window.handleHardcodedLogout = () => {
+            window.onUserLoggedOut();
+        };
+
+        window.dbOperations = {
+            getUsers: async () => {
+                const q = query(getCol('users'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addUser: async (data) => await addDoc(getCol('users'), data),
+            updateUser: async (id, data) => await updateDoc(doc(db, 'users_ddnex', id), data),
+            deleteUser: async (id) => await deleteDoc(doc(db, 'users_ddnex', id)),
+            
+            getClients: async () => {
+                const q = query(getCol('clients'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addClient: async (data) => await addDoc(getCol('clients'), data),
+            updateClient: async (id, data) => await updateDoc(doc(db, 'clients_ddnex', id), data),
+            deleteClient: async (id) => await deleteDoc(doc(db, 'clients_ddnex', id)),
+
+            getProjects: async () => {
+                const q = query(getCol('projects'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addProject: async (data) => await addDoc(getCol('projects'), data),
+            updateProject: async (id, data) => await updateDoc(doc(db, 'projects_ddnex', id), data),
+            deleteProject: async (id) => await deleteDoc(doc(db, 'projects_ddnex', id)),
+
+            getDeals: async () => {
+                const q = query(getCol('deals'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addDeal: async (data) => await addDoc(getCol('deals'), data),
+            updateDeal: async (id, data) => await updateDoc(doc(db, 'deals_ddnex', id), data),
+            deleteDeal: async (id) => await deleteDoc(doc(db, 'deals_ddnex', id)),
+            
+            // ORDERS / INVOICES (Combined Collection)
+            getOrders: async () => {
+                const q = query(getCol('orders'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            getOrder: async (id) => {
+                const ref = doc(db, 'orders_ddnex', id);
+                const snap = await getDoc(ref);
+                return snap.exists() ? {id: snap.id, ...snap.data()} : null;
+            },
+            setOrder: async (id, data) => await setDoc(doc(db, 'orders_ddnex', id), data, { merge: true }),
+            deleteOrder: async (id) => await deleteDoc(doc(db, 'orders_ddnex', id)),
+
+            // QUOTATIONS
+            getQuotations: async () => {
+                const q = query(getCol('quotation'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            getQuotation: async (id) => {
+                const ref = doc(db, 'quotation_ddnex', id);
+                const snap = await getDoc(ref);
+                return snap.exists() ? {id: snap.id, ...snap.data()} : null;
+            },
+            setQuotation: async (id, data) => await setDoc(doc(db, 'quotation_ddnex', id), data, { merge: true }),
+            deleteQuotation: async (id) => await deleteDoc(doc(db, 'quotation_ddnex', id))
+        };
+
+    </script>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State
+        let currentUser = null;
+        let currentRoute = '/login/auth';
+        
+        // Constants
+        const PACKAGE_PRICES = {
+            'Starter Landing Page': 399,
+            'Business Website': 899,
+            'Business Portal System': 3800,
+            'Custom System': 6800
+        };
+
+        // Router
+        function navigateTo(path) {
+            if (!currentUser && path !== '/login/auth') return;
+            
+            window.history.pushState({ path }, '', path);
+            currentRoute = path;
+            renderRoute(path);
+        }
+
+        window.onpopstate = (event) => {
+            if (event.state && event.state.path) {
+                renderRoute(event.state.path);
+            } else {
+                if(currentUser) navigateTo('/dashboard');
+            }
+        };
+
+        function renderRoute(path) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            let activePath = path;
+            if (path.startsWith('/invoice') || path.startsWith('/order')) {
+                activePath = '/cashbill';
+            }
+            
+            const activeLink = document.querySelector(`.nav-item[data-route="${activePath}"]`);
+            if(activeLink) activeLink.classList.add('active');
+
+            const titles = {
+                '/dashboard': 'Dashboard',
+                '/projects': 'Projects',
+                '/clients': 'Clients',
+                '/sales': 'Sales Pipeline',
+                '/cashbill': 'Orders & Invoices',
+                '/settings': 'Settings',
+                '/profile': 'My Profile',
+                '/services': 'Services & Pricing'
+            };
+            
+            let title = titles[path] || 'Dashboard';
+            
+            if (path.startsWith('/invoice/')) title = 'Edit Invoice';
+            if (path.startsWith('/quotation/')) title = 'Edit Quotation';
+            
+            document.getElementById('pageTitle').textContent = title;
+            document.getElementById('breadcrumbCurrent').textContent = title;
+            
+            document.getElementById('sidebar').classList.remove('mobile-open');
+
+            showLoading("Loading...");
+            setTimeout(() => {
+                if (path.startsWith('/invoice/')) {
+                    const id = path.split('/')[2];
+                    renderInvoiceEditor(id);
+                } else if (path.startsWith('/quotation/')) {
+                    const id = path.split('/')[2];
+                    renderQuotationEditor(id);
+                } else {
+                    switch(path) {
+                        case '/dashboard': renderDashboardSection(); break;
+                        case '/projects': renderProjectsSection(); break;
+                        case '/clients': renderClientsSection(); break;
+                        case '/sales': renderSalesSection(); break;
+                        case '/cashbill': renderCashbillSection(); break;
+                        case '/settings': renderSettingsSection(); break;
+                        case '/profile': renderProfileSection(); break;
+                        case '/services': renderServicesSection(); break;
+                        default: renderDashboardSection();
+                    }
+                }
+                hideLoading();
+            }, 200);
+        }
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-item[data-route]').forEach(item => {
+                item.addEventListener('click', () => {
+                    const route = item.getAttribute('data-route');
+                    navigateTo(route);
+                });
+            });
+        }
+
+        // Auth Handlers
+        window.handleLogin = (e) => {
+            e.preventDefault();
+            const uid = document.getElementById('userId').value;
+            const pass = document.getElementById('password').value;
+            
+            showLoading("Authenticating...");
+            window.handleHardcodedLogin(uid, pass).finally(() => {
+                hideLoading();
+            });
+        };
+
+        window.onUserLoggedIn = (user) => {
+            currentUser = user;
+            localStorage.setItem('ddnex_user', JSON.stringify(user));
+            
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('dashboardApp').classList.add('visible');
+            
+            const name = user.displayName || user.name || 'User';
+            const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            
+            ['sidebar', 'header'].forEach(prefix => {
+                const nameEl = document.getElementById(prefix + 'Name');
+                const avatarEl = document.getElementById(prefix + 'Avatar');
+                const roleEl = document.getElementById(prefix + 'Role');
+                if(nameEl) nameEl.textContent = name;
+                if(avatarEl) avatarEl.textContent = initials;
+                if(roleEl) roleEl.textContent = user.role || 'User';
+            });
+
+            const path = window.location.pathname || '/dashboard';
+            navigateTo(path);
+        };
+
+        window.handleLogout = () => {
+            if(confirm("Are you sure you want to sign out?")) {
+                window.handleHardcodedLogout();
+            }
+        };
+
+        window.onUserLoggedOut = () => {
+            currentUser = null;
+            localStorage.removeItem('ddnex_user');
+            
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('dashboardApp').classList.remove('visible');
+            document.getElementById('loginForm').reset();
+            window.history.pushState({ path: '/login/auth' }, '', '/login/auth');
+        };
+
+        // Utility Functions
+        const formatMYR = (value) => `RM ${parseFloat(value || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        
+        // UPDATED: Date formatting to DD/MM/YYYY
+        const formatDate = (date) => {
+            if (!date) return '-';
+            try {
+                let d;
+                // Handle Firestore Timestamp
+                if (date.seconds) {
+                    d = new Date(date.seconds * 1000);
+                } 
+                // Handle String (YYYY-MM-DD or ISO)
+                else if (typeof date === 'string') {
+                    d = new Date(date);
+                } else {
+                    d = new Date(date);
+                }
+                
+                if (isNaN(d.getTime())) return date; // Return original if invalid
+
+                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const year = d.getFullYear();
+                return `${day}/${month}/${year}`;
+            } catch (e) {
+                return date;
+            }
+        };
+        
+        const showLoading = (text = "Loading...") => {
+            const overlay = document.getElementById('loadingOverlay');
+            document.getElementById('loadingText').textContent = text;
+            overlay.classList.add('active');
+        };
+        
+        const hideLoading = () => {
+            document.getElementById('loadingOverlay').classList.remove('active');
+        };
+
+        const getInitials = (name) => name ? name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'NA';
+
+        // POPUP SYSTEM
+        let popupCallback = null;
+        window.showPopup = (title, message, isSuccess = true, callback = null) => {
+            const popup = document.getElementById('customPopup');
+            const titleEl = document.getElementById('popupTitle');
+            const msgEl = document.getElementById('popupMessage');
+            const card = document.getElementById('popupCard');
+            const icon = document.getElementById('popupIcon');
+            const btn = document.getElementById('popupBtn');
+
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+            popupCallback = callback;
+            
+            if(isSuccess) {
+                card.classList.add('success');
+                icon.innerHTML = '<i class="ri-checkbox-circle-fill"></i>';
+            } else {
+                card.classList.remove('success');
+                icon.innerHTML = '<i class="ri-error-warning-fill"></i>';
+            }
+
+            btn.innerText = callback ? "Confirm" : "Got it";
+            btn.onclick = handlePopupAction;
+            popup.classList.add('active');
+        };
+
+        const closePopup = () => {
+            document.getElementById('customPopup').classList.remove('active');
+            popupCallback = null;
+        };
+
+        const handlePopupAction = () => {
+            if(popupCallback) popupCallback();
+            closePopup();
+        };
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+        function toggleMobileSidebar() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        }
+
+        // MODAL SYSTEM
+        const openModal = (title, content, onSave) => {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').innerHTML = content;
+            document.getElementById('modal').classList.add('active');
+            
+            const saveBtn = document.getElementById('modalSaveBtn');
+            saveBtn.onclick = onSave;
+        };
+        window.closeModal = () => {
+            document.getElementById('modal').classList.remove('active');
+        };
+
+        // ================== TABLE FILTER HELPER ==================
+        window.setupTableFilter = (inputId, tableBodyId, keys) => {
+            const input = document.getElementById(inputId);
+            const tableBody = document.getElementById(tableBodyId);
+            if (!input || !tableBody) return;
+
+            input.addEventListener('keyup', () => {
+                const filter = input.value.toLowerCase();
+                const rows = tableBody.getElementsByTagName('tr');
+                
+                for (let i = 0; i < rows.length; i++) {
+                    let found = false;
+                    const cells = rows[i].getElementsByTagName('td');
+                    for (let j = 0; j < cells.length; j++) {
+                        if (cells[j].textContent.toLowerCase().includes(filter)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    rows[i].style.display = found ? "" : "none";
+                }
+            });
+        };
+
+        // ================== SECTION RENDERERS ==================
+
+        // --- DASHBOARD ---
+        async function renderDashboardSection() {
+            const projects = await window.dbOperations.getProjects();
+            const clients = await window.dbOperations.getClients();
+            const orders = await window.dbOperations.getOrders(); // Fetch all orders
+            
+            const activeProjects = projects.filter(p => p.status === 'active').length;
+            const totalRevenue = orders.filter(i => i.status === 'Paid' || i.status === 'Activated' || i.status === 'Completed').reduce((sum, i) => sum + (i.total || i.price || i.finalPrice || 0), 0);
+            
+            document.getElementById('mainContent').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Projects</h3>
+                            <div class="value">${projects.length}</div>
+                            <div class="trend up"><i class="ri-arrow-up-line"></i><span>${activeProjects} active</span></div>
+                        </div>
+                        <div class="stat-icon blue"><i class="ri-folder-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Active Clients</h3>
+                            <div class="value">${clients.length}</div>
+                            <div class="trend up"><i class="ri-arrow-up-line"></i><span>Managed internal</span></div>
+                        </div>
+                        <div class="stat-icon green"><i class="ri-team-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Revenue (Paid)</h3>
+                            <div class="value">${formatMYR(totalRevenue)}</div>
+                            <div class="trend up"><i class="ri-money-dollar-circle-line"></i><span>Confirmed</span></div>
+                        </div>
+                        <div class="stat-icon orange"><i class="ri-funds-line"></i></div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Projects</h3>
+                            <button class="btn-outline-sm" onclick="navigateTo('/projects')">View All</button>
+                        </div>
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead><tr><th>Project</th><th>Client</th><th>Status</th></tr></thead>
+                                <tbody>
+                                    ${projects.slice(0, 5).map(p => `
+                                        <tr>
+                                            <td><strong>${p.name}</strong></td>
+                                            <td>${p.client}</td>
+                                            <td><span class="status ${p.status}">${p.status}</span></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div class="card">
+                        <div class="card-header"><h3>Quick Actions</h3></div>
+                        <div class="card-body">
+                             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                                <button class="btn btn-outline" onclick="createNewInvoice()"><i class="ri-file-add-line"></i> New Invoice</button>
+                                <button class="btn btn-outline" onclick="createNewQuotation()"><i class="ri-file-paper-2-line"></i> New Quotation</button>
+                                <button class="btn btn-outline" onclick="navigateTo('/clients')"><i class="ri-user-add-line"></i> Add Client</button>
+                                <button class="btn btn-outline" onclick="navigateTo('/services')"><i class="ri-price-tag-3-line"></i> View Plans</button>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- SERVICES & PRICING (UPDATED UI) ---
+        function renderServicesSection() {
+            document.getElementById('mainContent').innerHTML = `
+                <div style="text-align:center; margin-bottom: 32px;">
+                    <h2 style="font-size: 32px; font-family: var(--font-heading); font-weight: 800; margin-bottom: 8px;">DDNEX® Service Packages</h2>
+                    <p style="color: var(--text-muted); font-size: 16px;">Transparent pricing for all your digital needs.</p>
+                </div>
+
+                <div class="pricing-container">
+                    <!-- Starter -->
+                    <div class="pricing-card">
+                        <div class="pricing-icon" style="background: #eff6ff; color: #2563eb;">
+                            <i class="ri-rocket-2-line"></i>
+                        </div>
+                        <div class="pricing-header">
+                            <h3>Starter Landing Page</h3>
+                            <p>Best for promotions, campaigns, startups</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="currency">RM</span><span class="amount">399</span>
+                            <div class="period">Fixed Price</div>
+                        </div>
+                        <div class="pricing-features">
+                            <ul>
+                                <li><i class="ri-time-line"></i> Delivery: 2–3 Days</li>
+                                <li><i class="ri-layout-line"></i> Single Page Design</li>
+                                <li><i class="ri-customer-service-2-line"></i> Basic Support</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline" onclick="navigateTo('/clients')">Choose Starter</button>
+                    </div>
+
+                    <!-- Business -->
+                    <div class="pricing-card popular">
+                        <div class="pricing-badge">Most Popular</div>
+                        <div class="pricing-icon" style="background: #f0fdf4; color: #16a34a;">
+                            <i class="ri-building-line"></i>
+                        </div>
+                        <div class="pricing-header">
+                            <h3>Business Website</h3>
+                            <p>Best for company profiles & small businesses</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="currency">RM</span><span class="amount">899</span>
+                            <div class="period">Fixed Price</div>
+                        </div>
+                        <div class="pricing-features">
+                            <ul>
+                                <li><i class="ri-time-line"></i> Delivery: 4–7 Days</li>
+                                <li><i class="ri-pages-line"></i> Up to 5 Pages</li>
+                                <li><i class="ri-cellphone-line"></i> Mobile Responsive</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-primary" onclick="navigateTo('/clients')">Choose Business</button>
+                    </div>
+
+                    <!-- Portal -->
+                    <div class="pricing-card">
+                        <div class="pricing-icon" style="background: #faf5ff; color: #9333ea;">
+                            <i class="ri-terminal-box-line"></i>
+                        </div>
+                        <div class="pricing-header">
+                            <h3>Business Portal System</h3>
+                            <p>Best for internal management systems</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="currency">RM</span><span class="amount">3,800</span>
+                            <div class="period">Fixed Price</div>
+                        </div>
+                        <div class="pricing-features">
+                            <ul>
+                                <li><i class="ri-time-line"></i> Delivery: 10–14 Days</li>
+                                <li><i class="ri-database-2-line"></i> Database Integration</li>
+                                <li><i class="ri-shield-check-line"></i> User Roles & Auth</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline" onclick="navigateTo('/clients')">Choose Portal</button>
+                    </div>
+
+                    <!-- Custom -->
+                    <div class="pricing-card">
+                        <div class="pricing-icon" style="background: #fffbeb; color: #d97706;">
+                            <i class="ri-code-s-slash-line"></i>
+                        </div>
+                        <div class="pricing-header">
+                            <h3>Custom System</h3>
+                            <p>Best for automation or complex systems</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="currency">RM</span><span class="amount">6,800</span>
+                            <div class="period">Starting Price</div>
+                        </div>
+                        <div class="pricing-features">
+                            <ul>
+                                <li><i class="ri-time-line"></i> Delivery: 3–6 Weeks</li>
+                                <li><i class="ri-tools-line"></i> Tailored Solution</li>
+                                <li><i class="ri-customer-service-line"></i> Priority Support</li>
+                            </ul>
+                        </div>
+                        <button class="btn btn-outline" onclick="window.open('https://wa.me/60123456789', '_blank')">Let's Talk</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- CLIENTS ---
+        async function renderClientsSection() {
+            const clients = await window.dbOperations.getClients();
+            
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search clients..." id="clientSearchInput">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <button class="btn btn-primary" onclick="openClientModal()">
+                        <i class="ri-add-line"></i> Add Client
+                    </button>
+                </div>
+                <div class="client-grid" id="clientGrid">
+                    ${clients.map(c => renderClientCard(c)).join('')}
+                </div>
+            `;
+
+            // Client Search Logic
+            const searchInput = document.getElementById('clientSearchInput');
+            searchInput.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.client-card');
+                cards.forEach(card => {
+                    const name = card.querySelector('h4').innerText.toLowerCase();
+                    const email = card.querySelector('.detail-item:nth-child(2) span')?.innerText.toLowerCase() || '';
+                    if(name.includes(term) || email.includes(term)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        const formatWebsiteLink = (url) => {
+            if (!url) return '#';
+            if (!/^https?:\/\//i.test(url)) return 'https://' + url;
+            return url;
+        };
+        
+        const formatWhatsApp = (phone, name) => {
+            if(!phone) return '#';
+            let cleaned = phone.replace(/\D/g, '');
+            if(cleaned.startsWith('0')) cleaned = '6' + cleaned;
+            if(!cleaned.startsWith('6')) cleaned = '6' + cleaned;
+            
+            const text = encodeURIComponent(`Hello ${name}, this is a reminder from DDNEX.`);
+            return `https://wa.me/${cleaned}?text=${text}`;
+        };
+
+        const renderClientCard = (c) => `
+            <div class="client-card" id="client-card-${c.id}">
+                <div class="client-header">
+                    <div class="client-avatar" style="background: ${c.color || '#0f62fe'}20; color: ${c.color || '#0f62fe'};">${getInitials(c.name)}</div>
+                    <div class="client-info">
+                        <h4>${c.name}</h4>
+                        <p>${c.industry}</p>
+                    </div>
+                </div>
+                <div class="client-details">
+                    <div class="detail-item"><i class="ri-user-line"></i><span>${c.contact}</span></div>
+                    <div class="detail-item"><i class="ri-mail-line"></i><span>${c.email}</span></div>
+                    <div class="detail-item">
+                        <i class="ri-global-line"></i>
+                        <a href="${formatWebsiteLink(c.website)}" target="_blank" rel="noopener noreferrer" style="color:var(--primary); text-decoration:none; font-weight:500;">
+                            ${c.website ? 'Visit Website' : 'No Website'}
+                        </a>
+                    </div>
+                    <div class="detail-item"><i class="ri-vip-crown-line"></i><span style="font-weight:600; color:var(--accent-purple);">Plan: ${c.activePlan || 'Standard'}</span></div>
+                </div>
+                <div class="client-actions">
+                    <a href="${formatWhatsApp(c.phone, c.name)}" target="_blank" rel="noopener noreferrer" class="btn-sm btn-whatsapp"><i class="ri-whatsapp-line"></i> Reminder</a>
+                    <button class="btn-sm btn-outline-sm" onclick="editClient('${c.id}')"><i class="ri-edit-line"></i> Edit</button>
+                    <button class="btn-sm btn-outline-sm" style="border-color:#fecaca; color:#dc2626;" onclick="deleteClient('${c.id}')"><i class="ri-delete-bin-line"></i></button>
+                </div>
+            </div>
+        `;
+
+        // --- CASHBILL / ORDERS LIST (Combined) ---
+        async function renderCashbillSection() {
+            const orders = await window.dbOperations.getOrders(); // Combined collection
+            const quotations = await window.dbOperations.getQuotations();
+            
+            // Combine
+            let allDocs = [...orders, ...quotations];
+
+            // Default Sort: Oldest to Latest (Ascending)
+            allDocs.sort((a, b) => {
+                const dateA = a.date ? new Date(a.date) : (a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0));
+                const dateB = b.date ? new Date(b.date) : (b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0));
+                return dateA - dateB;
+            });
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search by ID, Client, or Status..." id="cashbillSearchInput">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <!-- Sort Dropdown -->
+                    <select class="filter-select" id="sortSelect" onchange="applyTableSort()">
+                        <option value="oldest">Oldest to Latest</option>
+                        <option value="latest">Latest to Oldest</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="createNewInvoice()">
+                        <i class="ri-file-add-line"></i> Create Invoice
+                    </button>
+                    <button class="btn btn-outline" onclick="createNewQuotation()">
+                        <i class="ri-file-paper-2-line"></i> Create Quotation
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Number</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cashbillTableBody">
+                                ${allDocs.map(doc => renderDocRow(doc)).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+
+            window.setupTableFilter('cashbillSearchInput', 'cashbillTableBody');
+        }
+
+        // Helper to render a single document row
+        function renderDocRow(doc) {
+            // Determine Type Logic
+            let typeLabel = doc.type || 'Invoice';
+            let typeClass = 'active'; // Invoice default
+            if (doc.source === 'Website') {
+                typeLabel = 'Website Order';
+                typeClass = 'website';
+            } else if (doc.type === 'Quotation') {
+                typeLabel = 'Quotation';
+                typeClass = 'pending';
+            }
+
+            const dateStr = formatDate(doc.date || doc.createdAt);
+            // Use customerName primarily for website orders, fallback to clientName
+            const clientName = doc.customerName || doc.clientName || 'N/A';
+            const amount = doc.total || doc.price || doc.finalPrice || 0;
+
+            // Handle status class
+            let statusClass = doc.status ? doc.status.toLowerCase() : 'pending';
+            if(statusClass === 'activated') statusClass = 'activated'; // specific styling if needed
+
+            return `
+            <tr style="cursor: pointer;" onclick="navigateTo('${doc.type === 'Quotation' ? '/quotation/' : '/invoice/'}${doc.id}')">
+                <td><span class="status ${typeClass}">${typeLabel}</span></td>
+                <td><strong>${doc.number || doc.id}</strong></td>
+                <td>${clientName}</td>
+                <td>${dateStr}</td>
+                <td>${formatMYR(amount)}</td>
+                <td><span class="status ${statusClass}">${doc.status || 'Pending'}</span></td>
+                <td onclick="event.stopPropagation()">
+                    <button class="action-btn" title="Print" onclick="printDocument('${doc.id}', '${doc.type}')"><i class="ri-printer-line"></i></button>
+                    <button class="action-btn danger" title="Delete" onclick="deleteDocGeneric('${doc.id}', '${doc.type}')"><i class="ri-delete-bin-line"></i></button>
+                </td>
+            </tr>
+            `;
+        }
+
+        // Sort Function
+        window.applyTableSort = () => {
+            const sortValue = document.getElementById('sortSelect').value;
+            const tbody = document.getElementById('cashbillTableBody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            rows.sort((a, b) => {
+                // Date is in 4th column (index 3)
+                // Format is DD/MM/YYYY. We need to parse it back to Date object for comparison
+                const getDateFromRow = (row) => {
+                    const dateText = row.cells[3].textContent;
+                    const parts = dateText.split('/');
+                    if(parts.length === 3) {
+                        // DD/MM/YYYY -> YYYY-MM-DD (ISO)
+                        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
+                    }
+                    return new Date(0); // Fallback
+                };
+
+                const dateA = getDateFromRow(a);
+                const dateB = getDateFromRow(b);
+
+                if (sortValue === 'latest') {
+                    return dateB - dateA; // Descending
+                } else {
+                    return dateA - dateB; // Ascending
+                }
+            });
+
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        };
+
+        // --- DOCUMENT EDITORS ---
+
+        async function createNewInvoice() {
+            showLoading("Generating ID...");
+            const newId = await window.generateSmartId('invoice');
+            if(newId) {
+                await window.dbOperations.setOrder(newId, {
+                    number: newId,
+                    clientName: '',
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'Unpaid',
+                    type: 'Invoice',
+                    source: 'Portal',
+                    subtotal: 0,
+                    discount: 0,
+                    total: 0,
+                    paymentType: 'One-Time',
+                    domain: ''
+                });
+                hideLoading();
+                navigateTo(`/invoice/${newId}`);
+            } else {
+                hideLoading();
+                showPopup("Error", "Could not generate Invoice ID.", false);
+            }
+        }
+
+        async function createNewQuotation() {
+            showLoading("Generating ID...");
+            const newId = await window.generateSmartId('quotation');
+            if(newId) {
+                await window.dbOperations.setQuotation(newId, {
+                    number: newId,
+                    clientName: '',
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'Pending',
+                    type: 'Quotation',
+                    subtotal: 0,
+                    discount: 0,
+                    total: 0
+                });
+                hideLoading();
+                navigateTo(`/quotation/${newId}`);
+            } else {
+                hideLoading();
+                showPopup("Error", "Could not generate Quotation ID.", false);
+            }
+        }
+
+        // INVOICE EDITOR (Handles both Manual Invoice and Website Order)
+        async function renderInvoiceEditor(id) {
+            let data = await window.dbOperations.getOrder(id);
+            
+            if (!data) {
+                // Should not happen if navigated from list, but fallback
+                data = {
+                    number: id,
+                    clientName: '',
+                    date: new Date().toISOString().split('T')[0],
+                    subtotal: 0,
+                    discount: 0,
+                    total: 0,
+                    status: 'Unpaid',
+                    description: '',
+                    type: 'Invoice',
+                    paymentType: 'One-Time',
+                    installmentCycle: 1,
+                    domain: ''
+                };
+            }
+
+            const clients = await window.dbOperations.getClients();
+            const clientOptions = clients.map(c => `<option value="${c.name}" ${data.clientName === c.name ? 'selected' : ''}>${c.name}</option>`).join('');
+            
+            // Determine if this is a website order to show different UI
+            const isWebsiteOrder = data.source === 'Website';
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="doc-editor-container">
+                    <div class="doc-editor-header">
+                        <div>
+                            <button class="btn btn-outline" onclick="navigateTo('/cashbill')"><i class="ri-arrow-left-line"></i> Back</button>
+                        </div>
+                        <div style="display:flex; gap:12px;">
+                             <button class="btn btn-success" onclick="saveInvoice('${id}')"><i class="ri-save-line"></i> Save</button>
+                             <button class="btn btn-primary" onclick="printDocument('${id}', 'Invoice')"><i class="ri-printer-line"></i> Print</button>
+                        </div>
+                    </div>
+                    
+                    <div class="doc-editor-grid">
+                        <!-- Preview -->
+                        <div class="doc-preview-card">
+                            <div class="doc-preview-header">
+                                <div>
+                                    <div class="doc-preview-logo">DDNEX®</div>
+                                    <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="doc-type-badge ${isWebsiteOrder ? 'website' : 'invoice'}">${isWebsiteOrder ? 'Website Order' : 'Invoice'}</div>
+                                    <h2 style="font-size:24px; font-weight:800; margin-top:8px;" id="previewNumber">${data.number || data.id}</h2>
+                                </div>
+                            </div>
+                            
+                            <div class="doc-preview-meta">
+                                <div class="doc-preview-meta-item">
+                                    <label>Bill To</label>
+                                    <p id="previewClient">${data.clientName || data.customerName || 'Select Client'}</p>
+                                    ${isWebsiteOrder && data.customerEmail ? `<p style="font-size:12px; color:#64748b;">${data.customerEmail}</p>` : ''}
+                                </div>
+                                <div class="doc-preview-meta-item" style="text-align:right;">
+                                    <label>Date</label>
+                                    <p id="previewDate">${formatDate(data.date || data.createdAt)}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Domain Display in Preview -->
+                            ${data.domain || isWebsiteOrder ? `
+                            <div style="margin-bottom: 24px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary);">
+                                <label style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Project Domain</label>
+                                <p style="font-size:15px; font-weight:600; color:var(--text-main); margin-top:4px;">
+                                    <i class="ri-global-line" style="vertical-align: middle; margin-right: 6px;"></i>
+                                    ${data.domain || 'N/A'}
+                                </p>
+                            </div>
+                            ` : ''}
+
+                            <div class="doc-preview-meta" id="installmentPreviewMeta" style="display: none; background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                                <div class="doc-preview-meta-item">
+                                    <label>Payment Type</label>
+                                    <p id="previewPaymentType">${data.paymentType || 'One-Time'}</p>
+                                </div>
+                                <div class="doc-preview-meta-item" style="text-align:right;">
+                                    <label>Cycle</label>
+                                    <p id="previewCycle">${data.installmentCycle || 1} of ${data.installmentMonths || 12}</p>
+                                </div>
+                            </div>
+
+                            <table class="doc-preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th style="text-align:right;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="previewDesc">${data.description || data.planName || '-'}</td>
+                                        <td style="text-align:right;" id="previewSubtotal">${formatMYR(data.subtotal || data.price)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:none; text-align:right; padding-top:16px;">Discount</td>
+                                        <td style="border:none; text-align:right; padding-top:16px;" id="previewDiscount">-${formatMYR(data.discount)}</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td style="text-align:right; border:none;">Total</td>
+                                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(data.total || data.price)}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Editor Form -->
+                        <div class="card" style="align-self: start; position: sticky; top: 96px;">
+                            <div class="card-header"><h3>Order Details</h3></div>
+                            <div class="card-body doc-editor-form">
+                                <div class="form-group-modal">
+                                    <label>Client / Customer</label>
+                                    <input type="text" id="editClient" value="${data.clientName || data.customerName || ''}" oninput="updatePreview()" ${isWebsiteOrder ? 'readonly' : ''}>
+                                </div>
+                                
+                                <!-- Domain Input Field -->
+                                <div class="form-group-modal">
+                                    <label>Domain <span style="color:#aaa; font-weight:400;">(e.g., client.com)</span></label>
+                                    <input type="text" id="editDomain" value="${data.domain || ''}" placeholder="example.com" oninput="updatePreview()">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-modal">
+                                        <label>Date</label>
+                                        <input type="date" id="editDate" value="${data.date}" onchange="updatePreview()">
+                                    </div>
+                                    <div class="form-group-modal">
+                                        <label>Status</label>
+                                        <select id="editStatus">
+                                            <option value="Unpaid" ${data.status === 'Unpaid' ? 'selected' : ''}>Unpaid</option>
+                                            <option value="Paid" ${data.status === 'Paid' ? 'selected' : ''}>Paid</option>
+                                            <option value="Activated" ${data.status === 'Activated' ? 'selected' : ''}>Activated</option>
+                                            <option value="Completed" ${data.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                ${isWebsiteOrder ? `
+                                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                                        <p style="font-size:12px; font-weight:600; margin-bottom:4px;">Website Order Info</p>
+                                        <p style="font-size:13px;">Phone: <strong>${data.customerPhone || 'N/A'}</strong></p>
+                                    </div>
+                                ` : ''}
+
+                                <div class="form-group-modal">
+                                    <label>Package / Service</label>
+                                    <select id="editPackage" onchange="handlePackageChange()">
+                                        <option value="">-- Select Package --</option>
+                                        ${Object.keys(PACKAGE_PRICES).map(p => `<option value="${p}" ${data.description === p || data.planName === p ? 'selected' : ''}>${p} (RM${PACKAGE_PRICES[p]})</option>`).join('')}
+                                        <option value="custom" ${!Object.keys(PACKAGE_PRICES).includes(data.description) && data.description ? 'selected' : ''}>Custom</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group-modal">
+                                    <label>Description</label>
+                                    <textarea id="editDesc" rows="3" oninput="updatePreview()">${data.description || data.planName}</textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-modal">
+                                        <label>Full Amount (RM)</label>
+                                        <input type="number" id="editAmount" value="${data.subtotal || data.price}" oninput="updatePreview()">
+                                    </div>
+                                    <div class="form-group-modal">
+                                        <label>Discount (RM)</label>
+                                        <input type="number" id="editDiscount" value="${data.discount}" oninput="updatePreview()">
+                                    </div>
+                                </div>
+
+                                <hr style="margin: 16px 0; border-color: var(--border-light);">
+                                
+                                <div class="form-group-modal">
+                                    <label>Payment Type</label>
+                                    <div class="payment-options-grid">
+                                        <button type="button" class="payment-option-btn ${!data.paymentType || data.paymentType === 'One-Time' ? 'active' : ''}" onclick="setPaymentType('One-Time')">
+                                            <strong>One-Time</strong>
+                                            <span>Full Payment</span>
+                                        </button>
+                                        <button type="button" class="payment-option-btn ${data.paymentType === '12-Month' ? 'active' : ''}" onclick="setPaymentType('12-Month')">
+                                            <strong>12 Month</strong>
+                                            <span>Installment</span>
+                                        </button>
+                                        <button type="button" class="payment-option-btn ${data.paymentType === '24-Month' ? 'active' : ''}" onclick="setPaymentType('24-Month')">
+                                            <strong>24 Month</strong>
+                                            <span>Installment</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="installment-info-box" id="installmentBox">
+                                    <div class="installment-stat">
+                                        <span>Grand Total:</span>
+                                        <strong id="instGrandTotal">RM 0.00</span>
+                                    </div>
+                                    <div class="installment-stat">
+                                        <span>Monthly Payment:</span>
+                                        <strong id="instMonthly">RM 0.00</span>
+                                    </div>
+                                    <div class="form-row" style="margin-top:12px;">
+                                        <div class="form-group-modal" style="margin-bottom:0;">
+                                            <label>Current Cycle</label>
+                                            <input type="number" id="editCycle" value="${data.installmentCycle || 1}" min="1" oninput="updatePreview()">
+                                        </div>
+                                        <div class="form-group-modal" style="margin-bottom:0;">
+                                            <label>Remaining Balance</label>
+                                            <input type="text" id="remainingBalanceDisplay" readonly value="RM 0.00" style="background:#f8fafc;">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- WhatsApp Payment Reminder Button -->
+                                <div style="margin-top: 16px;">
+                                    <button class="btn btn-whatsapp" style="width: 100%;" onclick="sendPaymentReminder()">
+                                        <i class="ri-whatsapp-line"></i> Send Payment Reminder
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            window.currentPaymentType = data.paymentType || 'One-Time';
+            // Store data needed for reminder
+            window.currentInvoiceData = data; 
+            
+            updatePreview(); 
+        }
+
+        // NEW: Payment Reminder Function
+        window.sendPaymentReminder = () => {
+            // Get fresh values from inputs
+            const clientName = document.getElementById('editClient').value;
+            const desc = document.getElementById('editDesc').value;
+            const amount = document.getElementById('previewTotal').textContent; // Formatted amount
+            const cycle = document.getElementById('editCycle').value;
+            const months = window.currentPaymentType === '12-Month' ? 12 : 24;
+            const date = document.getElementById('editDate').value; // YYYY-MM-DD
+            
+            // Format Date for message (DD/MM/YYYY)
+            const d = new Date(date);
+            const formattedDate = d.toLocaleDateString('en-GB'); // dd/mm/yyyy
+
+            const text = `Hello,
+
+This is a friendly reminder from DDNEX® regarding your monthly installment payment.
+
+Package: ${desc}
+Monthly Payment: ${amount}
+Billing Cycle: Month ${cycle} of ${months}
+Due Date: ${formattedDate}
+
+Kindly complete the payment before the due date to ensure your service continues without interruption.
+
+If payment has already been made, please disregard this message.
+
+Thank you.
+
+DDNEX®
+support@ddnex.com`;
+
+            // Note: We don't have phone number in the editor explicitly, usually taken from client list.
+            // For now, we open WhatsApp Web without a specific number (user selects recipient) or we can try to find it.
+            // Let's try to fetch client phone if possible, otherwise generic.
+            // To keep it simple and robust within the editor without extra async fetch:
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        };
+
+        // Updated Package Change Handler
+        window.handlePackageChange = () => {
+            const select = document.getElementById('editPackage');
+            const amountInput = document.getElementById('editAmount');
+            const descInput = document.getElementById('editDesc');
+            const selected = select.value;
+
+            if(selected && selected !== 'custom') {
+                // Update Amount
+                amountInput.value = PACKAGE_PRICES[selected];
+                // Update Description
+                descInput.value = selected;
+            } else if (selected === 'custom') {
+                // Optional: Clear fields for custom entry
+                // amountInput.value = '';
+                // descInput.value = '';
+            }
+            window.updatePreview();
+        };
+
+        window.setPaymentType = (type) => {
+            window.currentPaymentType = type;
+            document.querySelectorAll('.payment-option-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            updatePreview();
+        };
+
+        window.updatePreview = () => {
+            const client = document.getElementById('editClient').value;
+            const domain = document.getElementById('editDomain').value;
+            const dateVal = document.getElementById('editDate').value;
+            const desc = document.getElementById('editDesc').value;
+            const amount = parseFloat(document.getElementById('editAmount').value || 0);
+            const discount = parseFloat(document.getElementById('editDiscount').value || 0);
+            const grandTotal = amount - discount;
+
+            const pClient = document.getElementById('previewClient');
+            const pDate = document.getElementById('previewDate');
+            const pDesc = document.getElementById('previewDesc');
+            const pSubtotal = document.getElementById('previewSubtotal');
+            const pDiscount = document.getElementById('previewDiscount');
+            const pTotal = document.getElementById('previewTotal');
+            const pPayType = document.getElementById('previewPaymentType');
+            const pCycle = document.getElementById('previewCycle');
+            const instBox = document.getElementById('installmentBox');
+            const instMeta = document.getElementById('installmentPreviewMeta');
+            
+            if(pClient) pClient.textContent = client || 'Select Client';
+            if(pDate) pDate.textContent = formatDate(dateVal);
+            if(pDesc) pDesc.textContent = desc || '-';
+            if(pSubtotal) pSubtotal.textContent = formatMYR(amount);
+            if(pDiscount) pDiscount.textContent = `-${formatMYR(discount)}`;
+
+            const type = window.currentPaymentType || 'One-Time';
+            let displayTotal = grandTotal;
+            let months = 1;
+
+            if(type === '12-Month') months = 12;
+            if(type === '24-Month') months = 24;
+
+            if(type !== 'One-Time') {
+                instBox.classList.add('visible');
+                instMeta.style.display = 'grid';
+                
+                const monthlyAmount = grandTotal / months;
+                const cycle = parseInt(document.getElementById('editCycle').value || 1);
+                displayTotal = monthlyAmount;
+
+                document.getElementById('instGrandTotal').textContent = formatMYR(grandTotal);
+                document.getElementById('instMonthly').textContent = formatMYR(monthlyAmount);
+                
+                if(pPayType) pPayType.textContent = type;
+                if(pCycle) pCycle.textContent = `${cycle} of ${months}`;
+                
+                const remainingBal = grandTotal - (monthlyAmount * cycle);
+                document.getElementById('remainingBalanceDisplay').value = remainingBal > 0 ? formatMYR(remainingBal) : 'Fully Paid';
+
+            } else {
+                instBox.classList.remove('visible');
+                instMeta.style.display = 'none';
+                if(pPayType) pPayType.textContent = 'One-Time';
+                if(pCycle) pCycle.textContent = '-';
+            }
+
+            if(pTotal) pTotal.textContent = formatMYR(displayTotal);
+        };
+
+        window.saveInvoice = async (id) => {
+            const type = window.currentPaymentType || 'One-Time';
+            let months = 1;
+            if(type === '12-Month') months = 12;
+            if(type === '24-Month') months = 24;
+
+            const amount = parseFloat(document.getElementById('editAmount').value || 0);
+            const discount = parseFloat(document.getElementById('editDiscount').value || 0);
+            const grandTotal = amount - discount;
+            const monthlyAmount = grandTotal / months;
+            const cycle = parseInt(document.getElementById('editCycle').value || 1);
+
+            const invoiceTotal = (type === 'One-Time') ? grandTotal : monthlyAmount;
+
+            const data = {
+                number: id,
+                clientName: document.getElementById('editClient').value,
+                domain: document.getElementById('editDomain').value, // Save domain
+                date: document.getElementById('editDate').value,
+                status: document.getElementById('editStatus').value,
+                description: document.getElementById('editDesc').value,
+                subtotal: amount,
+                discount: discount,
+                total: invoiceTotal, 
+                grandTotal: grandTotal, 
+                paymentType: type,
+                installmentMonths: months,
+                installmentCycle: cycle,
+                type: 'Invoice',
+                updatedAt: new Date()
+            };
+
+            showLoading("Saving...");
+            await window.dbOperations.setOrder(id, data);
+            hideLoading();
+            showPopup("Success", "Order saved successfully.");
+        };
+
+        // --- QUOTATION EDITOR (Kept Simple) ---
+        async function renderQuotationEditor(id) {
+            let data = await window.dbOperations.getQuotation(id);
+            if (!data) {
+                data = {
+                    number: id,
+                    clientName: '',
+                    date: new Date().toISOString().split('T')[0],
+                    subtotal: 0,
+                    discount: 0,
+                    total: 0,
+                    status: 'Pending',
+                    description: '',
+                    type: 'Quotation'
+                };
+            }
+
+            const clients = await window.dbOperations.getClients();
+            const clientOptions = clients.map(c => `<option value="${c.name}" ${data.clientName === c.name ? 'selected' : ''}>${c.name}</option>`).join('');
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="doc-editor-container">
+                    <div class="doc-editor-header">
+                        <div>
+                            <button class="btn btn-outline" onclick="navigateTo('/cashbill')"><i class="ri-arrow-left-line"></i> Back</button>
+                        </div>
+                        <div style="display:flex; gap:12px;">
+                             <button class="btn btn-success" onclick="saveQuotation('${id}')"><i class="ri-save-line"></i> Save Quotation</button>
+                             <button class="btn btn-primary" onclick="printDocument('${id}', 'Quotation')"><i class="ri-printer-line"></i> Print</button>
+                        </div>
+                    </div>
+                    
+                    <div class="doc-editor-grid">
+                        <div class="doc-preview-card">
+                            <div class="doc-preview-header">
+                                <div>
+                                    <div class="doc-preview-logo">DDNEX®</div>
+                                    <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div class="doc-type-badge quotation">Quotation</div>
+                                    <h2 style="font-size:24px; font-weight:800; margin-top:8px;" id="previewNumber">${data.number}</h2>
+                                </div>
+                            </div>
+                            
+                            <div class="doc-preview-meta">
+                                <div class="doc-preview-meta-item">
+                                    <label>Bill To</label>
+                                    <p id="previewClient">${data.clientName || 'Select Client'}</p>
+                                </div>
+                                <div class="doc-preview-meta-item" style="text-align:right;">
+                                    <label>Date</label>
+                                    <p id="previewDate">${formatDate(data.date)}</p>
+                                </div>
+                            </div>
+
+                            <table class="doc-preview-table">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th style="text-align:right;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td id="previewDesc">${data.description || '-'}</td>
+                                        <td style="text-align:right;" id="previewSubtotal">${formatMYR(data.subtotal)}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:none; text-align:right; padding-top:16px;">Discount</td>
+                                        <td style="border:none; text-align:right; padding-top:16px;" id="previewDiscount">-${formatMYR(data.discount)}</td>
+                                    </tr>
+                                    <tr class="total-row">
+                                        <td style="text-align:right; border:none;">Total</td>
+                                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(data.total)}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card" style="align-self: start; position: sticky; top: 96px;">
+                            <div class="card-header"><h3>Quotation Details</h3></div>
+                            <div class="card-body doc-editor-form">
+                                <div class="form-group-modal">
+                                    <label>Client</label>
+                                    <select id="editClient" onchange="updateQuotationPreview()">
+                                        <option value="">Select Client</option>
+                                        ${clientOptions}
+                                    </select>
+                                </div>
+                                <div class="form-group-modal">
+                                    <label>Date</label>
+                                    <input type="date" id="editDate" value="${data.date}" onchange="updateQuotationPreview()">
+                                </div>
+                                <div class="form-group-modal">
+                                    <label>Status</label>
+                                    <select id="editStatus">
+                                        <option value="Pending" ${data.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                        <option value="Accepted" ${data.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                        <option value="Rejected" ${data.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                    </select>
+                                </div>
+                                <hr style="margin: 16px 0; border-color: var(--border-light);">
+                                
+                                <div class="form-group-modal">
+                                    <label>Package / Service</label>
+                                    <select id="editPackage" onchange="handleQuotationPackageChange()">
+                                        <option value="">-- Select Package --</option>
+                                        ${Object.keys(PACKAGE_PRICES).map(p => `<option value="${p}" ${data.description === p ? 'selected' : ''}>${p} (RM${PACKAGE_PRICES[p]})</option>`).join('')}
+                                        <option value="custom">Custom</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group-modal">
+                                    <label>Description</label>
+                                    <textarea id="editDesc" rows="3" oninput="updateQuotationPreview()">${data.description}</textarea>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group-modal">
+                                        <label>Amount (RM)</label>
+                                        <input type="number" id="editAmount" value="${data.subtotal}" oninput="updateQuotationPreview()">
+                                    </div>
+                                    <div class="form-group-modal">
+                                        <label>Discount (RM)</label>
+                                        <input type="number" id="editDiscount" value="${data.discount}" oninput="updateQuotationPreview()">
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 16px;">
+                                    <button class="btn btn-outline" style="width:100%" onclick="convertToInvoice('${id}')">
+                                        <i class="ri-exchange-line"></i> Convert to Invoice
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.handleQuotationPackageChange = () => {
+            const select = document.getElementById('editPackage');
+            const amountInput = document.getElementById('editAmount');
+            const descInput = document.getElementById('editDesc');
+            const selected = select.value;
+
+            if(selected && selected !== 'custom') {
+                amountInput.value = PACKAGE_PRICES[selected];
+                descInput.value = selected;
+            } else if (selected === 'custom') {
+                amountInput.value = '';
+                descInput.value = '';
+            }
+            window.updateQuotationPreview();
+        };
+
+        window.updateQuotationPreview = () => {
+            const client = document.getElementById('editClient')?.value;
+            const dateVal = document.getElementById('editDate')?.value;
+            const desc = document.getElementById('editDesc')?.value;
+            const amount = parseFloat(document.getElementById('editAmount')?.value || 0);
+            const discount = parseFloat(document.getElementById('editDiscount')?.value || 0);
+            const total = amount - discount;
+
+            if(document.getElementById('previewClient')) document.getElementById('previewClient').textContent = client || 'Select Client';
+            if(document.getElementById('previewDate')) document.getElementById('previewDate').textContent = formatDate(dateVal);
+            if(document.getElementById('previewDesc')) document.getElementById('previewDesc').textContent = desc || '-';
+            if(document.getElementById('previewSubtotal')) document.getElementById('previewSubtotal').textContent = formatMYR(amount);
+            if(document.getElementById('previewDiscount')) document.getElementById('previewDiscount').textContent = `-${formatMYR(discount)}`;
+            if(document.getElementById('previewTotal')) document.getElementById('previewTotal').textContent = formatMYR(total);
+        };
+
+        window.saveQuotation = async (id) => {
+            const data = {
+                number: id,
+                clientName: document.getElementById('editClient').value,
+                date: document.getElementById('editDate').value,
+                status: document.getElementById('editStatus').value,
+                description: document.getElementById('editDesc').value,
+                subtotal: parseFloat(document.getElementById('editAmount').value || 0),
+                discount: parseFloat(document.getElementById('editDiscount').value || 0),
+                total: parseFloat(document.getElementById('editAmount').value || 0) - parseFloat(document.getElementById('editDiscount').value || 0),
+                type: 'Quotation'
+            };
+
+            showLoading("Saving...");
+            await window.dbOperations.setQuotation(id, data);
+            hideLoading();
+            showPopup("Success", "Quotation saved successfully.");
+        };
+
+        window.convertToInvoice = async (qId) => {
+            showLoading("Converting...");
+            const newInvId = await window.generateSmartId('invoice');
+            const qData = await window.dbOperations.getQuotation(qId);
+            
+            if(qData) {
+                const invData = {
+                    ...qData,
+                    number: newInvId,
+                    type: 'Invoice',
+                    source: 'Portal',
+                    status: 'Unpaid',
+                    paymentType: 'One-Time'
+                };
+                await window.dbOperations.setOrder(newInvId, invData);
+                hideLoading();
+                showPopup("Success", "Converted to Invoice. Redirecting...");
+                setTimeout(() => {
+                    navigateTo(`/invoice/${newInvId}`);
+                }, 1000);
+            } else {
+                hideLoading();
+                showPopup("Error", "Quotation not found.", false);
+            }
+        };
+        
+        window.deleteDocGeneric = async (id, type) => {
+            if(confirm("Delete this document?")) {
+                if(type === 'Quotation') await window.dbOperations.deleteQuotation(id);
+                else await window.dbOperations.deleteOrder(id);
+                navigateTo('/cashbill');
+            }
+        };
+
+        // Print Logic with Bank Details
+        window.printDocument = async (id, type) => {
+            let doc;
+            if (type === 'Quotation') {
+                doc = await window.dbOperations.getQuotation(id);
+            } else {
+                doc = await window.dbOperations.getOrder(id);
+            }
+
+            if(!doc) {
+                // Try to grab from UI if not saved yet
+                const client = document.getElementById('editClient')?.value || 'N/A';
+                doc = {
+                    type: type,
+                    number: id,
+                    clientName: client,
+                    domain: document.getElementById('editDomain')?.value || '',
+                    date: document.getElementById('editDate')?.value || new Date().toISOString().split('T')[0],
+                    description: document.getElementById('editDesc')?.value || '',
+                    subtotal: parseFloat(document.getElementById('editAmount')?.value || 0),
+                    discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
+                    total: parseFloat(document.getElementById('editAmount')?.value || 0) - parseFloat(document.getElementById('editDiscount')?.value || 0),
+                    paymentType: window.currentPaymentType || 'One-Time',
+                    installmentCycle: document.getElementById('editCycle')?.value || '-'
+                };
+            }
+            
+            // If installment, show specific details
+            let installmentRow = '';
+            if(doc.paymentType && doc.paymentType !== 'One-Time') {
+                installmentRow = `
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td colspan="2" style="padding: 8px 0; font-size: 12px; color: #64748b;">
+                            Payment Type: <strong>${doc.paymentType}</strong> (Cycle ${doc.installmentCycle || '-'})
+                        </td>
+                    </tr>
+                `;
+            }
+
+            const printContent = `
+                <div style="font-family: 'Inter', sans-serif; padding: 40px; max-width: 800px; margin: 0 auto;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
+                        <div>
+                            <h1 style="font-size: 32px; font-weight: 800; color: #0f172a;">DDNEX®</h1>
+                            <p style="color: #64748b;">Digital Solutions Provider</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <h2 style="font-size: 24px; color: #2563eb;">${doc.type || 'Invoice'}</h2>
+                            <p style="font-weight: 600;">${doc.number}</p>
+                            <p style="color: #64748b;">Date: ${formatDate(doc.date || doc.createdAt)}</p>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 32px;">
+                        <h3 style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Bill To:</h3>
+                        <p style="font-size: 18px; font-weight: 700;">${doc.clientName || doc.customerName}</p>
+                        ${doc.domain ? `<p style="font-size: 14px; color: #64748b;">Domain: ${doc.domain}</p>` : ''}
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #e2e8f0;">
+                                <th style="text-align: left; padding: 12px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Description</th>
+                                <th style="text-align: right; padding: 12px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #e2e8f0;">
+                                <td style="padding: 16px 0;">
+                                    <p style="font-weight: 600;">${doc.description || doc.planName || 'Professional Services'}</p>
+                                </td>
+                                <td style="padding: 16px 0; text-align: right;">${formatMYR(doc.subtotal || doc.price)}</td>
+                            </tr>
+                            ${installmentRow}
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <div style="width: 250px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #64748b;">Subtotal</span>
+                                <span>${formatMYR(doc.subtotal || doc.price)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="color: #64748b;">Discount</span>
+                                <span>-${formatMYR(doc.discount || 0)}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px; border-top: 2px solid #0f172a; padding-top: 12px; margin-top: 12px;">
+                                <span>Total</span>
+                                <span>${formatMYR(doc.total || doc.price)}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 60px; text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                        <p style="font-weight: 700; color: #0f172a; margin-bottom: 8px;">Bank Details</p>
+                        <p>DD CLOUD NETWORK</p>
+                        <p>OCBC BANK</p>
+                        <p style="font-weight: 700; margin-bottom: 12px;">7501183830</p>
+                        
+                        <p>Thank you for your business.</p>
+                        <p>DDNEX® | www.ddnex.com</p>
+                    </div>
+                </div>
+            `;
+
+            const printArea = document.getElementById('printArea');
+            printArea.innerHTML = printContent;
+            printArea.style.display = 'block';
+            window.print();
+            printArea.style.display = 'none';
+        };
+
+        // --- Project Actions ---
+        window.openProjectModal = () => {
+            openModal('Add Project', `
+                <div class="form-group-modal"><label>Project Name</label><input type="text" id="pName"></div>
+                <div class="form-group-modal"><label>Client Name</label><input type="text" id="pClient"></div>
+                <div class="form-row">
+                     <div class="form-group-modal"><label>Status</label><select id="pStatus"><option value="active">Active</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div>
+                     <div class="form-group-modal"><label>Deadline</label><input type="date" id="pDate"></div>
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('pName').value,
+                    client: document.getElementById('pClient').value,
+                    status: document.getElementById('pStatus').value,
+                    deadline: document.getElementById('pDate').value,
+                    value: 0
+                };
+                showLoading("Saving...");
+                await window.dbOperations.addProject(data);
+                closeModal();
+                renderProjectsSection();
+                hideLoading();
+            });
+        };
+
+        window.deleteProject = async (id) => {
+             if(confirm("Delete project?")) {
+                 await window.dbOperations.deleteProject(id);
+                 renderProjectsSection();
+             }
+        };
+        
+        async function renderProjectsSection() {
+            const projects = await window.dbOperations.getProjects();
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search projects..." id="projectSearchInput">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <button class="btn btn-primary" onclick="openProjectModal()">
+                        <i class="ri-add-line"></i> Add Project
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Client</th>
+                                    <th>Status</th>
+                                    <th>Deadline</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectTableBody">
+                                ${projects.map(p => `
+                                    <tr id="project-row-${p.id}">
+                                        <td><strong>${p.name}</strong></td>
+                                        <td>${p.client}</td>
+                                        <td><span class="status ${p.status}"><i class="ri-checkbox-blank-circle-fill"></i> ${p.status}</span></td>
+                                        <td>${formatDate(p.deadline)}</td>
+                                        <td>
+                                            <button class="action-btn" title="Edit" onclick="editProject('${p.id}')"><i class="ri-edit-line"></i></button>
+                                            <button class="action-btn danger" title="Delete" onclick="deleteProject('${p.id}')"><i class="ri-delete-bin-line"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            window.setupTableFilter('projectSearchInput', 'projectTableBody');
+        }
+
+        // --- Sales Pipeline ---
+        async function renderSalesSection() {
+            const deals = await window.dbOperations.getDeals();
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <button class="btn btn-primary" onclick="openDealModal()">
+                        <i class="ri-add-line"></i> Add Deal
+                    </button>
+                </div>
+                <div class="kanban-board">
+                    ${renderKanbanColumn(deals, 'leads', 'Leads', '#64748b')}
+                    ${renderKanbanColumn(deals, 'progress', 'In Progress', '#2563eb')}
+                    ${renderKanbanColumn(deals, 'closed', 'Closed', '#16a34a')}
+                </div>
+            `;
+            initKanban();
+        }
+
+        const renderKanbanColumn = (deals, stage, title, color) => `
+            <div class="kanban-column" data-column="${stage}">
+                <div class="kanban-header">
+                    <h4><i class="ri-record-circle-line" style="color: ${color};"></i> ${title} <span class="count">${deals.filter(d => d.stage === stage).length}</span></h4>
+                </div>
+                <div class="kanban-cards" data-column="${stage}">
+                    ${deals.filter(d => d.stage === stage).map(d => `
+                        <div class="kanban-card" draggable="true" data-id="${d.id}">
+                            <h5>${d.name}</h5>
+                            <p>${d.client}</p>
+                            <div class="meta">
+                                <span class="value">${formatMYR(d.value)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        // --- Settings / User Management ---
+        async function renderSettingsSection() {
+            let usersHtml = '';
+            // Check if current user is SuperAdmin from the state or DB
+            if (currentUser && currentUser.role === 'SuperAdmin') {
+                const users = await window.dbOperations.getUsers();
+                usersHtml = `
+                    <div class="card" style="margin-bottom:24px;">
+                        <div class="card-header">
+                            <h3>User Management (SuperAdmin)</h3>
+                            <button class="btn btn-primary" onclick="openUserModal()"><i class="ri-user-add-line"></i> Create User</button>
+                        </div>
+                        <div class="card-body no-padding">
+                            <div class="filter-bar" style="padding: 16px 24px 0;">
+                                <div class="search-box" style="flex: 1;">
+                                    <input type="text" placeholder="Search users..." id="userSearchInput">
+                                    <i class="ri-search-line"></i>
+                                </div>
+                            </div>
+                            <table class="data-table">
+                                <thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody id="userTableBody">
+                                    ${users.map(u => `
+                                        <tr>
+                                            <td>${u.name} <br><small style="color:#aaa">${u.userId}</small></td>
+                                            <td>${u.role}</td>
+                                            <td><span class="status ${u.status === 'active' ? 'active' : 'suspended'}">${u.status}</span></td>
+                                            <td>
+                                                ${u.role !== 'SuperAdmin' ? `
+                                                <button class="action-btn" onclick="editUser('${u.id}', '${encodeURIComponent(JSON.stringify(u))}')"><i class="ri-edit-line"></i></button>
+                                                <button class="action-btn danger" onclick="deleteUser('${u.id}')"><i class="ri-delete-bin-line"></i></button>
+                                                ` : '<span style="color:#ccc; font-size:12px;">Protected</span>'}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('mainContent').innerHTML = `
+                ${usersHtml}
+                <div class="settings-section">
+                    <div class="settings-section-header"><h3>Preferences</h3><p>System Configuration</p></div>
+                    <div class="settings-section-body">
+                        <div class="setting-item">
+                            <div class="setting-info"><h4>Email Notifications</h4><p>Receive system alerts</p></div>
+                            <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            if (currentUser && currentUser.role === 'SuperAdmin') {
+                window.setupTableFilter('userSearchInput', 'userTableBody');
+            }
+        }
+
+        // --- USER MODAL & ACTIONS ---
+        window.openUserModal = async () => {
+            showLoading("Generating ID...");
+            const newUserId = await window.generateUserIdSmart();
+            hideLoading();
+
+            openModal('Create New User', `
+                <div class="form-group-modal">
+                    <label>User ID (Auto-generated)</label>
+                    <input type="text" id="uId" value="${newUserId}" readonly style="background:#f8fafc;">
+                </div>
+                <div class="form-group-modal">
+                    <label>Full Name</label>
+                    <input type="text" id="uName" placeholder="John Doe">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email</label>
+                    <input type="email" id="uEmail" placeholder="john@example.com">
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Password</label>
+                        <input type="text" id="uPass" placeholder="Set initial password">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Role</label>
+                        <select id="uRole">
+                            <option value="Admin">Admin</option>
+                            <option value="Staff">Staff</option>
+                            <option value="SuperAdmin">SuperAdmin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Status</label>
+                    <select id="uStatus">
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+            `, async () => {
+                const data = {
+                    userId: document.getElementById('uId').value,
+                    name: document.getElementById('uName').value,
+                    email: document.getElementById('uEmail').value,
+                    password: document.getElementById('uPass').value,
+                    role: document.getElementById('uRole').value,
+                    status: document.getElementById('uStatus').value
+                };
+                
+                if(!data.name || !data.password) {
+                    showPopup("Error", "Name and Password are required.", false);
+                    return;
+                }
+
+                showLoading("Saving...");
+                await window.dbOperations.addUser(data);
+                closeModal();
+                renderSettingsSection(); // Refresh list
+                hideLoading();
+                showPopup("Success", "User created successfully.");
+            });
+        };
+
+        window.editUser = (id, dataStr) => {
+            const u = JSON.parse(decodeURIComponent(dataStr));
+            openModal('Edit User', `
+                <div class="form-group-modal">
+                    <label>User ID</label>
+                    <input type="text" value="${u.userId}" readonly style="background:#f8fafc;">
+                </div>
+                <div class="form-group-modal">
+                    <label>Full Name</label>
+                    <input type="text" id="uName" value="${u.name}">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email</label>
+                    <input type="email" id="uEmail" value="${u.email}">
+                </div>
+                 <div class="form-group-modal">
+                    <label>New Password</label>
+                    <input type="text" id="uPass" placeholder="Leave blank to keep current">
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Role</label>
+                        <select id="uRole">
+                            <option value="Admin" ${u.role === 'Admin' ? 'selected' : ''}>Admin</option>
+                            <option value="Staff" ${u.role === 'Staff' ? 'selected' : ''}>Staff</option>
+                            <option value="SuperAdmin" ${u.role === 'SuperAdmin' ? 'selected' : ''}>SuperAdmin</option>
+                        </select>
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Status</label>
+                        <select id="uStatus">
+                            <option value="active" ${u.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="suspended" ${u.status === 'suspended' ? 'selected' : ''}>Suspended</option>
+                        </select>
+                    </div>
+                </div>
+            `, async () => {
+                const updateData = {
+                    name: document.getElementById('uName').value,
+                    email: document.getElementById('uEmail').value,
+                    role: document.getElementById('uRole').value,
+                    status: document.getElementById('uStatus').value
+                };
+                const newPass = document.getElementById('uPass').value;
+                if(newPass) updateData.password = newPass;
+
+                showLoading("Updating...");
+                await window.dbOperations.updateUser(id, updateData);
+                closeModal();
+                renderSettingsSection();
+                hideLoading();
+            });
+        };
+
+        window.deleteUser = async (id) => {
+            if(confirm("Delete this user?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteUser(id);
+                renderSettingsSection();
+                hideLoading();
+            }
+        };
+
+        // --- Profile Section (Read from DB) ---
+        async function renderProfileSection() {
+            // Fetch latest user data from DB based on current user's UID or userId
+            let userData = currentUser; // Default to cached
+            
+            if (currentUser && currentUser.uid) {
+                // If we have UID, we can fetch fresh data, but since we are not using Auth UID for custom users always, 
+                // we rely on the cached currentUser or a query if needed. 
+                // For simplicity and performance, we use currentUser which is populated on login.
+            }
+            
+            document.getElementById('mainContent').innerHTML = `
+                <div class="card" style="max-width:600px; margin:0 auto;">
+                    <div class="card-body">
+                        <div style="text-align:center; margin-bottom:24px;">
+                            <div class="user-avatar" style="width:80px; height:80px; font-size:28px; margin:0 auto 16px;">${getInitials(userData.displayName)}</div>
+                            <h2>${userData.displayName}</h2>
+                            <p style="color:var(--text-muted)">${userData.email}</p>
+                            <span class="status active" style="margin-top:8px;">${userData.role || 'User'}</span>
+                        </div>
+                        <div class="form-group-modal">
+                            <label>Full Name</label>
+                            <input type="text" value="${userData.displayName}" disabled>
+                        </div>
+                        <div class="form-group-modal">
+                            <label>Email</label>
+                            <input type="email" value="${userData.email}" disabled>
+                        </div>
+                        <div class="form-group-modal">
+                            <label>User ID</label>
+                            <input type="text" value="${userData.userId || currentUser.uid}" disabled>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Kanban Drag & Drop ---
+        function initKanban() {
+            const cards = document.querySelectorAll('.kanban-card');
+            const columns = document.querySelectorAll('.kanban-cards');
+
+            cards.forEach(card => {
+                card.addEventListener('dragstart', (e) => {
+                    card.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', card.dataset.id);
+                });
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            });
+
+            columns.forEach(column => {
+                column.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    column.style.background = 'rgba(15, 98, 254, 0.05)';
+                });
+                column.addEventListener('dragleave', () => column.style.background = '');
+                column.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    column.style.background = '';
+                    const cardId = e.dataTransfer.getData('text/plain');
+                    const card = document.querySelector(`[data-id="${cardId}"]`);
+                    const newStage = column.dataset.column;
+                    
+                    if (card) {
+                        column.appendChild(card);
+                        await window.dbOperations.updateDeal(cardId, { stage: newStage });
+                        renderSalesSection(); 
+                    }
+                });
+            });
+        }
+
+        // Init
+        window.addEventListener('load', () => {
+            setupNavigation();
+            
+            const savedUser = localStorage.getItem('ddnex_user');
+            if (savedUser) {
+                try {
+                    const userObj = JSON.parse(savedUser);
+                    window.onUserLoggedIn(userObj);
+                } catch (e) {
+                    localStorage.removeItem('ddnex_user');
+                    window.history.pushState({ path: '/login/auth' }, '', '/login/auth');
+                }
+            } else {
+                window.history.pushState({ path: '/login/auth' }, '', '/login/auth');
+            }
+        });
+
+    </script>
+</body>
+</html>
