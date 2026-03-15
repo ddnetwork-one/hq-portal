@@ -470,6 +470,7 @@
         .status.paid { background: #dcfce7; color: #16a34a; }
         .status.website { background: #e0e7ff; color: #4f46e5; }
         .status.activated { background: #dcfce7; color: #16a34a; }
+        .status.draft { background: #f1f5f9; color: #64748b; }
         .status i { font-size: 8px; }
 
         /* Action Buttons */
@@ -486,7 +487,7 @@
         .action-btn.danger:hover { background: #fef2f2; color: var(--accent-red); }
 
         /* Filter/Search Bar */
-        .filter-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .filter-bar { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
         .search-box { position: relative; flex: 1; min-width: 200px; }
         .search-box input {
             width: 100%;
@@ -506,6 +507,110 @@
             font-size: 14px;
             min-width: 150px;
             cursor: pointer;
+        }
+
+        /* Multi-Select Filter */
+        .filter-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .filter-dropdown-btn {
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: space-between;
+        }
+        .filter-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 200px;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            margin-top: 4px;
+            padding: 8px;
+        }
+        .filter-dropdown-content.show { display: block; }
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .filter-option:hover { background: var(--bg-body); }
+        .filter-option input { cursor: pointer; }
+
+        /* Pagination */
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-light);
+            background: #fafafa;
+        }
+        .pagination-info { font-size: 13px; color: var(--text-muted); }
+        .pagination-actions { display: flex; align-items: center; gap: 8px; }
+        .pagination-btn {
+            width: 32px; height: 32px;
+            border: 1px solid var(--border-light);
+            background: white;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .pagination-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .per-page-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+        }
+
+        /* Tab Navigation for Tables */
+        .table-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 0;
+        }
+        .table-tab {
+            padding: 12px 24px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: none;
+            font-size: 14px;
+        }
+        .table-tab:hover { color: var(--text-main); }
+        .table-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         /* Kanban Board */
@@ -611,6 +716,8 @@
         .btn-danger:hover { background: #dc2626; }
         .btn-success { background: var(--accent-green); color: white; }
         .btn-success:hover { background: #059669; }
+        .btn-warning { background: var(--accent-orange); color: white; }
+        .btn-warning:hover { background: #ea580c; }
 
         /* =========================================
            DOCUMENT EDITOR PAGE (Invoice/Quotation)
@@ -636,6 +743,7 @@
         .doc-type-badge.invoice { background: #dbeafe; color: #2563eb; }
         .doc-type-badge.quotation { background: #fef3c7; color: #d97706; }
         .doc-type-badge.website { background: #e0e7ff; color: #4f46e5; }
+        .doc-type-badge.draft { background: #f1f5f9; color: #64748b; }
         
         .doc-editor-grid {
             display: grid;
@@ -679,6 +787,45 @@
         
         .doc-editor-form .form-group-modal { margin-bottom: 16px; }
         
+        /* Items List Editor */
+        .items-editor { margin-bottom: 20px; }
+        .item-row {
+            display: grid;
+            grid-template-columns: 1fr 100px 40px;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .item-row input {
+            padding: 10px 12px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+        }
+        .item-row input:focus { border-color: var(--primary); outline: none; }
+        .btn-remove-item {
+            width: 36px; height: 36px;
+            border-radius: 6px;
+            background: #fef2f2;
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .btn-remove-item:hover { background: #fee2e2; }
+        .btn-add-item {
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed var(--border-light);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .btn-add-item:hover { border-color: var(--primary); background: var(--primary-light); }
+        
         /* Payment Options UI */
         .payment-options-grid {
             display: grid;
@@ -713,7 +860,7 @@
         .installment-stat strong { color: var(--primary); }
 
         /* =========================================
-           PRICING SECTION (UPDATED)
+           PRICING SECTION
            ========================================= */
         .pricing-container {
             display: flex;
@@ -840,6 +987,8 @@
             box-shadow: var(--shadow-xl);
             border: 1px solid var(--border-light);
         }
+        /* Larger Modal for Email */
+        .modal-content.large { max-width: 800px; }
         .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
         .modal-header h3 { font-size: 18px; font-weight: 700; font-family: var(--font-heading); }
@@ -1029,6 +1178,9 @@
             .payment-options-grid { grid-template-columns: 1fr; }
             .pricing-container { flex-direction: column; align-items: center; }
             .pricing-card { max-width: 100%; }
+            .item-row { grid-template-columns: 1fr; }
+            .item-row input { margin-bottom: 4px; }
+            .btn-remove-item { justify-self: end; }
         }
         .mobile-menu-btn {
             display: none;
@@ -1128,6 +1280,10 @@
                     <i class="ri-file-list-3-line"></i>
                     <span>Orders & Invoices</span>
                 </div>
+                <div class="nav-item" data-route="/quotations">
+                    <i class="ri-file-paper-2-line"></i>
+                    <span>Quotations</span>
+                </div>
                 
                 <div class="nav-section-title" style="margin-top: 24px;">Reference</div>
                 <div class="nav-item" data-route="/services">
@@ -1201,7 +1357,7 @@
 
     <!-- Modal -->
     <div class="modal-overlay" id="modal" onclick="if(event.target === this) closeModal()">
-        <div class="modal-content">
+        <div class="modal-content" id="modalContent">
             <div class="modal-header">
                 <h3 id="modalTitle">Modal Title</h3>
                 <button class="modal-close" onclick="closeModal()"><i class="ri-close-line"></i></button>
@@ -1266,7 +1422,6 @@
             
             snapshot.forEach(d => {
                 const data = d.data();
-                // Check if userId exists and is a number string
                 if (data.userId) {
                     const numPart = parseInt(data.userId, 10);
                     if (!isNaN(numPart) && numPart > maxNum) {
@@ -1276,7 +1431,6 @@
             });
 
             const nextNum = maxNum + 1;
-            // Pad with zeros to make it 3 digits (001, 002, ...)
             return String(nextNum).padStart(3, '0');
         };
 
@@ -1312,12 +1466,9 @@
         };
 
         window.handleHardcodedLogin = async (userId, password) => {
-            // Check super admin first (001)
-            // We check if any user has userId 001 and role SuperAdmin
             const qSuper = query(getCol('users'), where('userId', '==', '001'), where('role', '==', 'SuperAdmin'));
             const superSnap = await getDocs(qSuper);
             
-            // If no super admin exists yet, allow hardcoded creation
             if (superSnap.empty && userId === '001' && password === '1234') {
                  await setDoc(doc(db, 'users_ddnex', 'superadmin_001'), {
                     userId: '001',
@@ -1325,7 +1476,7 @@
                     email: 'admin@ddnex.com',
                     role: 'SuperAdmin',
                     status: 'active',
-                    password: '1234', // Storing password for hardcoded check
+                    password: '1234', 
                     createdAt: new Date()
                 });
                 
@@ -1339,7 +1490,6 @@
                 return;
             }
 
-            // Normal login check against DB
             try {
                 const q = query(getCol('users'), where('userId', '==', userId));
                 const querySnapshot = await getDocs(q);
@@ -1413,7 +1563,6 @@
             updateDeal: async (id, data) => await updateDoc(doc(db, 'deals_ddnex', id), data),
             deleteDeal: async (id) => await deleteDoc(doc(db, 'deals_ddnex', id)),
             
-            // ORDERS / INVOICES (Combined Collection)
             getOrders: async () => {
                 const q = query(getCol('orders'));
                 const snap = await getDocs(q);
@@ -1427,7 +1576,6 @@
             setOrder: async (id, data) => await setDoc(doc(db, 'orders_ddnex', id), data, { merge: true }),
             deleteOrder: async (id) => await deleteDoc(doc(db, 'orders_ddnex', id)),
 
-            // QUOTATIONS
             getQuotations: async () => {
                 const q = query(getCol('quotation'));
                 const snap = await getDocs(q);
@@ -1449,6 +1597,10 @@
         // State
         let currentUser = null;
         let currentRoute = '/login/auth';
+        
+        // Pagination State
+        let invoicePageState = { page: 1, perPage: 20, filteredData: [] };
+        let quotationPageState = { page: 1, perPage: 20, filteredData: [] };
         
         // Constants
         const PACKAGE_PRICES = {
@@ -1482,6 +1634,9 @@
             if (path.startsWith('/invoice') || path.startsWith('/order')) {
                 activePath = '/cashbill';
             }
+            if (path.startsWith('/quotation')) {
+                activePath = '/quotations';
+            }
             
             const activeLink = document.querySelector(`.nav-item[data-route="${activePath}"]`);
             if(activeLink) activeLink.classList.add('active');
@@ -1492,6 +1647,7 @@
                 '/clients': 'Clients',
                 '/sales': 'Sales Pipeline',
                 '/cashbill': 'Orders & Invoices',
+                '/quotations': 'Quotations',
                 '/settings': 'Settings',
                 '/profile': 'My Profile',
                 '/services': 'Services & Pricing'
@@ -1522,6 +1678,7 @@
                         case '/clients': renderClientsSection(); break;
                         case '/sales': renderSalesSection(); break;
                         case '/cashbill': renderCashbillSection(); break;
+                        case '/quotations': renderQuotationsSection(); break;
                         case '/settings': renderSettingsSection(); break;
                         case '/profile': renderProfileSection(); break;
                         case '/services': renderServicesSection(); break;
@@ -1595,24 +1752,19 @@
         // Utility Functions
         const formatMYR = (value) => `RM ${parseFloat(value || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         
-        // UPDATED: Date formatting to DD/MM/YYYY
         const formatDate = (date) => {
             if (!date) return '-';
             try {
                 let d;
-                // Handle Firestore Timestamp
                 if (date.seconds) {
                     d = new Date(date.seconds * 1000);
-                } 
-                // Handle String (YYYY-MM-DD or ISO)
-                else if (typeof date === 'string') {
+                } else if (typeof date === 'string') {
                     d = new Date(date);
                 } else {
                     d = new Date(date);
                 }
                 
-                if (isNaN(d.getTime())) return date; // Return original if invalid
-
+                if (isNaN(d.getTime())) return date;
                 const day = String(d.getDate()).padStart(2, '0');
                 const month = String(d.getMonth() + 1).padStart(2, '0');
                 const year = d.getFullYear();
@@ -1680,10 +1832,14 @@
         }
 
         // MODAL SYSTEM
-        const openModal = (title, content, onSave) => {
+        const openModal = (title, content, onSave, isLarge = false) => {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalBody').innerHTML = content;
             document.getElementById('modal').classList.add('active');
+            
+            const modalContentEl = document.getElementById('modalContent');
+            if(isLarge) modalContentEl.classList.add('large');
+            else modalContentEl.classList.remove('large');
             
             const saveBtn = document.getElementById('modalSaveBtn');
             saveBtn.onclick = onSave;
@@ -1692,28 +1848,437 @@
             document.getElementById('modal').classList.remove('active');
         };
 
-        // ================== TABLE FILTER HELPER ==================
-        window.setupTableFilter = (inputId, tableBodyId, keys) => {
-            const input = document.getElementById(inputId);
-            const tableBody = document.getElementById(tableBodyId);
-            if (!input || !tableBody) return;
+        // ================== TABLE HELPERS ==================
+        
+        // Multi-Filter Dropdown Toggle
+        window.toggleFilterDropdown = (id) => {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('show');
+        };
 
-            input.addEventListener('keyup', () => {
-                const filter = input.value.toLowerCase();
-                const rows = tableBody.getElementsByTagName('tr');
-                
-                for (let i = 0; i < rows.length; i++) {
-                    let found = false;
-                    const cells = rows[i].getElementsByTagName('td');
-                    for (let j = 0; j < cells.length; j++) {
-                        if (cells[j].textContent.toLowerCase().includes(filter)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    rows[i].style.display = found ? "" : "none";
-                }
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('.filter-dropdown')) {
+                document.querySelectorAll('.filter-dropdown-content').forEach(d => d.classList.remove('show'));
+            }
+        });
+
+        // Sort by Date (Newest First as Default)
+        const sortByDateNewest = (data) => {
+            return data.sort((a, b) => {
+                const dateA = a.date ? new Date(a.date) : (a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0));
+                const dateB = b.date ? new Date(b.date) : (b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0));
+                return dateB - dateA;
             });
+        };
+
+        // Render Pagination
+        const renderPagination = (state, tableBodyId, renderFunc) => {
+            const { page, perPage, filteredData } = state;
+            const totalPages = Math.ceil(filteredData.length / perPage);
+            const startIdx = (page - 1) * perPage;
+            const endIdx = startIdx + perPage;
+            const pageData = filteredData.slice(startIdx, endIdx);
+
+            // Render Rows
+            const tbody = document.getElementById(tableBodyId);
+            tbody.innerHTML = pageData.map(item => renderFunc(item)).join('');
+
+            // Render Pagination Controls
+            const controlsId = tableBodyId.replace('TableBody', 'Pagination');
+            const controlsEl = document.getElementById(controlsId);
+            if(!controlsEl) return;
+
+            const startItem = filteredData.length === 0 ? 0 : startIdx + 1;
+            const endItem = Math.min(endIdx, filteredData.length);
+
+            let pagesHtml = '';
+            for(let i = 1; i <= totalPages; i++) {
+                if(i === 1 || i === totalPages || (i >= page - 1 && i <= page + 1)) {
+                    pagesHtml += `<button class="pagination-btn ${i === page ? 'active' : ''}" onclick="changePage('${tableBodyId}', ${i})">${i}</button>`;
+                } else if(i === page - 2 || i === page + 2) {
+                    pagesHtml += `<span style="padding: 0 8px;">...</span>`;
+                }
+            }
+
+            controlsEl.innerHTML = `
+                <div class="pagination-info">Showing ${startItem}-${endItem} of ${filteredData.length} entries</div>
+                <div class="pagination-actions">
+                    <select class="per-page-select" onchange="changePerPage('${tableBodyId}', this.value)">
+                        <option value="20" ${perPage === 20 ? 'selected' : ''}>20 / page</option>
+                        <option value="50" ${perPage === 50 ? 'selected' : ''}>50 / page</option>
+                        <option value="100" ${perPage === 100 ? 'selected' : ''}>100 / page</option>
+                    </select>
+                    <button class="pagination-btn" onclick="changePage('${tableBodyId}', ${page - 1})" ${page === 1 ? 'disabled' : ''}><i class="ri-arrow-left-s-line"></i></button>
+                    ${pagesHtml}
+                    <button class="pagination-btn" onclick="changePage('${tableBodyId}', ${page + 1})" ${page === totalPages || totalPages === 0 ? 'disabled' : ''}><i class="ri-arrow-right-s-line"></i></button>
+                </div>
+            `;
+        };
+
+        window.changePage = (tableBodyId, newPage) => {
+            if(tableBodyId === 'invoiceTableBody') {
+                invoicePageState.page = newPage;
+                renderPagination(invoicePageState, 'invoiceTableBody', renderInvoiceRow);
+            } else if(tableBodyId === 'quotationTableBody') {
+                quotationPageState.page = newPage;
+                renderPagination(quotationPageState, 'quotationTableBody', renderQuotationRow);
+            }
+        };
+
+        window.changePerPage = (tableBodyId, newPerPage) => {
+            if(tableBodyId === 'invoiceTableBody') {
+                invoicePageState.perPage = parseInt(newPerPage);
+                invoicePageState.page = 1;
+                renderPagination(invoicePageState, 'invoiceTableBody', renderInvoiceRow);
+            } else if(tableBodyId === 'quotationTableBody') {
+                quotationPageState.perPage = parseInt(newPerPage);
+                quotationPageState.page = 1;
+                renderPagination(quotationPageState, 'quotationTableBody', renderQuotationRow);
+            }
+        };
+
+        // ================== DOCUMENT GENERATORS ==================
+
+        const formatDateLong = (dateInput) => {
+            if (!dateInput) return '-';
+            let d;
+            if (typeof dateInput === 'string') d = new Date(dateInput);
+            else if (dateInput.seconds) d = new Date(dateInput.seconds * 1000);
+            else d = new Date(dateInput);
+            
+            if (isNaN(d.getTime())) return '-';
+            
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            return d.toLocaleDateString('en-GB', options);
+        };
+
+        const formatDateShort = (dateInput) => {
+            if (!dateInput) return '-';
+            let d;
+            if (typeof dateInput === 'string') d = new Date(dateInput);
+            else if (dateInput.seconds) d = new Date(dateInput.seconds * 1000);
+            else d = new Date(dateInput);
+            
+            if (isNaN(d.getTime())) return '-';
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear();
+            return `${day}/${month}/${year}`;
+        };
+
+        const generateProfessionalHTML = (doc) => {
+            const isQuotation = doc.type === 'Quotation';
+            const docTitle = isQuotation ? 'Quotation' : 'Invoice Receipt';
+            const clientName = doc.clientName || doc.customerName || 'Client';
+            const docNumber = doc.number || doc.id;
+            const dateStr = formatDateLong(doc.date || doc.createdAt);
+            
+            let validUntil = '-';
+            if (isQuotation) {
+                let d = new Date(doc.date || doc.createdAt);
+                d.setDate(d.getDate() + 16);
+                validUntil = formatDateLong(d);
+            }
+
+            // Items Logic
+            let itemRows = '';
+            let subtotal = 0;
+            let itemNum = 1;
+            
+            // Check if custom items exist
+            if(doc.items && Array.isArray(doc.items)) {
+                doc.items.forEach(item => {
+                    const itemAmt = parseFloat(item.amount || 0);
+                    subtotal += itemAmt;
+                    itemRows += `
+                        <tr>
+                            <td>${itemNum}</td>
+                            <td>${item.description}</td>
+                            <td>${parseFloat(itemAmt).toLocaleString()}</td>
+                        </tr>
+                    `;
+                    itemNum++;
+                });
+            } else {
+                // Legacy single item
+                const desc = doc.description || 'Professional Service';
+                const amt = parseFloat(doc.subtotal || doc.price || 0);
+                subtotal = amt;
+                
+                itemRows += `
+                    <tr>
+                        <td>${itemNum}</td>
+                        <td>${desc}</td>
+                        <td>${parseFloat(amt).toLocaleString()}</td>
+                    </tr>
+                `;
+                itemNum++;
+            }
+
+            // Installment row for Invoice
+            if (!isQuotation && doc.paymentType && doc.paymentType !== 'One-Time') {
+                const months = doc.installmentMonths || 12;
+                const monthlyAmt = subtotal / months;
+                itemRows += `
+                    <tr>
+                        <td>${itemNum}</td>
+                        <td>${doc.paymentType} Installment Plan</td>
+                        <td>${parseFloat(monthlyAmt).toLocaleString()} / month</td>
+                    </tr>
+                `;
+                itemNum++;
+            }
+
+            // Domain row
+            if (doc.domain) {
+                itemRows += `
+                    <tr>
+                        <td>${itemNum}</td>
+                        <td>Domain: ${doc.domain}</td>
+                        <td>-</td>
+                    </tr>
+                `;
+                itemNum++;
+            }
+
+            const discount = parseFloat(doc.discount || 0);
+            const total = subtotal - discount;
+            
+            const transactionRef = doc.transactionRef || doc.number || doc.id;
+
+            const statusBadge = doc.status === 'Paid' || doc.status === 'Activated' || doc.status === 'Completed' 
+                ? '<div class="badge" style="background:#34c759;">PAID</div>'
+                : '<div class="badge" style="background:#ff9500;">PENDING</div>';
+
+            let paymentDetailsSection = '';
+            if (!isQuotation) {
+                paymentDetailsSection = `
+                    <div class="payment-box">
+                        <strong>Payment Details</strong><br>
+                        Payment Method: Online Transfer<br>
+                        Transaction Reference: ${transactionRef}
+                    </div>
+                `;
+            }
+
+            let termsList = '';
+            if (isQuotation) {
+                termsList = `
+                    <li>This quotation is valid for 16 days from the date issued.</li>
+                    <li>Services delivered via DDNEX® secure portal.</li>
+                    <li>50% deposit required to commence project.</li>
+                    <li>Balance payment due upon project completion.</li>
+                    <li>Full policies and terms are available on the official DDNEX® website.</li>
+                `;
+            } else {
+                termsList = `
+                    <li>This receipt confirms that payment has been successfully received by DDNEX®.</li>
+                    <li>The service includes system setup, hosting, and maintenance under the agreed subscription plan.</li>
+                    <li>All payments made are non-refundable once service deployment has commenced.</li>
+                    <li>DDNEX® reserves the right to update service policies or operational terms when required.</li>
+                    <li>Full policies and terms are available on the official DDNEX® website.</li>
+                `;
+            }
+
+            return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${docTitle} – ${clientName}</title>
+<style>
+  body {
+    margin: 0;
+    background: #f2f2f7;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #1c1c1e;
+  }
+  .page {
+    max-width: 900px;
+    margin: auto;
+    background: #ffffff;
+    min-height: 100vh;
+    padding: 50px 60px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 50px;
+  }
+  .logo img {
+    max-width: 140px;
+  }
+  .company-info {
+    font-size: 13px;
+    color: #6e6e73;
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+  .invoice-info {
+    text-align: right;
+    font-size: 14px;
+  }
+  .badge {
+    display: inline-block;
+    background: #34c759;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .section {
+    margin-bottom: 40px;
+  }
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  .bill {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  th, td {
+    padding: 14px 10px;
+    border-bottom: 1px solid #e5e5ea;
+    text-align: left;
+  }
+  th {
+    background: #f7f7f7;
+    font-weight: 500;
+    color: #6e6e73;
+  }
+  .total-row td {
+    font-weight: 600;
+    font-size: 16px;
+  }
+  .payment-box {
+    margin-top: 25px;
+    background: #f7f7f7;
+    padding: 18px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .terms {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: #6e6e73;
+    line-height: 1.6;
+  }
+  .terms ul {
+    padding-left: 18px;
+    margin: 8px 0;
+  }
+  .footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5ea;
+    font-size: 12px;
+    color: #8e8e93;
+    text-align: center;
+  }
+  @media (max-width: 700px) {
+    .page {
+      padding: 30px 20px;
+    }
+    .header {
+      flex-direction: column;
+      gap: 20px;
+    }
+    .invoice-info {
+      text-align: left;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div>
+        <div class="logo">
+          <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX® Logo">
+        </div>
+        <div class="company-info">
+          <strong>DDNEX® by DD Cloud Network</strong><br>
+          Company Registration No.: 202603040752 (MA0342542-K)<br>
+          Sungai Petani, Kedah, Malaysia<br>
+          support@ddnex.com | www.ddnex.com
+        </div>
+      </div>
+      <div class="invoice-info">
+        ${statusBadge}
+        <strong>${docTitle}</strong><br><br>
+        ${isQuotation ? 'Quotation' : 'Invoice'} No: ${docNumber}<br>
+        Date Issued: ${dateStr}
+        ${isQuotation ? `<br>Valid Until: ${validUntil}` : ''}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Bill To</div>
+      <div class="bill">
+        <strong>${clientName}</strong><br>
+        Malaysia
+        ${doc.domain ? `<br>Domain: ${doc.domain}` : ''}
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Services</div>
+      <table>
+        <tr>
+          <th width="60">Item</th>
+          <th>Description</th>
+          <th width="160">Amount (RM)</th>
+        </tr>
+        ${itemRows}
+        ${discount > 0 ? `
+        <tr>
+          <td></td>
+          <td>Discount</td>
+          <td>-${parseFloat(discount).toLocaleString()}</td>
+        </tr>
+        ` : ''}
+        <tr class="total-row">
+          <td></td>
+          <td>${isQuotation ? 'Total' : 'Total Paid'}</td>
+          <td>RM ${parseFloat(total).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+        </tr>
+      </table>
+      ${paymentDetailsSection}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Terms & Conditions Summary</div>
+      <div class="terms">
+        <ul>
+          ${termsList}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer">
+      ${isQuotation ? 'Quotation' : 'Invoice'} generated automatically by the DDNEX® Billing System<br>
+      support@ddnex.com
+    </div>
+  </div>
+</body>
+</html>
+            `;
         };
 
         // ================== SECTION RENDERERS ==================
@@ -1722,7 +2287,7 @@
         async function renderDashboardSection() {
             const projects = await window.dbOperations.getProjects();
             const clients = await window.dbOperations.getClients();
-            const orders = await window.dbOperations.getOrders(); // Fetch all orders
+            const orders = await window.dbOperations.getOrders(); 
             
             const activeProjects = projects.filter(p => p.status === 'active').length;
             const totalRevenue = orders.filter(i => i.status === 'Paid' || i.status === 'Activated' || i.status === 'Completed').reduce((sum, i) => sum + (i.total || i.price || i.finalPrice || 0), 0);
@@ -1791,7 +2356,7 @@
             `;
         }
 
-        // --- SERVICES & PRICING (UPDATED UI) ---
+        // --- SERVICES & PRICING ---
         function renderServicesSection() {
             document.getElementById('mainContent').innerHTML = `
                 <div style="text-align:center; margin-bottom: 32px;">
@@ -1915,7 +2480,6 @@
                 </div>
             `;
 
-            // Client Search Logic
             const searchInput = document.getElementById('clientSearchInput');
             searchInput.addEventListener('keyup', (e) => {
                 const term = e.target.value.toLowerCase();
@@ -1976,37 +2540,38 @@
             </div>
         `;
 
-        // --- CASHBILL / ORDERS LIST (Combined) ---
+        // ================== INVOICES SECTION (Separate Table) ==================
         async function renderCashbillSection() {
-            const orders = await window.dbOperations.getOrders(); // Combined collection
-            const quotations = await window.dbOperations.getQuotations();
-            
-            // Combine
-            let allDocs = [...orders, ...quotations];
+            const orders = await window.dbOperations.getOrders();
+            const sortedOrders = sortByDateNewest(orders);
 
-            // Default Sort: Oldest to Latest (Ascending)
-            allDocs.sort((a, b) => {
-                const dateA = a.date ? new Date(a.date) : (a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0));
-                const dateB = b.date ? new Date(b.date) : (b.createdAt ? new Date(b.createdAt.seconds * 1000) : new Date(0));
-                return dateA - dateB;
-            });
+            invoicePageState.filteredData = sortedOrders;
+            invoicePageState.page = 1;
 
             document.getElementById('mainContent').innerHTML = `
                 <div class="filter-bar">
                     <div class="search-box" style="flex: 1;">
-                        <input type="text" placeholder="Search by ID, Client, or Status..." id="cashbillSearchInput">
+                        <input type="text" placeholder="Search by ID, Client..." id="invoiceSearchInput" oninput="filterInvoices()">
                         <i class="ri-search-line"></i>
                     </div>
-                    <!-- Sort Dropdown -->
-                    <select class="filter-select" id="sortSelect" onchange="applyTableSort()">
-                        <option value="oldest">Oldest to Latest</option>
-                        <option value="latest">Latest to Oldest</option>
-                    </select>
+                    
+                    <div class="filter-dropdown">
+                        <button class="filter-dropdown-btn" onclick="toggleFilterDropdown('invoiceStatusDropdown')">
+                            <span id="invoiceStatusLabel">All Status</span>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </button>
+                        <div class="filter-dropdown-content" id="invoiceStatusDropdown">
+                            <label class="filter-option"><input type="checkbox" value="Draft" onchange="filterInvoices()"> Draft</label>
+                            <label class="filter-option"><input type="checkbox" value="Unpaid" onchange="filterInvoices()"> Unpaid</label>
+                            <label class="filter-option"><input type="checkbox" value="Paid" onchange="filterInvoices()"> Paid</label>
+                            <label class="filter-option"><input type="checkbox" value="Activated" onchange="filterInvoices()"> Activated</label>
+                            <label class="filter-option"><input type="checkbox" value="Completed" onchange="filterInvoices()"> Completed</label>
+                            <label class="filter-option"><input type="checkbox" value="Overdue" onchange="filterInvoices()"> Overdue</label>
+                        </div>
+                    </div>
+
                     <button class="btn btn-primary" onclick="createNewInvoice()">
                         <i class="ri-file-add-line"></i> Create Invoice
-                    </button>
-                    <button class="btn btn-outline" onclick="createNewQuotation()">
-                        <i class="ri-file-paper-2-line"></i> Create Quotation
                     </button>
                 </div>
                 <div class="card">
@@ -2014,7 +2579,6 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Type</th>
                                     <th>Number</th>
                                     <th>Client</th>
                                     <th>Date</th>
@@ -2023,89 +2587,185 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="cashbillTableBody">
-                                ${allDocs.map(doc => renderDocRow(doc)).join('')}
+                            <tbody id="invoiceTableBody">
                             </tbody>
                         </table>
                     </div>
+                    <div class="pagination-controls" id="invoicePagination"></div>
                 </div>
             `;
 
-            window.setupTableFilter('cashbillSearchInput', 'cashbillTableBody');
+            renderPagination(invoicePageState, 'invoiceTableBody', renderInvoiceRow);
         }
 
-        // Helper to render a single document row
-        function renderDocRow(doc) {
-            // Determine Type Logic
-            let typeLabel = doc.type || 'Invoice';
-            let typeClass = 'active'; // Invoice default
-            if (doc.source === 'Website') {
-                typeLabel = 'Website Order';
-                typeClass = 'website';
-            } else if (doc.type === 'Quotation') {
-                typeLabel = 'Quotation';
-                typeClass = 'pending';
-            }
-
+        const renderInvoiceRow = (doc) => {
             const dateStr = formatDate(doc.date || doc.createdAt);
-            // Use customerName primarily for website orders, fallback to clientName
             const clientName = doc.customerName || doc.clientName || 'N/A';
             const amount = doc.total || doc.price || doc.finalPrice || 0;
-
-            // Handle status class
             let statusClass = doc.status ? doc.status.toLowerCase() : 'pending';
-            if(statusClass === 'activated') statusClass = 'activated'; // specific styling if needed
+            if(statusClass === 'activated') statusClass = 'activated';
+            if(statusClass === 'draft') statusClass = 'draft';
 
             return `
-            <tr style="cursor: pointer;" onclick="navigateTo('${doc.type === 'Quotation' ? '/quotation/' : '/invoice/'}${doc.id}')">
-                <td><span class="status ${typeClass}">${typeLabel}</span></td>
+            <tr style="cursor: pointer;" onclick="navigateTo('/invoice/${doc.id}')">
                 <td><strong>${doc.number || doc.id}</strong></td>
                 <td>${clientName}</td>
                 <td>${dateStr}</td>
                 <td>${formatMYR(amount)}</td>
-                <td><span class="status ${statusClass}">${doc.status || 'Pending'}</span></td>
+                <td><span class="status ${statusClass}">${doc.status || 'Draft'}</span></td>
                 <td onclick="event.stopPropagation()">
-                    <button class="action-btn" title="Print" onclick="printDocument('${doc.id}', '${doc.type}')"><i class="ri-printer-line"></i></button>
-                    <button class="action-btn danger" title="Delete" onclick="deleteDocGeneric('${doc.id}', '${doc.type}')"><i class="ri-delete-bin-line"></i></button>
+                    <button class="action-btn" title="Print" onclick="printDocument('${doc.id}', 'Invoice')"><i class="ri-printer-line"></i></button>
+                    <button class="action-btn" title="Email" onclick="openEmailTemplateModal('${doc.id}', 'Invoice')"><i class="ri-mail-line"></i></button>
+                    <button class="action-btn danger" title="Delete" onclick="deleteDocGeneric('${doc.id}', 'Invoice')"><i class="ri-delete-bin-line"></i></button>
                 </td>
             </tr>
             `;
-        }
-
-        // Sort Function
-        window.applyTableSort = () => {
-            const sortValue = document.getElementById('sortSelect').value;
-            const tbody = document.getElementById('cashbillTableBody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-
-            rows.sort((a, b) => {
-                // Date is in 4th column (index 3)
-                // Format is DD/MM/YYYY. We need to parse it back to Date object for comparison
-                const getDateFromRow = (row) => {
-                    const dateText = row.cells[3].textContent;
-                    const parts = dateText.split('/');
-                    if(parts.length === 3) {
-                        // DD/MM/YYYY -> YYYY-MM-DD (ISO)
-                        return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`);
-                    }
-                    return new Date(0); // Fallback
-                };
-
-                const dateA = getDateFromRow(a);
-                const dateB = getDateFromRow(b);
-
-                if (sortValue === 'latest') {
-                    return dateB - dateA; // Descending
-                } else {
-                    return dateA - dateB; // Ascending
-                }
-            });
-
-            // Re-append sorted rows
-            rows.forEach(row => tbody.appendChild(row));
         };
 
-        // --- DOCUMENT EDITORS ---
+        window.filterInvoices = async () => {
+            const orders = await window.dbOperations.getOrders();
+            const sortedOrders = sortByDateNewest(orders);
+            
+            const searchTerm = document.getElementById('invoiceSearchInput').value.toLowerCase();
+            const statusCheckboxes = document.querySelectorAll('#invoiceStatusDropdown input:checked');
+            const selectedStatuses = Array.from(statusCheckboxes).map(cb => cb.value);
+
+            let filtered = sortedOrders.filter(doc => {
+                const matchesSearch = (doc.number || doc.id).toLowerCase().includes(searchTerm) ||
+                                      (doc.clientName || doc.customerName || '').toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(doc.status || 'Draft');
+                
+                return matchesSearch && matchesStatus;
+            });
+
+            invoicePageState.filteredData = filtered;
+            invoicePageState.page = 1;
+            renderPagination(invoicePageState, 'invoiceTableBody', renderInvoiceRow);
+
+            // Update label
+            const label = document.getElementById('invoiceStatusLabel');
+            if(selectedStatuses.length === 0) {
+                label.textContent = 'All Status';
+            } else if(selectedStatuses.length === 1) {
+                label.textContent = selectedStatuses[0];
+            } else {
+                label.textContent = `${selectedStatuses.length} Selected`;
+            }
+        };
+
+        // ================== QUOTATIONS SECTION (Separate Table) ==================
+        async function renderQuotationsSection() {
+            const quotations = await window.dbOperations.getQuotations();
+            const sortedQuotations = sortByDateNewest(quotations);
+
+            quotationPageState.filteredData = sortedQuotations;
+            quotationPageState.page = 1;
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search by ID, Client..." id="quotationSearchInput" oninput="filterQuotations()">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    
+                    <div class="filter-dropdown">
+                        <button class="filter-dropdown-btn" onclick="toggleFilterDropdown('quotationStatusDropdown')">
+                            <span id="quotationStatusLabel">All Status</span>
+                            <i class="ri-arrow-down-s-line"></i>
+                        </button>
+                        <div class="filter-dropdown-content" id="quotationStatusDropdown">
+                            <label class="filter-option"><input type="checkbox" value="Draft" onchange="filterQuotations()"> Draft</label>
+                            <label class="filter-option"><input type="checkbox" value="Pending" onchange="filterQuotations()"> Pending</label>
+                            <label class="filter-option"><input type="checkbox" value="Accepted" onchange="filterQuotations()"> Accepted</label>
+                            <label class="filter-option"><input type="checkbox" value="Rejected" onchange="filterQuotations()"> Rejected</label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="createNewQuotation()">
+                        <i class="ri-file-paper-2-line"></i> Create Quotation
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Number</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="quotationTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination-controls" id="quotationPagination"></div>
+                </div>
+            `;
+
+            renderPagination(quotationPageState, 'quotationTableBody', renderQuotationRow);
+        }
+
+        const renderQuotationRow = (doc) => {
+            const dateStr = formatDate(doc.date || doc.createdAt);
+            const clientName = doc.clientName || 'N/A';
+            const amount = doc.total || 0;
+            let statusClass = doc.status ? doc.status.toLowerCase() : 'pending';
+            if(statusClass === 'draft') statusClass = 'draft';
+
+            return `
+            <tr style="cursor: pointer;" onclick="navigateTo('/quotation/${doc.id}')">
+                <td><strong>${doc.number || doc.id}</strong></td>
+                <td>${clientName}</td>
+                <td>${dateStr}</td>
+                <td>${formatMYR(amount)}</td>
+                <td><span class="status ${statusClass}">${doc.status || 'Draft'}</span></td>
+                <td onclick="event.stopPropagation()">
+                    <button class="action-btn" title="Print" onclick="printDocument('${doc.id}', 'Quotation')"><i class="ri-printer-line"></i></button>
+                    <button class="action-btn" title="Email" onclick="openEmailTemplateModal('${doc.id}', 'Quotation')"><i class="ri-mail-line"></i></button>
+                    <button class="action-btn danger" title="Delete" onclick="deleteDocGeneric('${doc.id}', 'Quotation')"><i class="ri-delete-bin-line"></i></button>
+                </td>
+            </tr>
+            `;
+        };
+
+        window.filterQuotations = async () => {
+            const quotations = await window.dbOperations.getQuotations();
+            const sortedQuotations = sortByDateNewest(quotations);
+            
+            const searchTerm = document.getElementById('quotationSearchInput').value.toLowerCase();
+            const statusCheckboxes = document.querySelectorAll('#quotationStatusDropdown input:checked');
+            const selectedStatuses = Array.from(statusCheckboxes).map(cb => cb.value);
+
+            let filtered = sortedQuotations.filter(doc => {
+                const matchesSearch = (doc.number || doc.id).toLowerCase().includes(searchTerm) ||
+                                      (doc.clientName || '').toLowerCase().includes(searchTerm);
+                
+                const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(doc.status || 'Draft');
+                
+                return matchesSearch && matchesStatus;
+            });
+
+            quotationPageState.filteredData = filtered;
+            quotationPageState.page = 1;
+            renderPagination(quotationPageState, 'quotationTableBody', renderQuotationRow);
+
+            // Update label
+            const label = document.getElementById('quotationStatusLabel');
+            if(selectedStatuses.length === 0) {
+                label.textContent = 'All Status';
+            } else if(selectedStatuses.length === 1) {
+                label.textContent = selectedStatuses[0];
+            } else {
+                label.textContent = `${selectedStatuses.length} Selected`;
+            }
+        };
+
+        // ================== DOCUMENT EDITORS ==================
 
         async function createNewInvoice() {
             showLoading("Generating ID...");
@@ -2115,10 +2775,10 @@
                     number: newId,
                     clientName: '',
                     date: new Date().toISOString().split('T')[0],
-                    status: 'Unpaid',
+                    status: 'Draft',
                     type: 'Invoice',
                     source: 'Portal',
-                    subtotal: 0,
+                    items: [{description: '', amount: 0}],
                     discount: 0,
                     total: 0,
                     paymentType: 'One-Time',
@@ -2140,9 +2800,9 @@
                     number: newId,
                     clientName: '',
                     date: new Date().toISOString().split('T')[0],
-                    status: 'Pending',
+                    status: 'Draft',
                     type: 'Quotation',
-                    subtotal: 0,
+                    items: [{description: '', amount: 0}],
                     discount: 0,
                     total: 0
                 });
@@ -2154,21 +2814,19 @@
             }
         }
 
-        // INVOICE EDITOR (Handles both Manual Invoice and Website Order)
+        // INVOICE EDITOR
         async function renderInvoiceEditor(id) {
             let data = await window.dbOperations.getOrder(id);
             
             if (!data) {
-                // Should not happen if navigated from list, but fallback
                 data = {
                     number: id,
                     clientName: '',
                     date: new Date().toISOString().split('T')[0],
-                    subtotal: 0,
+                    items: [{description: '', amount: 0}],
                     discount: 0,
                     total: 0,
-                    status: 'Unpaid',
-                    description: '',
+                    status: 'Draft',
                     type: 'Invoice',
                     paymentType: 'One-Time',
                     installmentCycle: 1,
@@ -2176,11 +2834,19 @@
                 };
             }
 
+            // Ensure items array exists
+            if(!data.items || !Array.isArray(data.items)) {
+                data.items = [{description: data.description || '', amount: data.subtotal || data.price || 0}];
+            }
+
             const clients = await window.dbOperations.getClients();
             const clientOptions = clients.map(c => `<option value="${c.name}" ${data.clientName === c.name ? 'selected' : ''}>${c.name}</option>`).join('');
-            
-            // Determine if this is a website order to show different UI
             const isWebsiteOrder = data.source === 'Website';
+
+            // Calculate subtotal from items
+            const subtotal = data.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            const discount = parseFloat(data.discount || 0);
+            const grandTotal = subtotal - discount;
 
             document.getElementById('mainContent').innerHTML = `
                 <div class="doc-editor-container">
@@ -2189,8 +2855,12 @@
                             <button class="btn btn-outline" onclick="navigateTo('/cashbill')"><i class="ri-arrow-left-line"></i> Back</button>
                         </div>
                         <div style="display:flex; gap:12px;">
+                             ${data.status === 'Draft' ? `
+                                <button class="btn btn-warning" onclick="commitInvoice('${id}')"><i class="ri-check-double-line"></i> Commit</button>
+                             ` : ''}
                              <button class="btn btn-success" onclick="saveInvoice('${id}')"><i class="ri-save-line"></i> Save</button>
                              <button class="btn btn-primary" onclick="printDocument('${id}', 'Invoice')"><i class="ri-printer-line"></i> Print</button>
+                             <button class="btn btn-outline" onclick="openEmailTemplateModal('${id}', 'Invoice')"><i class="ri-mail-line"></i> Email</button>
                         </div>
                     </div>
                     
@@ -2203,7 +2873,7 @@
                                     <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
                                 </div>
                                 <div style="text-align:right;">
-                                    <div class="doc-type-badge ${isWebsiteOrder ? 'website' : 'invoice'}">${isWebsiteOrder ? 'Website Order' : 'Invoice'}</div>
+                                    <div class="doc-type-badge ${isWebsiteOrder ? 'website' : data.status === 'Draft' ? 'draft' : 'invoice'}">${isWebsiteOrder ? 'Website Order' : data.status === 'Draft' ? 'Draft' : 'Invoice'}</div>
                                     <h2 style="font-size:24px; font-weight:800; margin-top:8px;" id="previewNumber">${data.number || data.id}</h2>
                                 </div>
                             </div>
@@ -2220,7 +2890,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Domain Display in Preview -->
                             ${data.domain || isWebsiteOrder ? `
                             <div style="margin-bottom: 24px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary);">
                                 <label style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Project Domain</label>
@@ -2231,7 +2900,7 @@
                             </div>
                             ` : ''}
 
-                            <div class="doc-preview-meta" id="installmentPreviewMeta" style="display: none; background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                            <div class="doc-preview-meta" id="installmentPreviewMeta" style="display: ${data.paymentType !== 'One-Time' ? 'grid' : 'none'}; background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
                                 <div class="doc-preview-meta-item">
                                     <label>Payment Type</label>
                                     <p id="previewPaymentType">${data.paymentType || 'One-Time'}</p>
@@ -2249,18 +2918,24 @@
                                         <th style="text-align:right;">Amount</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="previewItemsBody">
+                                    ${data.items.map(item => `
+                                        <tr>
+                                            <td>${item.description || '-'}</td>
+                                            <td style="text-align:right;">${formatMYR(item.amount)}</td>
+                                        </tr>
+                                    `).join('')}
                                     <tr>
-                                        <td id="previewDesc">${data.description || data.planName || '-'}</td>
-                                        <td style="text-align:right;" id="previewSubtotal">${formatMYR(data.subtotal || data.price)}</td>
+                                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;">Subtotal</td>
+                                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;" id="previewSubtotal">${formatMYR(subtotal)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="border:none; text-align:right; padding-top:16px;">Discount</td>
-                                        <td style="border:none; text-align:right; padding-top:16px;" id="previewDiscount">-${formatMYR(data.discount)}</td>
+                                        <td style="border:none; text-align:right;">Discount</td>
+                                        <td style="border:none; text-align:right;" id="previewDiscount">-${formatMYR(data.discount)}</td>
                                     </tr>
                                     <tr class="total-row">
                                         <td style="text-align:right; border:none;">Total</td>
-                                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(data.total || data.price)}</td>
+                                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(grandTotal)}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -2272,23 +2947,23 @@
                             <div class="card-body doc-editor-form">
                                 <div class="form-group-modal">
                                     <label>Client / Customer</label>
-                                    <input type="text" id="editClient" value="${data.clientName || data.customerName || ''}" oninput="updatePreview()" ${isWebsiteOrder ? 'readonly' : ''}>
+                                    <input type="text" id="editClient" value="${data.clientName || data.customerName || ''}" oninput="updateInvoicePreview()" ${isWebsiteOrder ? 'readonly' : ''}>
                                 </div>
                                 
-                                <!-- Domain Input Field -->
                                 <div class="form-group-modal">
-                                    <label>Domain <span style="color:#aaa; font-weight:400;">(e.g., client.com)</span></label>
-                                    <input type="text" id="editDomain" value="${data.domain || ''}" placeholder="example.com" oninput="updatePreview()">
+                                    <label>Domain</label>
+                                    <input type="text" id="editDomain" value="${data.domain || ''}" placeholder="example.com" oninput="updateInvoicePreview()">
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group-modal">
                                         <label>Date</label>
-                                        <input type="date" id="editDate" value="${data.date}" onchange="updatePreview()">
+                                        <input type="date" id="editDate" value="${data.date}" onchange="updateInvoicePreview()">
                                     </div>
                                     <div class="form-group-modal">
                                         <label>Status</label>
                                         <select id="editStatus">
+                                            <option value="Draft" ${data.status === 'Draft' ? 'selected' : ''}>Draft</option>
                                             <option value="Unpaid" ${data.status === 'Unpaid' ? 'selected' : ''}>Unpaid</option>
                                             <option value="Paid" ${data.status === 'Paid' ? 'selected' : ''}>Paid</option>
                                             <option value="Activated" ${data.status === 'Activated' ? 'selected' : ''}>Activated</option>
@@ -2304,29 +2979,23 @@
                                     </div>
                                 ` : ''}
 
-                                <div class="form-group-modal">
-                                    <label>Package / Service</label>
-                                    <select id="editPackage" onchange="handlePackageChange()">
-                                        <option value="">-- Select Package --</option>
-                                        ${Object.keys(PACKAGE_PRICES).map(p => `<option value="${p}" ${data.description === p || data.planName === p ? 'selected' : ''}>${p} (RM${PACKAGE_PRICES[p]})</option>`).join('')}
-                                        <option value="custom" ${!Object.keys(PACKAGE_PRICES).includes(data.description) && data.description ? 'selected' : ''}>Custom</option>
-                                    </select>
+                                <hr style="margin: 16px 0; border-color: var(--border-light);">
+                                
+                                <label style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:block;">Items</label>
+                                <div class="items-editor" id="itemsEditor">
+                                    ${data.items.map((item, idx) => `
+                                        <div class="item-row" data-index="${idx}">
+                                            <input type="text" placeholder="Description" value="${item.description || ''}" onchange="updateItemRow(${idx}, 'description', this.value)">
+                                            <input type="number" placeholder="Amount" value="${item.amount || 0}" onchange="updateItemRow(${idx}, 'amount', this.value)">
+                                            <button class="btn-remove-item" onclick="removeItemRow(${idx})"><i class="ri-delete-bin-line"></i></button>
+                                        </div>
+                                    `).join('')}
+                                    <button class="btn-add-item" onclick="addItemRow()"><i class="ri-add-line"></i> Add Item</button>
                                 </div>
 
-                                <div class="form-group-modal">
-                                    <label>Description</label>
-                                    <textarea id="editDesc" rows="3" oninput="updatePreview()">${data.description || data.planName}</textarea>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group-modal">
-                                        <label>Full Amount (RM)</label>
-                                        <input type="number" id="editAmount" value="${data.subtotal || data.price}" oninput="updatePreview()">
-                                    </div>
-                                    <div class="form-group-modal">
-                                        <label>Discount (RM)</label>
-                                        <input type="number" id="editDiscount" value="${data.discount}" oninput="updatePreview()">
-                                    </div>
+                                <div class="form-group-modal" style="margin-top: 16px;">
+                                    <label>Discount (RM)</label>
+                                    <input type="number" id="editDiscount" value="${data.discount || 0}" oninput="updateInvoicePreview()">
                                 </div>
 
                                 <hr style="margin: 16px 0; border-color: var(--border-light);">
@@ -2349,28 +3018,27 @@
                                     </div>
                                 </div>
 
-                                <div class="installment-info-box" id="installmentBox">
+                                <div class="installment-info-box" id="installmentBox" style="display: ${data.paymentType !== 'One-Time' ? 'block' : 'none'};">
                                     <div class="installment-stat">
                                         <span>Grand Total:</span>
-                                        <strong id="instGrandTotal">RM 0.00</span>
+                                        <strong id="instGrandTotal">${formatMYR(grandTotal)}</strong>
                                     </div>
                                     <div class="installment-stat">
                                         <span>Monthly Payment:</span>
-                                        <strong id="instMonthly">RM 0.00</span>
+                                        <strong id="instMonthly">${formatMYR(grandTotal / (data.installmentMonths || 12))}</strong>
                                     </div>
                                     <div class="form-row" style="margin-top:12px;">
                                         <div class="form-group-modal" style="margin-bottom:0;">
                                             <label>Current Cycle</label>
-                                            <input type="number" id="editCycle" value="${data.installmentCycle || 1}" min="1" oninput="updatePreview()">
+                                            <input type="number" id="editCycle" value="${data.installmentCycle || 1}" min="1" oninput="updateInvoicePreview()">
                                         </div>
                                         <div class="form-group-modal" style="margin-bottom:0;">
                                             <label>Remaining Balance</label>
-                                            <input type="text" id="remainingBalanceDisplay" readonly value="RM 0.00" style="background:#f8fafc;">
+                                            <input type="text" id="remainingBalanceDisplay" readonly value="${formatMYR(grandTotal - (grandTotal / (data.installmentMonths || 12)) * (data.installmentCycle || 1))}" style="background:#f8fafc;">
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <!-- WhatsApp Payment Reminder Button -->
                                 <div style="margin-top: 16px;">
                                     <button class="btn btn-whatsapp" style="width: 100%;" onclick="sendPaymentReminder()">
                                         <i class="ri-whatsapp-line"></i> Send Payment Reminder
@@ -2384,91 +3052,80 @@
             `;
 
             window.currentPaymentType = data.paymentType || 'One-Time';
-            // Store data needed for reminder
             window.currentInvoiceData = data; 
-            
-            updatePreview(); 
+            window.currentItems = [...data.items];
+            updateInvoicePreview();
         }
 
-        // NEW: Payment Reminder Function
-        window.sendPaymentReminder = () => {
-            // Get fresh values from inputs
-            const clientName = document.getElementById('editClient').value;
-            const desc = document.getElementById('editDesc').value;
-            const amount = document.getElementById('previewTotal').textContent; // Formatted amount
-            const cycle = document.getElementById('editCycle').value;
-            const months = window.currentPaymentType === '12-Month' ? 12 : 24;
-            const date = document.getElementById('editDate').value; // YYYY-MM-DD
-            
-            // Format Date for message (DD/MM/YYYY)
-            const d = new Date(date);
-            const formattedDate = d.toLocaleDateString('en-GB'); // dd/mm/yyyy
-
-            const text = `Hello,
-
-This is a friendly reminder from DDNEX® regarding your monthly installment payment.
-
-Package: ${desc}
-Monthly Payment: ${amount}
-Billing Cycle: Month ${cycle} of ${months}
-Due Date: ${formattedDate}
-
-Kindly complete the payment before the due date to ensure your service continues without interruption.
-
-If payment has already been made, please disregard this message.
-
-Thank you.
-
-DDNEX®
-support@ddnex.com`;
-
-            // Note: We don't have phone number in the editor explicitly, usually taken from client list.
-            // For now, we open WhatsApp Web without a specific number (user selects recipient) or we can try to find it.
-            // Let's try to fetch client phone if possible, otherwise generic.
-            // To keep it simple and robust within the editor without extra async fetch:
-            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-            window.open(url, '_blank');
+        window.addItemRow = () => {
+            window.currentItems.push({description: '', amount: 0});
+            renderItemsEditor();
+            updateInvoicePreview();
         };
 
-        // Updated Package Change Handler
-        window.handlePackageChange = () => {
-            const select = document.getElementById('editPackage');
-            const amountInput = document.getElementById('editAmount');
-            const descInput = document.getElementById('editDesc');
-            const selected = select.value;
-
-            if(selected && selected !== 'custom') {
-                // Update Amount
-                amountInput.value = PACKAGE_PRICES[selected];
-                // Update Description
-                descInput.value = selected;
-            } else if (selected === 'custom') {
-                // Optional: Clear fields for custom entry
-                // amountInput.value = '';
-                // descInput.value = '';
+        window.removeItemRow = (index) => {
+            if(window.currentItems.length > 1) {
+                window.currentItems.splice(index, 1);
+                renderItemsEditor();
+                updateInvoicePreview();
             }
-            window.updatePreview();
+        };
+
+        window.updateItemRow = (index, field, value) => {
+            window.currentItems[index][field] = field === 'amount' ? parseFloat(value) || 0 : value;
+            updateInvoicePreview();
+        };
+
+        const renderItemsEditor = () => {
+            const editor = document.getElementById('itemsEditor');
+            if(!editor) return;
+            
+            editor.innerHTML = `
+                ${window.currentItems.map((item, idx) => `
+                    <div class="item-row" data-index="${idx}">
+                        <input type="text" placeholder="Description" value="${item.description || ''}" onchange="updateItemRow(${idx}, 'description', this.value)">
+                        <input type="number" placeholder="Amount" value="${item.amount || 0}" onchange="updateItemRow(${idx}, 'amount', this.value)">
+                        <button class="btn-remove-item" onclick="removeItemRow(${idx})"><i class="ri-delete-bin-line"></i></button>
+                    </div>
+                `).join('')}
+                <button class="btn-add-item" onclick="addItemRow()"><i class="ri-add-line"></i> Add Item</button>
+            `;
+        };
+
+        window.sendPaymentReminder = () => {
+            const clientName = document.getElementById('editClient').value;
+            const amount = document.getElementById('previewTotal').textContent; 
+            const cycle = document.getElementById('editCycle')?.value || '-';
+            const months = window.currentPaymentType === '12-Month' ? 12 : 24;
+            const date = document.getElementById('editDate').value; 
+            
+            const d = new Date(date);
+            const formattedDate = d.toLocaleDateString('en-GB');
+
+            const text = `Hello,\n\nThis is a friendly reminder from DDNEX® regarding your monthly installment payment.\n\nMonthly Payment: ${amount}\nBilling Cycle: Month ${cycle} of ${months}\nDue Date: ${formattedDate}\n\nKindly complete the payment before the due date to ensure your service continues without interruption.\n\nIf payment has already been made, please disregard this message.\n\nThank you.\n\nDDNEX®\nsupport@ddnex.com`;
+
+            const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
         };
 
         window.setPaymentType = (type) => {
             window.currentPaymentType = type;
             document.querySelectorAll('.payment-option-btn').forEach(btn => btn.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            updatePreview();
+            updateInvoicePreview();
         };
 
-        window.updatePreview = () => {
-            const client = document.getElementById('editClient').value;
-            const domain = document.getElementById('editDomain').value;
-            const dateVal = document.getElementById('editDate').value;
-            const desc = document.getElementById('editDesc').value;
-            const amount = parseFloat(document.getElementById('editAmount').value || 0);
-            const discount = parseFloat(document.getElementById('editDiscount').value || 0);
-            const grandTotal = amount - discount;
+        window.updateInvoicePreview = () => {
+            const client = document.getElementById('editClient')?.value;
+            const domain = document.getElementById('editDomain')?.value;
+            const dateVal = document.getElementById('editDate')?.value;
+            const discount = parseFloat(document.getElementById('editDiscount')?.value || 0);
+
+            const subtotal = window.currentItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            const grandTotal = subtotal - discount;
 
             const pClient = document.getElementById('previewClient');
             const pDate = document.getElementById('previewDate');
-            const pDesc = document.getElementById('previewDesc');
             const pSubtotal = document.getElementById('previewSubtotal');
             const pDiscount = document.getElementById('previewDiscount');
             const pTotal = document.getElementById('previewTotal');
@@ -2479,9 +3136,34 @@ support@ddnex.com`;
             
             if(pClient) pClient.textContent = client || 'Select Client';
             if(pDate) pDate.textContent = formatDate(dateVal);
-            if(pDesc) pDesc.textContent = desc || '-';
-            if(pSubtotal) pSubtotal.textContent = formatMYR(amount);
+            if(pSubtotal) pSubtotal.textContent = formatMYR(subtotal);
             if(pDiscount) pDiscount.textContent = `-${formatMYR(discount)}`;
+
+            // Update items in preview
+            const tbody = document.getElementById('previewItemsBody');
+            if(tbody) {
+                const itemsHtml = window.currentItems.map(item => `
+                    <tr>
+                        <td>${item.description || '-'}</td>
+                        <td style="text-align:right;">${formatMYR(item.amount)}</td>
+                    </tr>
+                `).join('');
+                
+                tbody.innerHTML = itemsHtml + `
+                    <tr>
+                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;">Subtotal</td>
+                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;" id="previewSubtotal">${formatMYR(subtotal)}</td>
+                    </tr>
+                    <tr>
+                        <td style="border:none; text-align:right;">Discount</td>
+                        <td style="border:none; text-align:right;" id="previewDiscount">-${formatMYR(discount)}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td style="text-align:right; border:none;">Total</td>
+                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(grandTotal)}</td>
+                    </tr>
+                `;
+            }
 
             const type = window.currentPaymentType || 'One-Time';
             let displayTotal = grandTotal;
@@ -2491,30 +3173,43 @@ support@ddnex.com`;
             if(type === '24-Month') months = 24;
 
             if(type !== 'One-Time') {
-                instBox.classList.add('visible');
-                instMeta.style.display = 'grid';
+                if(instBox) instBox.style.display = 'block';
+                if(instMeta) instMeta.style.display = 'grid';
                 
                 const monthlyAmount = grandTotal / months;
-                const cycle = parseInt(document.getElementById('editCycle').value || 1);
+                const cycle = parseInt(document.getElementById('editCycle')?.value || 1);
                 displayTotal = monthlyAmount;
 
-                document.getElementById('instGrandTotal').textContent = formatMYR(grandTotal);
-                document.getElementById('instMonthly').textContent = formatMYR(monthlyAmount);
+                const instGrandTotal = document.getElementById('instGrandTotal');
+                const instMonthly = document.getElementById('instMonthly');
+                
+                if(instGrandTotal) instGrandTotal.textContent = formatMYR(grandTotal);
+                if(instMonthly) instMonthly.textContent = formatMYR(monthlyAmount);
                 
                 if(pPayType) pPayType.textContent = type;
                 if(pCycle) pCycle.textContent = `${cycle} of ${months}`;
                 
                 const remainingBal = grandTotal - (monthlyAmount * cycle);
-                document.getElementById('remainingBalanceDisplay').value = remainingBal > 0 ? formatMYR(remainingBal) : 'Fully Paid';
+                const remBalDisplay = document.getElementById('remainingBalanceDisplay');
+                if(remBalDisplay) remBalDisplay.value = remainingBal > 0 ? formatMYR(remainingBal) : 'Fully Paid';
 
             } else {
-                instBox.classList.remove('visible');
-                instMeta.style.display = 'none';
+                if(instBox) instBox.style.display = 'none';
+                if(instMeta) instMeta.style.display = 'none';
                 if(pPayType) pPayType.textContent = 'One-Time';
                 if(pCycle) pCycle.textContent = '-';
             }
+        };
 
-            if(pTotal) pTotal.textContent = formatMYR(displayTotal);
+        window.commitInvoice = async (id) => {
+            if(confirm("Commit this invoice? Status will change to 'Unpaid' and can be printed.")) {
+                const data = await window.dbOperations.getOrder(id);
+                if(data) {
+                    await window.dbOperations.setOrder(id, { status: 'Unpaid' });
+                    showPopup("Committed", "Invoice is now ready for client.");
+                    renderInvoiceEditor(id);
+                }
+            }
         };
 
         window.saveInvoice = async (id) => {
@@ -2523,22 +3218,21 @@ support@ddnex.com`;
             if(type === '12-Month') months = 12;
             if(type === '24-Month') months = 24;
 
-            const amount = parseFloat(document.getElementById('editAmount').value || 0);
-            const discount = parseFloat(document.getElementById('editDiscount').value || 0);
-            const grandTotal = amount - discount;
+            const subtotal = window.currentItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            const discount = parseFloat(document.getElementById('editDiscount')?.value || 0);
+            const grandTotal = subtotal - discount;
             const monthlyAmount = grandTotal / months;
-            const cycle = parseInt(document.getElementById('editCycle').value || 1);
+            const cycle = parseInt(document.getElementById('editCycle')?.value || 1);
 
             const invoiceTotal = (type === 'One-Time') ? grandTotal : monthlyAmount;
 
             const data = {
                 number: id,
-                clientName: document.getElementById('editClient').value,
-                domain: document.getElementById('editDomain').value, // Save domain
-                date: document.getElementById('editDate').value,
-                status: document.getElementById('editStatus').value,
-                description: document.getElementById('editDesc').value,
-                subtotal: amount,
+                clientName: document.getElementById('editClient')?.value || '',
+                domain: document.getElementById('editDomain')?.value || '', 
+                date: document.getElementById('editDate')?.value || new Date().toISOString().split('T')[0],
+                status: document.getElementById('editStatus')?.value || 'Draft',
+                items: window.currentItems,
                 discount: discount,
                 total: invoiceTotal, 
                 grandTotal: grandTotal, 
@@ -2549,13 +3243,13 @@ support@ddnex.com`;
                 updatedAt: new Date()
             };
 
-            showLoading("Saving...");
+            showLoading            ("Saving...");
             await window.dbOperations.setOrder(id, data);
             hideLoading();
-            showPopup("Success", "Order saved successfully.");
+            showPopup("Success", "Invoice saved successfully.");
         };
 
-        // --- QUOTATION EDITOR (Kept Simple) ---
+        // --- QUOTATION EDITOR (Updated with Custom Items) ---
         async function renderQuotationEditor(id) {
             let data = await window.dbOperations.getQuotation(id);
             if (!data) {
@@ -2563,27 +3257,40 @@ support@ddnex.com`;
                     number: id,
                     clientName: '',
                     date: new Date().toISOString().split('T')[0],
-                    subtotal: 0,
+                    items: [{description: '', amount: 0}],
                     discount: 0,
                     total: 0,
-                    status: 'Pending',
-                    description: '',
+                    status: 'Draft',
                     type: 'Quotation'
                 };
             }
 
+            // Ensure items array exists
+            if(!data.items || !Array.isArray(data.items)) {
+                data.items = [{description: data.description || '', amount: data.subtotal || data.price || 0}];
+            }
+
             const clients = await window.dbOperations.getClients();
             const clientOptions = clients.map(c => `<option value="${c.name}" ${data.clientName === c.name ? 'selected' : ''}>${c.name}</option>`).join('');
+            
+            // Calculate subtotal
+            const subtotal = data.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            const discount = parseFloat(data.discount || 0);
+            const grandTotal = subtotal - discount;
 
             document.getElementById('mainContent').innerHTML = `
                 <div class="doc-editor-container">
                     <div class="doc-editor-header">
                         <div>
-                            <button class="btn btn-outline" onclick="navigateTo('/cashbill')"><i class="ri-arrow-left-line"></i> Back</button>
+                            <button class="btn btn-outline" onclick="navigateTo('/quotations')"><i class="ri-arrow-left-line"></i> Back</button>
                         </div>
                         <div style="display:flex; gap:12px;">
+                             ${data.status === 'Draft' ? `
+                                <button class="btn btn-warning" onclick="commitQuotation('${id}')"><i class="ri-check-double-line"></i> Commit</button>
+                             ` : ''}
                              <button class="btn btn-success" onclick="saveQuotation('${id}')"><i class="ri-save-line"></i> Save Quotation</button>
                              <button class="btn btn-primary" onclick="printDocument('${id}', 'Quotation')"><i class="ri-printer-line"></i> Print</button>
+                             <button class="btn btn-outline" onclick="openEmailTemplateModal('${id}', 'Quotation')"><i class="ri-mail-line"></i> Email</button>
                         </div>
                     </div>
                     
@@ -2595,7 +3302,7 @@ support@ddnex.com`;
                                     <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
                                 </div>
                                 <div style="text-align:right;">
-                                    <div class="doc-type-badge quotation">Quotation</div>
+                                    <div class="doc-type-badge ${data.status === 'Draft' ? 'draft' : 'quotation'}">${data.status === 'Draft' ? 'Draft' : 'Quotation'}</div>
                                     <h2 style="font-size:24px; font-weight:800; margin-top:8px;" id="previewNumber">${data.number}</h2>
                                 </div>
                             </div>
@@ -2618,18 +3325,24 @@ support@ddnex.com`;
                                         <th style="text-align:right;">Amount</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="previewQuotationItemsBody">
+                                    ${data.items.map(item => `
+                                        <tr>
+                                            <td>${item.description || '-'}</td>
+                                            <td style="text-align:right;">${formatMYR(item.amount)}</td>
+                                        </tr>
+                                    `).join('')}
                                     <tr>
-                                        <td id="previewDesc">${data.description || '-'}</td>
-                                        <td style="text-align:right;" id="previewSubtotal">${formatMYR(data.subtotal)}</td>
+                                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;">Subtotal</td>
+                                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;" id="previewQSubtotal">${formatMYR(subtotal)}</td>
                                     </tr>
                                     <tr>
-                                        <td style="border:none; text-align:right; padding-top:16px;">Discount</td>
-                                        <td style="border:none; text-align:right; padding-top:16px;" id="previewDiscount">-${formatMYR(data.discount)}</td>
+                                        <td style="border:none; text-align:right;">Discount</td>
+                                        <td style="border:none; text-align:right;" id="previewQDiscount">-${formatMYR(data.discount)}</td>
                                     </tr>
                                     <tr class="total-row">
                                         <td style="text-align:right; border:none;">Total</td>
-                                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(data.total)}</td>
+                                        <td style="text-align:right; border:none;" id="previewQTotal">${formatMYR(grandTotal)}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -2640,18 +3353,19 @@ support@ddnex.com`;
                             <div class="card-body doc-editor-form">
                                 <div class="form-group-modal">
                                     <label>Client</label>
-                                    <select id="editClient" onchange="updateQuotationPreview()">
+                                    <select id="editQClient" onchange="updateQuotationPreview()">
                                         <option value="">Select Client</option>
                                         ${clientOptions}
                                     </select>
                                 </div>
                                 <div class="form-group-modal">
                                     <label>Date</label>
-                                    <input type="date" id="editDate" value="${data.date}" onchange="updateQuotationPreview()">
+                                    <input type="date" id="editQDate" value="${data.date}" onchange="updateQuotationPreview()">
                                 </div>
                                 <div class="form-group-modal">
                                     <label>Status</label>
-                                    <select id="editStatus">
+                                    <select id="editQStatus">
+                                        <option value="Draft" ${data.status === 'Draft' ? 'selected' : ''}>Draft</option>
                                         <option value="Pending" ${data.status === 'Pending' ? 'selected' : ''}>Pending</option>
                                         <option value="Accepted" ${data.status === 'Accepted' ? 'selected' : ''}>Accepted</option>
                                         <option value="Rejected" ${data.status === 'Rejected' ? 'selected' : ''}>Rejected</option>
@@ -2659,29 +3373,21 @@ support@ddnex.com`;
                                 </div>
                                 <hr style="margin: 16px 0; border-color: var(--border-light);">
                                 
-                                <div class="form-group-modal">
-                                    <label>Package / Service</label>
-                                    <select id="editPackage" onchange="handleQuotationPackageChange()">
-                                        <option value="">-- Select Package --</option>
-                                        ${Object.keys(PACKAGE_PRICES).map(p => `<option value="${p}" ${data.description === p ? 'selected' : ''}>${p} (RM${PACKAGE_PRICES[p]})</option>`).join('')}
-                                        <option value="custom">Custom</option>
-                                    </select>
+                                <label style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:block;">Items</label>
+                                <div class="items-editor" id="quotationItemsEditor">
+                                    ${data.items.map((item, idx) => `
+                                        <div class="item-row" data-index="${idx}">
+                                            <input type="text" placeholder="Description" value="${item.description || ''}" onchange="updateQuotationItemRow(${idx}, 'description', this.value)">
+                                            <input type="number" placeholder="Amount" value="${item.amount || 0}" onchange="updateQuotationItemRow(${idx}, 'amount', this.value)">
+                                            <button class="btn-remove-item" onclick="removeQuotationItemRow(${idx})"><i class="ri-delete-bin-line"></i></button>
+                                        </div>
+                                    `).join('')}
+                                    <button class="btn-add-item" onclick="addQuotationItemRow()"><i class="ri-add-line"></i> Add Item</button>
                                 </div>
 
-                                <div class="form-group-modal">
-                                    <label>Description</label>
-                                    <textarea id="editDesc" rows="3" oninput="updateQuotationPreview()">${data.description}</textarea>
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group-modal">
-                                        <label>Amount (RM)</label>
-                                        <input type="number" id="editAmount" value="${data.subtotal}" oninput="updateQuotationPreview()">
-                                    </div>
-                                    <div class="form-group-modal">
-                                        <label>Discount (RM)</label>
-                                        <input type="number" id="editDiscount" value="${data.discount}" oninput="updateQuotationPreview()">
-                                    </div>
+                                <div class="form-group-modal" style="margin-top: 16px;">
+                                    <label>Discount (RM)</label>
+                                    <input type="number" id="editQDiscount" value="${data.discount || 0}" oninput="updateQuotationPreview()">
                                 </div>
 
                                 <div style="margin-top: 16px;">
@@ -2694,51 +3400,111 @@ support@ddnex.com`;
                     </div>
                 </div>
             `;
+
+            window.currentQuotationItems = [...data.items];
+            window.updateQuotationPreview();
         }
 
-        window.handleQuotationPackageChange = () => {
-            const select = document.getElementById('editPackage');
-            const amountInput = document.getElementById('editAmount');
-            const descInput = document.getElementById('editDesc');
-            const selected = select.value;
+        window.addQuotationItemRow = () => {
+            window.currentQuotationItems.push({description: '', amount: 0});
+            renderQuotationItemsEditor();
+            updateQuotationPreview();
+        };
 
-            if(selected && selected !== 'custom') {
-                amountInput.value = PACKAGE_PRICES[selected];
-                descInput.value = selected;
-            } else if (selected === 'custom') {
-                amountInput.value = '';
-                descInput.value = '';
+        window.removeQuotationItemRow = (index) => {
+            if(window.currentQuotationItems.length > 1) {
+                window.currentQuotationItems.splice(index, 1);
+                renderQuotationItemsEditor();
+                updateQuotationPreview();
             }
-            window.updateQuotationPreview();
+        };
+
+        window.updateQuotationItemRow = (index, field, value) => {
+            window.currentQuotationItems[index][field] = field === 'amount' ? parseFloat(value) || 0 : value;
+            updateQuotationPreview();
+        };
+
+        const renderQuotationItemsEditor = () => {
+            const editor = document.getElementById('quotationItemsEditor');
+            if(!editor) return;
+            
+            editor.innerHTML = `
+                ${window.currentQuotationItems.map((item, idx) => `
+                    <div class="item-row" data-index="${idx}">
+                        <input type="text" placeholder="Description" value="${item.description || ''}" onchange="updateQuotationItemRow(${idx}, 'description', this.value)">
+                        <input type="number" placeholder="Amount" value="${item.amount || 0}" onchange="updateQuotationItemRow(${idx}, 'amount', this.value)">
+                        <button class="btn-remove-item" onclick="removeQuotationItemRow(${idx})"><i class="ri-delete-bin-line"></i></button>
+                    </div>
+                `).join('')}
+                <button class="btn-add-item" onclick="addQuotationItemRow()"><i class="ri-add-line"></i> Add Item</button>
+            `;
         };
 
         window.updateQuotationPreview = () => {
-            const client = document.getElementById('editClient')?.value;
-            const dateVal = document.getElementById('editDate')?.value;
-            const desc = document.getElementById('editDesc')?.value;
-            const amount = parseFloat(document.getElementById('editAmount')?.value || 0);
-            const discount = parseFloat(document.getElementById('editDiscount')?.value || 0);
-            const total = amount - discount;
+            const client = document.getElementById('editQClient')?.value;
+            const dateVal = document.getElementById('editQDate')?.value;
+            const discount = parseFloat(document.getElementById('editQDiscount')?.value || 0);
+
+            const subtotal = window.currentQuotationItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            const total = subtotal - discount;
 
             if(document.getElementById('previewClient')) document.getElementById('previewClient').textContent = client || 'Select Client';
             if(document.getElementById('previewDate')) document.getElementById('previewDate').textContent = formatDate(dateVal);
-            if(document.getElementById('previewDesc')) document.getElementById('previewDesc').textContent = desc || '-';
-            if(document.getElementById('previewSubtotal')) document.getElementById('previewSubtotal').textContent = formatMYR(amount);
-            if(document.getElementById('previewDiscount')) document.getElementById('previewDiscount').textContent = `-${formatMYR(discount)}`;
-            if(document.getElementById('previewTotal')) document.getElementById('previewTotal').textContent = formatMYR(total);
+
+            // Update items in preview
+            const tbody = document.getElementById('previewQuotationItemsBody');
+            if(tbody) {
+                const itemsHtml = window.currentQuotationItems.map(item => `
+                    <tr>
+                        <td>${item.description || '-'}</td>
+                        <td style="text-align:right;">${formatMYR(item.amount)}</td>
+                    </tr>
+                `).join('');
+                
+                tbody.innerHTML = itemsHtml + `
+                    <tr>
+                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;">Subtotal</td>
+                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;" id="previewQSubtotal">${formatMYR(subtotal)}</td>
+                    </tr>
+                    <tr>
+                        <td style="border:none; text-align:right;">Discount</td>
+                        <td style="border:none; text-align:right;" id="previewQDiscount">-${formatMYR(discount)}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td style="text-align:right; border:none;">Total</td>
+                        <td style="text-align:right; border:none;" id="previewQTotal">${formatMYR(total)}</td>
+                    </tr>
+                `;
+            }
+        };
+
+        window.commitQuotation = async (id) => {
+            if(confirm("Commit this quotation? Status will change to 'Pending'.")) {
+                const data = await window.dbOperations.getQuotation(id);
+                if(data) {
+                    await window.dbOperations.setQuotation(id, { status: 'Pending' });
+                    showPopup("Committed", "Quotation is now ready for client.");
+                    renderQuotationEditor(id);
+                }
+            }
         };
 
         window.saveQuotation = async (id) => {
+            const subtotal = window.currentQuotationItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            const discount = parseFloat(document.getElementById('editQDiscount')?.value || 0);
+            const total = subtotal - discount;
+
             const data = {
                 number: id,
-                clientName: document.getElementById('editClient').value,
-                date: document.getElementById('editDate').value,
-                status: document.getElementById('editStatus').value,
-                description: document.getElementById('editDesc').value,
-                subtotal: parseFloat(document.getElementById('editAmount').value || 0),
-                discount: parseFloat(document.getElementById('editDiscount').value || 0),
-                total: parseFloat(document.getElementById('editAmount').value || 0) - parseFloat(document.getElementById('editDiscount').value || 0),
-                type: 'Quotation'
+                clientName: document.getElementById('editQClient')?.value || '',
+                date: document.getElementById('editQDate')?.value || new Date().toISOString().split('T')[0],
+                status: document.getElementById('editQStatus')?.value || 'Draft',
+                items: window.currentQuotationItems,
+                discount: discount,
+                subtotal: subtotal,
+                total: total,
+                type: 'Quotation',
+                updatedAt: new Date()
             };
 
             showLoading("Saving...");
@@ -2758,10 +3524,14 @@ support@ddnex.com`;
                     number: newInvId,
                     type: 'Invoice',
                     source: 'Portal',
-                    status: 'Unpaid',
+                    status: 'Draft', // Converted invoices start as Draft
                     paymentType: 'One-Time'
                 };
                 await window.dbOperations.setOrder(newInvId, invData);
+                
+                // Update quotation status
+                await window.dbOperations.setQuotation(qId, { status: 'Accepted' });
+                
                 hideLoading();
                 showPopup("Success", "Converted to Invoice. Redirecting...");
                 setTimeout(() => {
@@ -2775,120 +3545,130 @@ support@ddnex.com`;
         
         window.deleteDocGeneric = async (id, type) => {
             if(confirm("Delete this document?")) {
+                showLoading("Deleting...");
                 if(type === 'Quotation') await window.dbOperations.deleteQuotation(id);
                 else await window.dbOperations.deleteOrder(id);
-                navigateTo('/cashbill');
+                hideLoading();
+                if(type === 'Quotation') renderQuotationsSection();
+                else renderCashbillSection();
             }
         };
 
-        // Print Logic with Bank Details
+        // ================== EMAIL TEMPLATE MODAL ==================
+        window.openEmailTemplateModal = async (id, type) => {
+            let doc;
+            if (type === 'Quotation') {
+                doc = await window.dbOperations.getQuotation(id);
+                if(!doc) doc = { 
+                    type: 'Quotation', 
+                    number: id, 
+                    clientName: document.getElementById('editQClient')?.value || '', 
+                    items: window.currentQuotationItems, 
+                    discount: parseFloat(document.getElementById('editQDiscount')?.value || 0),
+                    date: document.getElementById('editQDate')?.value 
+                };
+            } else {
+                doc = await window.dbOperations.getOrder(id);
+                if(!doc) doc = { 
+                    type: 'Invoice', 
+                    number: id, 
+                    clientName: document.getElementById('editClient')?.value || '', 
+                    domain: document.getElementById('editDomain')?.value || '',
+                    items: window.currentItems, 
+                    discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
+                    paymentType: window.currentPaymentType,
+                    installmentCycle: document.getElementById('editCycle')?.value,
+                    date: document.getElementById('editDate')?.value
+                };
+            }
+
+            // Calculate totals for the template
+            if(!doc.items) doc.items = [];
+            const subtotal = doc.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            doc.subtotal = subtotal;
+            doc.total = subtotal - (doc.discount || 0);
+
+            const htmlContent = generateProfessionalHTML(doc);
+
+            const content = `
+                <p style="margin-bottom:12px; font-size:13px;">Copy the HTML code below to use in your email client (Gmail, Outlook, etc.).</p>
+                <textarea id="emailCodeTextarea" style="width:100%; height:300px; font-family:monospace; font-size:12px; border:1px solid #e2e8f0; border-radius:8px; padding:12px; resize:vertical;" readonly>${htmlContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                <div style="margin-top:12px; display:flex; gap:8px;">
+                    <button class="btn btn-primary" onclick="copyEmailCode()"><i class="ri-clipboard-line"></i> Copy Code</button>
+                    <button class="btn btn-outline" onclick="downloadEmailHTML('${doc.number || id}', '${type}')"><i class="ri-download-line"></i> Download HTML</button>
+                </div>
+            `;
+
+            openModal(`Email Template: ${doc.number || id}`, content, closeModal, true);
+        };
+
+        window.copyEmailCode = () => {
+            const textarea = document.getElementById('emailCodeTextarea');
+            const doc = new DOMParser().parseFromString(textarea.value, 'text/html');
+            const rawHtml = doc.documentElement.textContent;
+            
+            navigator.clipboard.writeText(rawHtml).then(() => {
+                showPopup("Copied!", "HTML code copied to clipboard.");
+            }).catch(err => {
+                textarea.select();
+                document.execCommand('copy');
+                showPopup("Copied!", "HTML code copied to clipboard.");
+            });
+        };
+
+        window.downloadEmailHTML = (filename, type) => {
+            const textarea = document.getElementById('emailCodeTextarea');
+            const doc = new DOMParser().parseFromString(textarea.value, 'text/html');
+            const rawHtml = doc.documentElement.textContent;
+            
+            const blob = new Blob([rawHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${filename}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        };
+
+        // Print Logic
         window.printDocument = async (id, type) => {
             let doc;
             if (type === 'Quotation') {
                 doc = await window.dbOperations.getQuotation(id);
+                if(!doc) doc = { 
+                    type: 'Quotation', 
+                    number: id, 
+                    clientName: document.getElementById('editQClient')?.value || '', 
+                    items: window.currentQuotationItems, 
+                    discount: parseFloat(document.getElementById('editQDiscount')?.value || 0),
+                    date: document.getElementById('editQDate')?.value 
+                };
             } else {
                 doc = await window.dbOperations.getOrder(id);
-            }
-
-            if(!doc) {
-                // Try to grab from UI if not saved yet
-                const client = document.getElementById('editClient')?.value || 'N/A';
-                doc = {
-                    type: type,
-                    number: id,
-                    clientName: client,
+                if(!doc) doc = { 
+                    type: 'Invoice', 
+                    number: id, 
+                    clientName: document.getElementById('editClient')?.value || '', 
                     domain: document.getElementById('editDomain')?.value || '',
-                    date: document.getElementById('editDate')?.value || new Date().toISOString().split('T')[0],
-                    description: document.getElementById('editDesc')?.value || '',
-                    subtotal: parseFloat(document.getElementById('editAmount')?.value || 0),
+                    items: window.currentItems, 
                     discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
-                    total: parseFloat(document.getElementById('editAmount')?.value || 0) - parseFloat(document.getElementById('editDiscount')?.value || 0),
-                    paymentType: window.currentPaymentType || 'One-Time',
-                    installmentCycle: document.getElementById('editCycle')?.value || '-'
+                    paymentType: window.currentPaymentType,
+                    installmentCycle: document.getElementById('editCycle')?.value,
+                    date: document.getElementById('editDate')?.value
                 };
             }
+
+            if(!doc.items) doc.items = [];
+            const subtotal = doc.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            doc.subtotal = subtotal;
+            doc.total = subtotal - (doc.discount || 0);
             
-            // If installment, show specific details
-            let installmentRow = '';
-            if(doc.paymentType && doc.paymentType !== 'One-Time') {
-                installmentRow = `
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td colspan="2" style="padding: 8px 0; font-size: 12px; color: #64748b;">
-                            Payment Type: <strong>${doc.paymentType}</strong> (Cycle ${doc.installmentCycle || '-'})
-                        </td>
-                    </tr>
-                `;
-            }
-
-            const printContent = `
-                <div style="font-family: 'Inter', sans-serif; padding: 40px; max-width: 800px; margin: 0 auto;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 40px;">
-                        <div>
-                            <h1 style="font-size: 32px; font-weight: 800; color: #0f172a;">DDNEX®</h1>
-                            <p style="color: #64748b;">Digital Solutions Provider</p>
-                        </div>
-                        <div style="text-align: right;">
-                            <h2 style="font-size: 24px; color: #2563eb;">${doc.type || 'Invoice'}</h2>
-                            <p style="font-weight: 600;">${doc.number}</p>
-                            <p style="color: #64748b;">Date: ${formatDate(doc.date || doc.createdAt)}</p>
-                        </div>
-                    </div>
-
-                    <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 32px;">
-                        <h3 style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Bill To:</h3>
-                        <p style="font-size: 18px; font-weight: 700;">${doc.clientName || doc.customerName}</p>
-                        ${doc.domain ? `<p style="font-size: 14px; color: #64748b;">Domain: ${doc.domain}</p>` : ''}
-                    </div>
-
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
-                        <thead>
-                            <tr style="border-bottom: 2px solid #e2e8f0;">
-                                <th style="text-align: left; padding: 12px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Description</th>
-                                <th style="text-align: right; padding: 12px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #e2e8f0;">
-                                <td style="padding: 16px 0;">
-                                    <p style="font-weight: 600;">${doc.description || doc.planName || 'Professional Services'}</p>
-                                </td>
-                                <td style="padding: 16px 0; text-align: right;">${formatMYR(doc.subtotal || doc.price)}</td>
-                            </tr>
-                            ${installmentRow}
-                        </tbody>
-                    </table>
-
-                    <div style="display: flex; justify-content: flex-end;">
-                        <div style="width: 250px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #64748b;">Subtotal</span>
-                                <span>${formatMYR(doc.subtotal || doc.price)}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span style="color: #64748b;">Discount</span>
-                                <span>-${formatMYR(doc.discount || 0)}</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-weight: 800; font-size: 20px; border-top: 2px solid #0f172a; padding-top: 12px; margin-top: 12px;">
-                                <span>Total</span>
-                                <span>${formatMYR(doc.total || doc.price)}</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 60px; text-align: center; color: #64748b; font-size: 12px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-                        <p style="font-weight: 700; color: #0f172a; margin-bottom: 8px;">Bank Details</p>
-                        <p>DD CLOUD NETWORK</p>
-                        <p>OCBC BANK</p>
-                        <p style="font-weight: 700; margin-bottom: 12px;">7501183830</p>
-                        
-                        <p>Thank you for your business.</p>
-                        <p>DDNEX® | www.ddnex.com</p>
-                    </div>
-                </div>
-            `;
-
+            const rawHtml = generateProfessionalHTML(doc);
+            
             const printArea = document.getElementById('printArea');
-            printArea.innerHTML = printContent;
+            printArea.innerHTML = rawHtml;
             printArea.style.display = 'block';
             window.print();
             printArea.style.display = 'none';
@@ -2921,13 +3701,22 @@ support@ddnex.com`;
 
         window.deleteProject = async (id) => {
              if(confirm("Delete project?")) {
+                 showLoading("Deleting...");
                  await window.dbOperations.deleteProject(id);
                  renderProjectsSection();
+                 hideLoading();
              }
         };
         
         async function renderProjectsSection() {
             const projects = await window.dbOperations.getProjects();
+            // Sort by date newest
+            projects.sort((a, b) => {
+                const dateA = a.deadline ? new Date(a.deadline) : new Date(0);
+                const dateB = b.deadline ? new Date(b.deadline) : new Date(0);
+                return dateB - dateA;
+            });
+
             document.getElementById('mainContent').innerHTML = `
                 <div class="filter-bar">
                     <div class="search-box" style="flex: 1;">
@@ -2968,7 +3757,17 @@ support@ddnex.com`;
                     </div>
                 </div>
             `;
-            window.setupTableFilter('projectSearchInput', 'projectTableBody');
+            
+            // Simple search filter for projects
+            const searchInput = document.getElementById('projectSearchInput');
+            searchInput.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#projectTableBody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
         }
 
         // --- Sales Pipeline ---
@@ -3011,7 +3810,6 @@ support@ddnex.com`;
         // --- Settings / User Management ---
         async function renderSettingsSection() {
             let usersHtml = '';
-            // Check if current user is SuperAdmin from the state or DB
             if (currentUser && currentUser.role === 'SuperAdmin') {
                 const users = await window.dbOperations.getUsers();
                 usersHtml = `
@@ -3064,7 +3862,15 @@ support@ddnex.com`;
             `;
             
             if (currentUser && currentUser.role === 'SuperAdmin') {
-                window.setupTableFilter('userSearchInput', 'userTableBody');
+                const searchInput = document.getElementById('userSearchInput');
+                searchInput.addEventListener('keyup', (e) => {
+                    const term = e.target.value.toLowerCase();
+                    const rows = document.querySelectorAll('#userTableBody tr');
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(term) ? '' : 'none';
+                    });
+                });
             }
         }
 
@@ -3126,7 +3932,7 @@ support@ddnex.com`;
                 showLoading("Saving...");
                 await window.dbOperations.addUser(data);
                 closeModal();
-                renderSettingsSection(); // Refresh list
+                renderSettingsSection(); 
                 hideLoading();
                 showPopup("Success", "User created successfully.");
             });
@@ -3195,16 +4001,145 @@ support@ddnex.com`;
             }
         };
 
-        // --- Profile Section (Read from DB) ---
-        async function renderProfileSection() {
-            // Fetch latest user data from DB based on current user's UID or userId
-            let userData = currentUser; // Default to cached
-            
-            if (currentUser && currentUser.uid) {
-                // If we have UID, we can fetch fresh data, but since we are not using Auth UID for custom users always, 
-                // we rely on the cached currentUser or a query if needed. 
-                // For simplicity and performance, we use currentUser which is populated on login.
+        // --- Client Modal Logic ---
+        window.openClientModal = () => {
+            openModal('Add Client', `
+                <div class="form-group-modal"><label>Name</label><input type="text" id="cName"></div>
+                <div class="form-row">
+                     <div class="form-group-modal"><label>Contact Person</label><input type="text" id="cContact"></div>
+                     <div class="form-group-modal"><label>Phone</label><input type="text" id="cPhone"></div>
+                </div>
+                <div class="form-group-modal"><label>Email</label><input type="email" id="cEmail"></div>
+                <div class="form-group-modal"><label>Website</label><input type="text" id="cWebsite" placeholder="example.com"></div>
+                <div class="form-row">
+                    <div class="form-group-modal"><label>Industry</label><input type="text" id="cIndustry"></div>
+                    <div class="form-group-modal"><label>Plan</label><input type="text" id="cPlan"></div>
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('cName').value,
+                    contact: document.getElementById('cContact').value,
+                    phone: document.getElementById('cPhone').value,
+                    email: document.getElementById('cEmail').value,
+                    website: document.getElementById('cWebsite').value,
+                    industry: document.getElementById('cIndustry').value,
+                    activePlan: document.getElementById('cPlan').value,
+                    color: '#2563eb'
+                };
+                if(!data.name) return;
+                
+                showLoading("Saving...");
+                await window.dbOperations.addClient(data);
+                closeModal();
+                renderClientsSection();
+                hideLoading();
+            });
+        };
+
+        window.editClient = async (id) => {
+            const clients = await window.dbOperations.getClients();
+            const c = clients.find(x => x.id === id);
+            if(!c) return;
+
+            openModal('Edit Client', `
+                 <div class="form-group-modal"><label>Name</label><input type="text" id="cName" value="${c.name}"></div>
+                <div class="form-row">
+                     <div class="form-group-modal"><label>Contact Person</label><input type="text" id="cContact" value="${c.contact || ''}"></div>
+                     <div class="form-group-modal"><label>Phone</label><input type="text" id="cPhone" value="${c.phone || ''}"></div>
+                </div>
+                <div class="form-group-modal"><label>Email</label><input type="email" id="cEmail" value="${c.email || ''}"></div>
+                <div class="form-group-modal"><label>Website</label><input type="text" id="cWebsite" value="${c.website || ''}"></div>
+                <div class="form-row">
+                    <div class="form-group-modal"><label>Industry</label><input type="text" id="cIndustry" value="${c.industry || ''}"></div>
+                    <div class="form-group-modal"><label>Plan</label><input type="text" id="cPlan" value="${c.activePlan || ''}"></div>
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('cName').value,
+                    contact: document.getElementById('cContact').value,
+                    phone: document.getElementById('cPhone').value,
+                    email: document.getElementById('cEmail').value,
+                    website: document.getElementById('cWebsite').value,
+                    industry: document.getElementById('cIndustry').value,
+                    activePlan: document.getElementById('cPlan').value
+                };
+                
+                showLoading("Updating...");
+                await window.dbOperations.updateClient(id, data);
+                closeModal();
+                renderClientsSection();
+                hideLoading();
+            });
+        };
+
+        window.deleteClient = async (id) => {
+            if(confirm("Delete this client?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteClient(id);
+                renderClientsSection();
+                hideLoading();
             }
+        };
+
+        // --- Project Modal Logic ---
+        window.editProject = async (id) => {
+            const projects = await window.dbOperations.getProjects();
+            const p = projects.find(x => x.id === id);
+            if(!p) return;
+
+            openModal('Edit Project', `
+                <div class="form-group-modal"><label>Project Name</label><input type="text" id="pName" value="${p.name}"></div>
+                <div class="form-group-modal"><label>Client Name</label><input type="text" id="pClient" value="${p.client}"></div>
+                <div class="form-row">
+                     <div class="form-group-modal"><label>Status</label>
+                        <select id="pStatus">
+                            <option value="active" ${p.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="completed" ${p.status === 'completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                     </div>
+                     <div class="form-group-modal"><label>Deadline</label><input type="date" id="pDate" value="${p.deadline}"></div>
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('pName').value,
+                    client: document.getElementById('pClient').value,
+                    status: document.getElementById('pStatus').value,
+                    deadline: document.getElementById('pDate').value
+                };
+                showLoading("Updating...");
+                await window.dbOperations.updateProject(id, data);
+                closeModal();
+                renderProjectsSection();
+                hideLoading();
+            });
+        };
+
+        // --- Deal Modal Logic ---
+        window.openDealModal = () => {
+            openModal('Add Deal', `
+                <div class="form-group-modal"><label>Deal Name</label><input type="text" id="dName"></div>
+                <div class="form-group-modal"><label>Client</label><input type="text" id="dClient"></div>
+                <div class="form-group-modal"><label>Value (RM)</label><input type="number" id="dValue"></div>
+                <input type="hidden" id="dStage" value="leads">
+            `, async () => {
+                const data = {
+                    name: document.getElementById('dName').value,
+                    client: document.getElementById('dClient').value,
+                    value: parseFloat(document.getElementById('dValue').value || 0),
+                    stage: 'leads'
+                };
+                showLoading("Saving...");
+                await window.dbOperations.addDeal(data);
+                closeModal();
+                renderSalesSection();
+                hideLoading();
+            });
+        };
+
+        // --- Profile Section ---
+        async function renderProfileSection() {
+            let userData = currentUser;
             
             document.getElementById('mainContent').innerHTML = `
                 <div class="card" style="max-width:600px; margin:0 auto;">
