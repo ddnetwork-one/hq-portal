@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
         /* =========================================
@@ -988,7 +991,7 @@
             border: 1px solid var(--border-light);
         }
         /* Larger Modal for Email */
-        .modal-content.large { max-width: 800px; }
+        .modal-content.large { max-width: 900px; }
         .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
         .modal-header h3 { font-size: 18px; font-weight: 700; font-family: var(--font-heading); }
@@ -1163,6 +1166,180 @@
         }
         .popup-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
+        /* Email Modal Styles */
+        .email-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: 20px;
+        }
+        .email-tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            background: none;
+        }
+        .email-tab:hover { color: var(--text-main); }
+        .email-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+        
+        .email-preview-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .email-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            margin-top: 16px;
+        }
+        .email-status-indicator.sending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+        .email-status-indicator.success {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        .email-status-indicator.error {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        /* Cooldown & Force Send Styles */
+        .email-cooldown-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-top: 16px;
+            text-align: center;
+        }
+        .email-cooldown-box p { margin-bottom: 12px; font-size: 14px; color: #92400e; }
+        .force-send-btn {
+            background: #1f2937;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .force-send-btn:hover { background: #111827; }
+
+        .pdf-link-info {
+            margin-top: 12px;
+            padding: 12px;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        /* Email Grid Layout */
+        .email-modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+        }
+        @media (max-width: 768px) {
+            .email-modal-grid { grid-template-columns: 1fr; }
+        }
+
+        .email-info-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .email-info-box h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        .email-info-box p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        /* Email Summary Styles */
+        .email-summary-preview {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin-top: 16px;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .email-summary-preview h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 8px;
+        }
+        .email-summary-preview .item-list {
+            margin: 16px 0;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+        .email-summary-preview .item-row-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--border-light);
+        }
+        .email-summary-preview .item-row-summary:last-child {
+            border-bottom: none;
+        }
+        .email-summary-preview .total-row-summary {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            margin-top: 12px;
+            border-top: 2px solid var(--border-light);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Section Divider */
+        .section-divider {
+            margin: 24px 0;
+            border: none;
+            border-top: 1px solid var(--border-light);
+            position: relative;
+        }
+        .section-divider::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 0 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* Responsive */
         @media(max-width: 768px) {
             .sidebar { transform: translateX(-100%); width: var(--sidebar-width); }
@@ -1214,7 +1391,7 @@
             </div>
             <div class="login-title">
                 <h1>Internal Access</h1>
-                <p>Sign in to access DDNEX® Management System</p>
+                <p>Sign in to access DDNEX Management System</p>
             </div>
 
             <form id="loginForm" onsubmit="handleLogin(event)">
@@ -1228,7 +1405,7 @@
                 <div class="form-group">
                     <label>Password</label>
                     <div class="form-input-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="••••••••" required>
+                        <input type="password" class="form-input" id="password" placeholder="..." required>
                         <i class="ri-lock-line"></i>
                     </div>
                 </div>
@@ -1239,7 +1416,7 @@
             </form>
             
             <div style="margin-top: 20px; text-align: center; font-size: 11px; color: var(--text-muted);">
-                <p>DDNEX® Internal Management System v2.5</p>
+                <p>DDNEX Internal Management System v2.5</p>
                 <p style="margin-top: 4px;">Authorized Personnel Only</p>
             </div>
         </div>
@@ -1398,7 +1575,7 @@
         import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where, setDoc, orderBy, limit, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-          apiKey: "AIzaSyAwf31b-wpYQwPbd-3DxnqGVRw8g3xq938",
+          apiKey: "AIzaSyAwf31b-wpYwPbd-3DxnqGVRw8g3xq938",
           authDomain: "ddnetwork-database.firebaseapp.com",
           projectId: "ddnetwork-database",
           storageBucket: "ddnetwork-database.firebasestorage.app",
@@ -1594,9 +1771,24 @@
 
     <!-- JavaScript Logic -->
     <script>
+        // =========================================
+        // EMAILJS CONFIGURATION
+        // =========================================
+        const EMAILJS_CONFIG = {
+            publicKey: 'dN7qLgPS_8B-K-SSq',
+            serviceId: 'service_fkiuk6k',
+            templateId: 'template_7ch5l34'
+        };
+
+        // Initialize EmailJS when the script loads
+        (function() {
+            emailjs.init(EMAILJS_CONFIG.publicKey);
+        })();
+
         // State
         let currentUser = null;
         let currentRoute = '/login/auth';
+        let emailLastSentTimestamp = localStorage.getItem('ddnex_last_email_sent') ? parseInt(localStorage.getItem('ddnex_last_email_sent')) : 0;
         
         // Pagination State
         let invoicePageState = { page: 1, perPage: 20, filteredData: [] };
@@ -1608,6 +1800,94 @@
             'Business Website': 899,
             'Business Portal System': 3800,
             'Custom System': 6800
+        };
+
+        // =========================================
+        // EMAIL SENDING FUNCTION (EmailJS)
+        // =========================================
+        async function sendEmailViaEmailJS(toEmail, toName, subject, htmlContent) {
+            try {
+                const templateParams = {
+                    to_email: toEmail,
+                    to_name: toName || 'Client',
+                    from_name: 'DDNEX Billing System',
+                    from_email: 'support@ddnex.com',
+                    subject: subject,
+                    message_html: htmlContent,
+                    reply_to: 'support@ddnex.com'
+                };
+
+                const response = await emailjs.send(
+                    EMAILJS_CONFIG.serviceId,
+                    EMAILJS_CONFIG.templateId,
+                    templateParams
+                );
+
+                console.log('EmailJS Response:', response);
+                
+                if (response.status === 200) {
+                    const now = Date.now();
+                    localStorage.setItem('ddnex_last_email_sent', now);
+                    emailLastSentTimestamp = now;
+                    
+                    return { success: true, messageId: response.text };
+                } else {
+                    return { success: false, error: 'Failed to send email' };
+                }
+            } catch (error) {
+                console.error('EmailJS Error:', error);
+                return { success: false, error: error.message || 'Unknown error occurred' };
+            }
+        }
+
+        // Global email sending function for modal
+        window.sendEmailDirectly = async function(toEmail, subject, htmlContent, docNumber, forceSend = false) {
+            if (!toEmail) {
+                showPopup("Error", "Please enter a recipient email address.", false);
+                return;
+            }
+            
+            const now = Date.now();
+            const timeDiff = now - emailLastSentTimestamp;
+            const cooldownTime = 300000; // 5 minutes
+            
+            if (!forceSend && timeDiff < cooldownTime) {
+                const remaining = Math.ceil((cooldownTime - timeDiff) / 1000);
+                const statusEl = document.getElementById('emailSendStatus');
+                if (statusEl) {
+                    statusEl.className = 'email-status-indicator sending';
+                    statusEl.innerHTML = `
+                        <div class="email-cooldown-box">
+                            <p><i class="ri-time-line"></i> Please wait <strong>${remaining}</strong> seconds before sending another email.</p>
+                            <p style="font-size:12px; margin-bottom:10px;">To prevent spam, emails are rate-limited.</p>
+                            <button class="force-send-btn" onclick="triggerSendEmail('${docNumber}', 'Invoice', true)">
+                                <i class="ri-send-plane-fill"></i> Force Send Now
+                            </button>
+                        </div>
+                    `;
+                }
+                return { success: false, error: 'Cooldown active' };
+            }
+
+            const statusEl = document.getElementById('emailSendStatus');
+            if (statusEl) {
+                statusEl.className = 'email-status-indicator sending';
+                statusEl.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Sending email...';
+            }
+
+            const result = await sendEmailViaEmailJS(toEmail, 'Client', subject, htmlContent);
+
+            if (statusEl) {
+                if (result.success) {
+                    statusEl.className = 'email-status-indicator success';
+                    statusEl.innerHTML = `<i class="ri-checkbox-circle-fill"></i> Email sent successfully to ${toEmail}!`;
+                } else {
+                    statusEl.className = 'email-status-indicator error';
+                    statusEl.innerHTML = `<i class="ri-error-warning-fill"></i> Failed to send: ${result.error}`;
+                }
+            }
+
+            return result;
         };
 
         // Router
@@ -1850,20 +2130,17 @@
 
         // ================== TABLE HELPERS ==================
         
-        // Multi-Filter Dropdown Toggle
         window.toggleFilterDropdown = (id) => {
             const dropdown = document.getElementById(id);
             dropdown.classList.toggle('show');
         };
 
-        // Close dropdowns when clicking outside
         window.addEventListener('click', (e) => {
             if (!e.target.closest('.filter-dropdown')) {
                 document.querySelectorAll('.filter-dropdown-content').forEach(d => d.classList.remove('show'));
             }
         });
 
-        // Sort by Date (Newest First as Default)
         const sortByDateNewest = (data) => {
             return data.sort((a, b) => {
                 const dateA = a.date ? new Date(a.date) : (a.createdAt ? new Date(a.createdAt.seconds * 1000) : new Date(0));
@@ -1872,7 +2149,6 @@
             });
         };
 
-        // Render Pagination
         const renderPagination = (state, tableBodyId, renderFunc) => {
             const { page, perPage, filteredData } = state;
             const totalPages = Math.ceil(filteredData.length / perPage);
@@ -1880,11 +2156,9 @@
             const endIdx = startIdx + perPage;
             const pageData = filteredData.slice(startIdx, endIdx);
 
-            // Render Rows
             const tbody = document.getElementById(tableBodyId);
             tbody.innerHTML = pageData.map(item => renderFunc(item)).join('');
 
-            // Render Pagination Controls
             const controlsId = tableBodyId.replace('TableBody', 'Pagination');
             const controlsEl = document.getElementById(controlsId);
             if(!controlsEl) return;
@@ -1967,7 +2241,174 @@
             return `${day}/${month}/${year}`;
         };
 
-        const generateProfessionalHTML = (doc) => {
+        // =========================================
+        // SUMMARIZED EMAIL HTML - For Sending (FIXED)
+        // =========================================
+        const generateSummarizedEmailHTML = (doc) => {
+            const isQuotation = doc.type === 'Quotation';
+            const docTitle = isQuotation ? 'Quotation' : 'Invoice Receipt';
+            const clientName = doc.clientName || doc.customerName || 'Client';
+            const docNumber = doc.number || doc.id;
+            const dateStr = formatDateLong(doc.date || doc.createdAt);
+            
+            // Items Logic - FIXED: Better handling of items array
+            let itemRows = '';
+            let subtotal = 0;
+            
+            // Ensure items is always an array
+            let itemsList = [];
+            if (doc.items && Array.isArray(doc.items) && doc.items.length > 0) {
+                itemsList = doc.items;
+            } else if (doc.description || doc.subtotal || doc.price || doc.total) {
+                // Fallback: create single item from legacy fields
+                itemsList = [{
+                    description: doc.description || 'Professional Service',
+                    amount: parseFloat(doc.subtotal || doc.price || doc.total || 0)
+                }];
+            }
+
+            // Filter valid items and build rows
+            const validItems = itemsList.filter(item => {
+                const hasDesc = item.description && item.description.trim() !== '';
+                const hasAmount = parseFloat(item.amount || 0) > 0;
+                return hasDesc || hasAmount;
+            });
+
+            if (validItems.length > 0) {
+                validItems.forEach(item => {
+                    const itemAmt = parseFloat(item.amount || 0);
+                    subtotal += itemAmt;
+                    itemRows += `
+                        <div class="item-row-summary">
+                            <span>${item.description || 'Service'}</span>
+                            <strong>${formatMYR(itemAmt)}</strong>
+                        </div>
+                    `;
+                });
+            } else {
+                // Ultimate fallback if no valid items
+                const fallbackAmount = parseFloat(doc.total || doc.grandTotal || doc.subtotal || doc.price || 0);
+                subtotal = fallbackAmount;
+                itemRows = `
+                    <div class="item-row-summary">
+                        <span>Professional Service</span>
+                        <strong>${formatMYR(fallbackAmount)}</strong>
+                    </div>
+                `;
+            }
+
+            const discount = parseFloat(doc.discount || 0);
+            const total = subtotal - discount;
+
+            const statusBadge = doc.status === 'Paid' || doc.status === 'Activated' || doc.status === 'Completed' 
+                ? '<span style="display:inline-block;background:#34c759;color:#ffffff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;">PAID</span>'
+                : '<span style="display:inline-block;background:#ff9500;color:#ffffff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;">PENDING</span>';
+
+            // Payment info for invoice
+            let paymentInfo = '';
+            if (!isQuotation && doc.paymentType && doc.paymentType !== 'One-Time') {
+                const months = doc.installmentMonths || 12;
+                const cycle = doc.installmentCycle || 1;
+                paymentInfo = `
+                    <div style="background:#f0f9ff;padding:12px;border-radius:8px;margin-top:16px;border-left:3px solid #2563eb;">
+                        <p style="margin:0;font-size:13px;color:#1e40af;"><strong>Payment Plan:</strong> ${doc.paymentType} Installment</p>
+                        <p style="margin:4px 0 0 0;font-size:13px;color:#1e40af;"><strong>Cycle:</strong> Month ${cycle} of ${months}</p>
+                    </div>
+                `;
+            }
+
+            // Domain info
+            let domainInfo = '';
+            if (doc.domain) {
+                domainInfo = `
+                    <tr>
+                        <td style="padding:8px 0;color:#64748b;">Domain:</td>
+                        <td style="padding:8px 0;text-align:right;font-weight:600;">${doc.domain}</td>
+                    </tr>
+                `;
+            }
+
+            // For PDF contact
+            const pdfContact = `
+                <div style="background:#f8fafc;padding:16px;border-radius:8px;margin-top:24px;border:1px solid #e2e8f0;">
+                    <p style="margin:0 0 8px 0;font-size:13px;color:#475569;">
+                        <i class="ri-file-pdf-line" style="color:#ef4444;"></i> Need a PDF copy?
+                    </p>
+                    <p style="margin:0;font-size:13px;color:#475569;">
+                        Contact us at <strong style="color:#2563eb;">+60122600969</strong> or reply to this email.
+                    </p>
+                </div>
+            `;
+
+            return `
+<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;max-width:600px;margin:0 auto;background:#ffffff;padding:32px;">
+
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #e2e8f0;">
+        <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX" style="max-width:120px;margin-bottom:16px;">
+        <h1 style="margin:0;font-size:22px;font-weight:800;color:#0f172a;">${docTitle}</h1>
+        <p style="margin:8px 0 0 0;font-size:14px;color:#64748b;">${docNumber}</p>
+    </div>
+
+    <!-- Client & Date Info -->
+    <table style="width:100%;margin-bottom:24px;font-size:14px;">
+        <tr>
+            <td style="padding:8px 0;color:#64748b;vertical-align:top;">Bill To:</td>
+            <td style="padding:8px 0;text-align:right;font-weight:600;">${clientName}</td>
+        </tr>
+        <tr>
+            <td style="padding:8px 0;color:#64748b;">Date:</td>
+            <td style="padding:8px 0;text-align:right;">${dateStr}</td>
+        </tr>
+        ${domainInfo}
+        <tr>
+            <td style="padding:8px 0;color:#64748b;">Status:</td>
+            <td style="padding:8px 0;text-align:right;">${statusBadge}</td>
+        </tr>
+    </table>
+
+    <!-- Items Section -->
+    <div style="background:#f8fafc;border-radius:12px;padding:20px;margin-bottom:24px;">
+        <h3 style="margin:0 0 16px 0;font-size:14px;color:#0f172a;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Items Purchased</h3>
+        <div style="background:#ffffff;border-radius:8px;padding:16px;">
+            ${itemRows}
+        </div>
+        
+        ${discount > 0 ? `
+        <div style="display:flex;justify-content:space-between;padding:12px 0;margin-top:12px;border-top:1px dashed #e2e8f0;font-size:14px;color:#64748b;">
+            <span>Discount</span>
+            <span style="color:#dc2626;">-${formatMYR(discount)}</span>
+        </div>
+        ` : ''}
+        
+        <div style="display:flex;justify-content:space-between;padding:16px 0;margin-top:12px;border-top:2px solid #e2e8f0;">
+            <span style="font-size:16px;font-weight:700;color:#0f172a;">Total</span>
+            <span style="font-size:20px;font-weight:800;color:#2563eb;">${formatMYR(total)}</span>
+        </div>
+    </div>
+
+    ${paymentInfo}
+
+    ${pdfContact}
+
+    <!-- Footer -->
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid #e2e8f0;text-align:center;">
+        <p style="margin:0;font-size:13px;color:#64748b;">
+            DDNEX by DD Cloud Network
+        </p>
+        <p style="margin:4px 0 0 0;font-size:12px;color:#94a3b8;">
+            support@ddnex.com | +60122600969
+        </p>
+    </div>
+
+</div>
+            `;
+        };
+
+        // =========================================
+        // FULL TEMPLATE HTML - For PDF/Download (FIXED)
+        // =========================================
+        const generateFullTemplateHTML = (doc) => {
             const isQuotation = doc.type === 'Quotation';
             const docTitle = isQuotation ? 'Quotation' : 'Invoice Receipt';
             const clientName = doc.clientName || doc.customerName || 'Client';
@@ -1981,62 +2422,72 @@
                 validUntil = formatDateLong(d);
             }
 
-            // Items Logic
             let itemRows = '';
             let subtotal = 0;
             let itemNum = 1;
             
-            // Check if custom items exist
-            if(doc.items && Array.isArray(doc.items)) {
-                doc.items.forEach(item => {
+            // FIXED: Better handling of items array
+            let itemsList = [];
+            if (doc.items && Array.isArray(doc.items) && doc.items.length > 0) {
+                itemsList = doc.items;
+            } else if (doc.description || doc.subtotal || doc.price || doc.total) {
+                itemsList = [{
+                    description: doc.description || 'Professional Service',
+                    amount: parseFloat(doc.subtotal || doc.price || doc.total || 0)
+                }];
+            }
+
+            const validItems = itemsList.filter(item => {
+                const hasDesc = item.description && item.description.trim() !== '';
+                const hasAmount = parseFloat(item.amount || 0) > 0;
+                return hasDesc || hasAmount;
+            });
+
+            if (validItems.length > 0) {
+                validItems.forEach(item => {
                     const itemAmt = parseFloat(item.amount || 0);
                     subtotal += itemAmt;
                     itemRows += `
                         <tr>
-                            <td>${itemNum}</td>
-                            <td>${item.description}</td>
-                            <td>${parseFloat(itemAmt).toLocaleString()}</td>
+                            <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">${itemNum}</td>
+                            <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">${item.description || 'Service'}</td>
+                            <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;text-align:right;">${parseFloat(itemAmt).toLocaleString()}</td>
                         </tr>
                     `;
                     itemNum++;
                 });
             } else {
-                // Legacy single item
-                const desc = doc.description || 'Professional Service';
-                const amt = parseFloat(doc.subtotal || doc.price || 0);
-                subtotal = amt;
-                
+                const fallbackAmt = parseFloat(doc.total || doc.grandTotal || doc.subtotal || doc.price || 0);
+                subtotal = fallbackAmt;
                 itemRows += `
                     <tr>
-                        <td>${itemNum}</td>
-                        <td>${desc}</td>
-                        <td>${parseFloat(amt).toLocaleString()}</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">1</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">Professional Service</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;text-align:right;">${parseFloat(fallbackAmt).toLocaleString()}</td>
                     </tr>
                 `;
-                itemNum++;
+                itemNum = 2;
             }
 
-            // Installment row for Invoice
             if (!isQuotation && doc.paymentType && doc.paymentType !== 'One-Time') {
                 const months = doc.installmentMonths || 12;
                 const monthlyAmt = subtotal / months;
                 itemRows += `
                     <tr>
-                        <td>${itemNum}</td>
-                        <td>${doc.paymentType} Installment Plan</td>
-                        <td>${parseFloat(monthlyAmt).toLocaleString()} / month</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">${itemNum}</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">${doc.paymentType} Installment Plan</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;text-align:right;">${parseFloat(monthlyAmt).toLocaleString()} / month</td>
                     </tr>
                 `;
                 itemNum++;
             }
 
-            // Domain row
             if (doc.domain) {
                 itemRows += `
                     <tr>
-                        <td>${itemNum}</td>
-                        <td>Domain: ${doc.domain}</td>
-                        <td>-</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">${itemNum}</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">Domain: ${doc.domain}</td>
+                        <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;text-align:right;">-</td>
                     </tr>
                 `;
                 itemNum++;
@@ -2048,13 +2499,13 @@
             const transactionRef = doc.transactionRef || doc.number || doc.id;
 
             const statusBadge = doc.status === 'Paid' || doc.status === 'Activated' || doc.status === 'Completed' 
-                ? '<div class="badge" style="background:#34c759;">PAID</div>'
-                : '<div class="badge" style="background:#ff9500;">PENDING</div>';
+                ? '<span style="display:inline-block;background:#34c759;color:#ffffff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;">PAID</span>'
+                : '<span style="display:inline-block;background:#ff9500;color:#ffffff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;">PENDING</span>';
 
             let paymentDetailsSection = '';
             if (!isQuotation) {
                 paymentDetailsSection = `
-                    <div class="payment-box">
+                    <div style="margin-top:25px;background:#f7f7f7;padding:18px;border-radius:12px;font-size:14px;line-height:1.6;">
                         <strong>Payment Details</strong><br>
                         Payment Method: Online Transfer<br>
                         Transaction Reference: ${transactionRef}
@@ -2065,219 +2516,115 @@
             let termsList = '';
             if (isQuotation) {
                 termsList = `
-                    <li>This quotation is valid for 16 days from the date issued.</li>
-                    <li>Services delivered via DDNEX® secure portal.</li>
-                    <li>50% deposit required to commence project.</li>
-                    <li>Balance payment due upon project completion.</li>
-                    <li>Full policies and terms are available on the official DDNEX® website.</li>
+                    <li style="margin-bottom:8px;">This quotation is valid for 16 days from the date issued.</li>
+                    <li style="margin-bottom:8px;">Services delivered via DDNEX secure portal.</li>
+                    <li style="margin-bottom:8px;">50% deposit required to commence project.</li>
+                    <li style="margin-bottom:8px;">Balance payment due upon project completion.</li>
+                    <li style="margin-bottom:8px;">Full policies and terms are available on the official DDNEX website.</li>
                 `;
             } else {
                 termsList = `
-                    <li>This receipt confirms that payment has been successfully received by DDNEX®.</li>
-                    <li>The service includes system setup, hosting, and maintenance under the agreed subscription plan.</li>
-                    <li>All payments made are non-refundable once service deployment has commenced.</li>
-                    <li>DDNEX® reserves the right to update service policies or operational terms when required.</li>
-                    <li>Full policies and terms are available on the official DDNEX® website.</li>
+                    <li style="margin-bottom:8px;">This receipt confirms that payment has been successfully received by DDNEX.</li>
+                    <li style="margin-bottom:8px;">The service includes system setup, hosting, and maintenance under the agreed subscription plan.</li>
+                    <li style="margin-bottom:8px;">All payments made are non-refundable once service deployment has commenced.</li>
+                    <li style="margin-bottom:8px;">DDNEX reserves the right to update service policies or operational terms when required.</li>
+                    <li style="margin-bottom:8px;">Full policies and terms are available on the official DDNEX website.</li>
                 `;
             }
 
+            const contactInfo = `
+                <div style="margin-top:24px;background:#f0f9ff;padding:16px;border-radius:8px;border-left:4px solid #2563eb;">
+                    <p style="margin:0 0 8px 0;font-size:14px;color:#1e40af;">
+                        <strong>Need a PDF copy of this ${isQuotation ? 'quotation' : 'invoice'}?</strong>
+                    </p>
+                    <p style="margin:0;font-size:14px;color:#1e40af;">
+                        Please contact us at <a href="tel:+60122600969" style="color:#2563eb;text-decoration:none;font-weight:700;">+60122600969</a> to request your official PDF receipt.
+                    </p>
+                </div>
+            `;
+
             return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${docTitle} – ${clientName}</title>
-<style>
-  body {
-    margin: 0;
-    background: #f2f2f7;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: #1c1c1e;
-  }
-  .page {
-    max-width: 900px;
-    margin: auto;
-    background: #ffffff;
-    min-height: 100vh;
-    padding: 50px 60px;
-  }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 50px;
-  }
-  .logo img {
-    max-width: 140px;
-  }
-  .company-info {
-    font-size: 13px;
-    color: #6e6e73;
-    line-height: 1.6;
-    margin-top: 12px;
-  }
-  .invoice-info {
-    text-align: right;
-    font-size: 14px;
-  }
-  .badge {
-    display: inline-block;
-    background: #34c759;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-  }
-  .section {
-    margin-bottom: 40px;
-  }
-  .section-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 14px;
-  }
-  .bill {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 10px;
-  }
-  th, td {
-    padding: 14px 10px;
-    border-bottom: 1px solid #e5e5ea;
-    text-align: left;
-  }
-  th {
-    background: #f7f7f7;
-    font-weight: 500;
-    color: #6e6e73;
-  }
-  .total-row td {
-    font-weight: 600;
-    font-size: 16px;
-  }
-  .payment-box {
-    margin-top: 25px;
-    background: #f7f7f7;
-    padding: 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .terms {
-    background: #fafafa;
-    padding: 20px;
-    border-radius: 12px;
-    font-size: 13px;
-    color: #6e6e73;
-    line-height: 1.6;
-  }
-  .terms ul {
-    padding-left: 18px;
-    margin: 8px 0;
-  }
-  .footer {
-    margin-top: 60px;
-    padding-top: 20px;
-    border-top: 1px solid #e5e5ea;
-    font-size: 12px;
-    color: #8e8e93;
-    text-align: center;
-  }
-  @media (max-width: 700px) {
-    .page {
-      padding: 30px 20px;
-    }
-    .header {
-      flex-direction: column;
-      gap: 20px;
-    }
-    .invoice-info {
-      text-align: left;
-    }
-  }
-</style>
-</head>
-<body>
-  <div class="page">
-    <div class="header">
-      <div>
-        <div class="logo">
-          <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX® Logo">
+<div style="background-color:#f2f2f7;padding:20px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+    <div style="max-width:900px;margin:0 auto;background:#ffffff;min-height:100vh;padding:50px 60px;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+        
+        <!-- Header -->
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:50px;">
+            <div>
+                <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX" style="max-width:140px;">
+                <p style="font-size:13px;color:#6e6e73;line-height:1.6;margin-top:12px;">
+                    <strong>DDNEX by DD Cloud Network</strong><br>
+                    Company Registration No.: 202603040752 (MA0342542-K)<br>
+                    Sungai Petani, Kedah, Malaysia<br>
+                    support@ddnex.com | www.ddnex.com
+                </p>
+            </div>
+            <div style="text-align:right;font-size:14px;">
+                ${statusBadge}
+                <p style="margin-top:10px;"><strong>${docTitle}</strong></p>
+                <p style="margin-top:8px;">
+                    ${isQuotation ? 'Quotation' : 'Invoice'} No: <strong>${docNumber}</strong><br>
+                    Date Issued: ${dateStr}
+                    ${isQuotation ? `<br>Valid Until: ${validUntil}` : ''}
+                </p>
+            </div>
         </div>
-        <div class="company-info">
-          <strong>DDNEX® by DD Cloud Network</strong><br>
-          Company Registration No.: 202603040752 (MA0342542-K)<br>
-          Sungai Petani, Kedah, Malaysia<br>
-          support@ddnex.com | www.ddnex.com
+        
+        <!-- Bill To -->
+        <div style="margin-bottom:40px;">
+            <p style="font-size:18px;font-weight:600;margin-bottom:14px;">Bill To</p>
+            <div style="font-size:14px;line-height:1.6;">
+                <strong>${clientName}</strong><br>
+                Malaysia
+                ${doc.domain ? `<br>Domain: ${doc.domain}` : ''}
+            </div>
         </div>
-      </div>
-      <div class="invoice-info">
-        ${statusBadge}
-        <strong>${docTitle}</strong><br><br>
-        ${isQuotation ? 'Quotation' : 'Invoice'} No: ${docNumber}<br>
-        Date Issued: ${dateStr}
-        ${isQuotation ? `<br>Valid Until: ${validUntil}` : ''}
-      </div>
+        
+        <!-- Services Table -->
+        <div style="margin-bottom:40px;">
+            <p style="font-size:18px;font-weight:600;margin-bottom:14px;">Services</p>
+            <table width="100%" style="border-collapse:collapse;font-size:14px;">
+                <tr>
+                    <th width="60" style="padding:12px 16px;text-align:left;border-bottom:1px solid #e5e5ea;background:#f7f7f7;font-weight:500;color:#6e6e73;">Item</th>
+                    <th style="padding:12px 16px;text-align:left;border-bottom:1px solid #e5e5ea;background:#f7f7f7;font-weight:500;color:#6e6e73;">Description</th>
+                    <th width="160" style="padding:12px 16px;text-align:right;border-bottom:1px solid #e5e5ea;background:#f7f7f7;font-weight:500;color:#6e6e73;">Amount (RM)</th>
+                </tr>
+                ${itemRows}
+                ${discount > 0 ? `
+                <tr>
+                    <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;"></td>
+                    <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;">Discount</td>
+                    <td style="padding:12px 16px;border-bottom:1px solid #e5e5ea;text-align:right;">-${parseFloat(discount).toLocaleString()}</td>
+                </tr>
+                ` : ''}
+                <tr>
+                    <td colspan="2" style="padding:16px;text-align:right;font-weight:600;font-size:16px;border:none;">${isQuotation ? 'Total' : 'Total Paid'}</td>
+                    <td style="padding:16px;text-align:right;font-weight:600;font-size:16px;border:none;">RM ${parseFloat(total).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                </tr>
+            </table>
+            ${paymentDetailsSection}
+        </div>
+        
+        <!-- Terms -->
+        <div style="margin-bottom:40px;">
+            <p style="font-size:18px;font-weight:600;margin-bottom:14px;">Terms & Conditions Summary</p>
+            <div style="background:#fafafa;padding:20px;border-radius:12px;font-size:13px;color:#6e6e73;line-height:1.6;">
+                <ul style="padding-left:18px;margin:8px 0;">
+                    ${termsList}
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Contact for PDF -->
+        ${contactInfo}
+        
+        <!-- Footer -->
+        <div style="margin-top:60px;padding-top:20px;border-top:1px solid #e5e5ea;font-size:12px;color:#8e8e93;text-align:center;">
+            <p style="margin:0 0 4px 0;">${isQuotation ? 'Quotation' : 'Invoice'} generated automatically by the DDNEX Billing System</p>
+            <p style="margin:0;">support@ddnex.com</p>
+        </div>
+        
     </div>
-
-    <div class="section">
-      <div class="section-title">Bill To</div>
-      <div class="bill">
-        <strong>${clientName}</strong><br>
-        Malaysia
-        ${doc.domain ? `<br>Domain: ${doc.domain}` : ''}
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Services</div>
-      <table>
-        <tr>
-          <th width="60">Item</th>
-          <th>Description</th>
-          <th width="160">Amount (RM)</th>
-        </tr>
-        ${itemRows}
-        ${discount > 0 ? `
-        <tr>
-          <td></td>
-          <td>Discount</td>
-          <td>-${parseFloat(discount).toLocaleString()}</td>
-        </tr>
-        ` : ''}
-        <tr class="total-row">
-          <td></td>
-          <td>${isQuotation ? 'Total' : 'Total Paid'}</td>
-          <td>RM ${parseFloat(total).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-        </tr>
-      </table>
-      ${paymentDetailsSection}
-    </div>
-
-    <div class="section">
-      <div class="section-title">Terms & Conditions Summary</div>
-      <div class="terms">
-        <ul>
-          ${termsList}
-        </ul>
-      </div>
-    </div>
-
-    <div class="footer">
-      ${isQuotation ? 'Quotation' : 'Invoice'} generated automatically by the DDNEX® Billing System<br>
-      support@ddnex.com
-    </div>
-  </div>
-</body>
-</html>
+</div>
             `;
         };
 
@@ -2360,7 +2707,7 @@
         function renderServicesSection() {
             document.getElementById('mainContent').innerHTML = `
                 <div style="text-align:center; margin-bottom: 32px;">
-                    <h2 style="font-size: 32px; font-family: var(--font-heading); font-weight: 800; margin-bottom: 8px;">DDNEX® Service Packages</h2>
+                    <h2 style="font-size: 32px; font-family: var(--font-heading); font-weight: 800; margin-bottom: 8px;">DDNEX Service Packages</h2>
                     <p style="color: var(--text-muted); font-size: 16px;">Transparent pricing for all your digital needs.</p>
                 </div>
 
@@ -2380,7 +2727,7 @@
                         </div>
                         <div class="pricing-features">
                             <ul>
-                                <li><i class="ri-time-line"></i> Delivery: 2–3 Days</li>
+                                <li><i class="ri-time-line"></i> Delivery: 2-3 Days</li>
                                 <li><i class="ri-layout-line"></i> Single Page Design</li>
                                 <li><i class="ri-customer-service-2-line"></i> Basic Support</li>
                             </ul>
@@ -2404,7 +2751,7 @@
                         </div>
                         <div class="pricing-features">
                             <ul>
-                                <li><i class="ri-time-line"></i> Delivery: 4–7 Days</li>
+                                <li><i class="ri-time-line"></i> Delivery: 4-7 Days</li>
                                 <li><i class="ri-pages-line"></i> Up to 5 Pages</li>
                                 <li><i class="ri-cellphone-line"></i> Mobile Responsive</li>
                             </ul>
@@ -2427,7 +2774,7 @@
                         </div>
                         <div class="pricing-features">
                             <ul>
-                                <li><i class="ri-time-line"></i> Delivery: 10–14 Days</li>
+                                <li><i class="ri-time-line"></i> Delivery: 10-14 Days</li>
                                 <li><i class="ri-database-2-line"></i> Database Integration</li>
                                 <li><i class="ri-shield-check-line"></i> User Roles & Auth</li>
                             </ul>
@@ -2450,7 +2797,7 @@
                         </div>
                         <div class="pricing-features">
                             <ul>
-                                <li><i class="ri-time-line"></i> Delivery: 3–6 Weeks</li>
+                                <li><i class="ri-time-line"></i> Delivery: 3-6 Weeks</li>
                                 <li><i class="ri-tools-line"></i> Tailored Solution</li>
                                 <li><i class="ri-customer-service-line"></i> Priority Support</li>
                             </ul>
@@ -2540,7 +2887,7 @@
             </div>
         `;
 
-        // ================== INVOICES SECTION (Separate Table) ==================
+        // ================== INVOICES SECTION ==================
         async function renderCashbillSection() {
             const orders = await window.dbOperations.getOrders();
             const sortedOrders = sortByDateNewest(orders);
@@ -2600,7 +2947,7 @@
 
         const renderInvoiceRow = (doc) => {
             const dateStr = formatDate(doc.date || doc.createdAt);
-            const clientName = doc.customerName || doc.clientName || 'N/A';
+            const clientName = doc.clientName || doc.customerName || 'N/A';
             const amount = doc.total || doc.price || doc.finalPrice || 0;
             let statusClass = doc.status ? doc.status.toLowerCase() : 'pending';
             if(statusClass === 'activated') statusClass = 'activated';
@@ -2643,7 +2990,6 @@
             invoicePageState.page = 1;
             renderPagination(invoicePageState, 'invoiceTableBody', renderInvoiceRow);
 
-            // Update label
             const label = document.getElementById('invoiceStatusLabel');
             if(selectedStatuses.length === 0) {
                 label.textContent = 'All Status';
@@ -2654,7 +3000,7 @@
             }
         };
 
-        // ================== QUOTATIONS SECTION (Separate Table) ==================
+        // ================== QUOTATIONS SECTION ==================
         async function renderQuotationsSection() {
             const quotations = await window.dbOperations.getQuotations();
             const sortedQuotations = sortByDateNewest(quotations);
@@ -2754,7 +3100,6 @@
             quotationPageState.page = 1;
             renderPagination(quotationPageState, 'quotationTableBody', renderQuotationRow);
 
-            // Update label
             const label = document.getElementById('quotationStatusLabel');
             if(selectedStatuses.length === 0) {
                 label.textContent = 'All Status';
@@ -2834,7 +3179,6 @@
                 };
             }
 
-            // Ensure items array exists
             if(!data.items || !Array.isArray(data.items)) {
                 data.items = [{description: data.description || '', amount: data.subtotal || data.price || 0}];
             }
@@ -2843,7 +3187,6 @@
             const clientOptions = clients.map(c => `<option value="${c.name}" ${data.clientName === c.name ? 'selected' : ''}>${c.name}</option>`).join('');
             const isWebsiteOrder = data.source === 'Website';
 
-            // Calculate subtotal from items
             const subtotal = data.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
             const discount = parseFloat(data.discount || 0);
             const grandTotal = subtotal - discount;
@@ -2868,183 +3211,184 @@
                         <!-- Preview -->
                         <div class="doc-preview-card">
                             <div class="doc-preview-header">
-                                <div>
-                                    <div class="doc-preview-logo">DDNEX®</div>
-                                    <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
-                                </div>
-                                <div style="text-align:right;">
-                                    <div class="doc-type-badge ${isWebsiteOrder ? 'website' : data.status === 'Draft' ? 'draft' : 'invoice'}">${isWebsiteOrder ? 'Website Order' : data.status === 'Draft' ? 'Draft' : 'Invoice'}</div>
-                                    <h2 style="font-size:24px; font-weight:800; margin-top:8px;" id="previewNumber">${data.number || data.id}</h2>
-                                </div>
-                            </div>
-                            
-                            <div class="doc-preview-meta">
-                                <div class="doc-preview-meta-item">
-                                    <label>Bill To</label>
-                                    <p id="previewClient">${data.clientName || data.customerName || 'Select Client'}</p>
-                                    ${isWebsiteOrder && data.customerEmail ? `<p style="font-size:12px; color:#64748b;">${data.customerEmail}</p>` : ''}
-                                </div>
-                                <div class="doc-preview-meta-item" style="text-align:right;">
-                                    <label>Date</label>
-                                    <p id="previewDate">${formatDate(data.date || data.createdAt)}</p>
-                                </div>
-                            </div>
-                            
-                            ${data.domain || isWebsiteOrder ? `
-                            <div style="margin-bottom: 24px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary);">
-                                <label style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Project Domain</label>
-                                <p style="font-size:15px; font-weight:600; color:var(--text-main); margin-top:4px;">
-                                    <i class="ri-global-line" style="vertical-align: middle; margin-right: 6px;"></i>
-                                    ${data.domain || 'N/A'}
-                                </p>
-                            </div>
-                            ` : ''}
-
-                            <div class="doc-preview-meta" id="installmentPreviewMeta" style="display: ${data.paymentType !== 'One-Time' ? 'grid' : 'none'}; background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-                                <div class="doc-preview-meta-item">
-                                    <label>Payment Type</label>
-                                    <p id="previewPaymentType">${data.paymentType || 'One-Time'}</p>
-                                </div>
-                                <div class="doc-preview-meta-item" style="text-align:right;">
-                                    <label>Cycle</label>
-                                    <p id="previewCycle">${data.installmentCycle || 1} of ${data.installmentMonths || 12}</p>
-                                </div>
-                            </div>
-
-                            <table class="doc-preview-table">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th style="text-align:right;">Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="previewItemsBody">
-                                    ${data.items.map(item => `
-                                        <tr>
-                                            <td>${item.description || '-'}</td>
-                                            <td style="text-align:right;">${formatMYR(item.amount)}</td>
-                                        </tr>
-                                    `).join('')}
-                                    <tr>
-                                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;">Subtotal</td>
-                                        <td style="border:none; text-align:right; padding-top:16px; font-weight:600;" id="previewSubtotal">${formatMYR(subtotal)}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="border:none; text-align:right;">Discount</td>
-                                        <td style="border:none; text-align:right;" id="previewDiscount">-${formatMYR(data.discount)}</td>
-                                    </tr>
-                                    <tr class="total-row">
-                                        <td style="text-align:right; border:none;">Total</td>
-                                        <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(grandTotal)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Editor Form -->
-                        <div class="card" style="align-self: start; position: sticky; top: 96px;">
-                            <div class="card-header"><h3>Order Details</h3></div>
-                            <div class="card-body doc-editor-form">
-                                <div class="form-group-modal">
-                                    <label>Client / Customer</label>
-                                    <input type="text" id="editClient" value="${data.clientName || data.customerName || ''}" oninput="updateInvoicePreview()" ${isWebsiteOrder ? 'readonly' : ''}>
+                                    <div>
+                                        <div class="doc-preview-logo">DDNEX</div>
+                                        <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div class="doc-type-badge ${isWebsiteOrder ? 'website' : data.status === 'Draft' ? 'draft' : 'invoice'}">${isWebsiteOrder ? 'Website Order' : data.status === 'Draft' ? 'Draft' : 'Invoice'}</div>
+                                        <h2 style="font-size:24px; font-weight:800; margin-top:8px;" id="previewNumber">${data.number || data.id}</h2>
+                                    </div>
                                 </div>
                                 
-                                <div class="form-group-modal">
-                                    <label>Domain</label>
-                                    <input type="text" id="editDomain" value="${data.domain || ''}" placeholder="example.com" oninput="updateInvoicePreview()">
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="form-group-modal">
+                                <div class="doc-preview-meta">
+                                    <div class="doc-preview-meta-item">
+                                        <label>Bill To</label>
+                                        <p id="previewClient">${data.clientName || data.customerName || 'Select Client'}</p>
+                                        ${isWebsiteOrder && data.customerEmail ? `<p style="font-size:12px; color:#64748b;">${data.customerEmail}</p>` : ''}
+                                    </div>
+                                    <div class="doc-preview-meta-item" style="text-align:right;">
                                         <label>Date</label>
-                                        <input type="date" id="editDate" value="${data.date}" onchange="updateInvoicePreview()">
-                                    </div>
-                                    <div class="form-group-modal">
-                                        <label>Status</label>
-                                        <select id="editStatus">
-                                            <option value="Draft" ${data.status === 'Draft' ? 'selected' : ''}>Draft</option>
-                                            <option value="Unpaid" ${data.status === 'Unpaid' ? 'selected' : ''}>Unpaid</option>
-                                            <option value="Paid" ${data.status === 'Paid' ? 'selected' : ''}>Paid</option>
-                                            <option value="Activated" ${data.status === 'Activated' ? 'selected' : ''}>Activated</option>
-                                            <option value="Completed" ${data.status === 'Completed' ? 'selected' : ''}>Completed</option>
-                                        </select>
+                                        <p id="previewDate">${formatDate(data.date || data.createdAt)}</p>
                                     </div>
                                 </div>
                                 
-                                ${isWebsiteOrder ? `
-                                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
-                                        <p style="font-size:12px; font-weight:600; margin-bottom:4px;">Website Order Info</p>
-                                        <p style="font-size:13px;">Phone: <strong>${data.customerPhone || 'N/A'}</strong></p>
-                                    </div>
+                                ${data.domain || isWebsiteOrder ? `
+                                <div style="margin-bottom: 24px; padding: 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid var(--primary);">
+                                    <label style="font-size:11px; color:var(--text-muted); text-transform:uppercase; font-weight:600;">Project Domain</label>
+                                    <p style="font-size:15px; font-weight:600; color:var(--text-main); margin-top:4px;">
+                                        <i class="ri-global-line" style="vertical-align: middle; margin-right: 6px;"></i>
+                                        ${data.domain || 'N/A'}
+                                    </p>
+                                </div>
                                 ` : ''}
 
-                                <hr style="margin: 16px 0; border-color: var(--border-light);">
-                                
-                                <label style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:block;">Items</label>
-                                <div class="items-editor" id="itemsEditor">
-                                    ${data.items.map((item, idx) => `
-                                        <div class="item-row" data-index="${idx}">
-                                            <input type="text" placeholder="Description" value="${item.description || ''}" onchange="updateItemRow(${idx}, 'description', this.value)">
-                                            <input type="number" placeholder="Amount" value="${item.amount || 0}" onchange="updateItemRow(${idx}, 'amount', this.value)">
-                                            <button class="btn-remove-item" onclick="removeItemRow(${idx})"><i class="ri-delete-bin-line"></i></button>
+                                <div class="doc-preview-meta" id="installmentPreviewMeta" style="display: ${data.paymentType !== 'One-Time' ? 'grid' : 'none'}; background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                                    <div class="doc-preview-meta-item">
+                                        <label>Payment Type</label>
+                                        <p id="previewPaymentType">${data.paymentType || 'One-Time'}</p>
+                                    </div>
+                                    <div class="doc-preview-meta-item" style="text-align:right;">
+                                        <label>Cycle</label>
+                                        <p id="previewCycle">${data.installmentCycle || 1} of ${data.installmentMonths || 12}</p>
+                                    </div>
+                                </div>
+
+                                <table class="doc-preview-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th style="text-align:right;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="previewItemsBody">
+                                        ${data.items.map(item => `
+                                            <tr>
+                                                <td>${item.description || '-'}</td>
+                                                <td style="text-align:right;">${formatMYR(item.amount)}</td>
+                                            </tr>
+                                        `).join('')}
+                                        <tr>
+                                            <td style="border:none; text-align:right; padding-top:16px; font-weight:600;">Subtotal</td>
+                                            <td style="border:none; text-align:right; padding-top:16px; font-weight:600;" id="previewSubtotal">${formatMYR(subtotal)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border:none; text-align:right;">Discount</td>
+                                            <td style="border:none; text-align:right;" id="previewDiscount">-${formatMYR(data.discount)}</td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <td style="text-align:right; border:none;">Total</td>
+                                            <td style="text-align:right; border:none;" id="previewTotal">${formatMYR(grandTotal)}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Editor Form -->
+                            <div class="card" style="align-self: start; position: sticky; top: 96px;">
+                                <div class="card-header"><h3>Order Details</h3></div>
+                                <div class="card-body doc-editor-form">
+                                    <div class="form-group-modal">
+                                        <label>Client / Customer</label>
+                                        <input type="text" id="editClient" value="${data.clientName || data.customerName || ''}" oninput="updateInvoicePreview()" ${isWebsiteOrder ? 'readonly' : ''}>
+                                    </div>
+                                    
+                                    <div class="form-group-modal">
+                                        <label>Domain</label>
+                                        <input type="text" id="editDomain" value="${data.domain || ''}" placeholder="example.com" oninput="updateInvoicePreview()">
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group-modal">
+                                            <label>Date</label>
+                                            <input type="date" id="editDate" value="${data.date}" onchange="updateInvoicePreview()">
                                         </div>
-                                    `).join('')}
-                                    <button class="btn-add-item" onclick="addItemRow()"><i class="ri-add-line"></i> Add Item</button>
-                                </div>
-
-                                <div class="form-group-modal" style="margin-top: 16px;">
-                                    <label>Discount (RM)</label>
-                                    <input type="number" id="editDiscount" value="${data.discount || 0}" oninput="updateInvoicePreview()">
-                                </div>
-
-                                <hr style="margin: 16px 0; border-color: var(--border-light);">
-                                
-                                <div class="form-group-modal">
-                                    <label>Payment Type</label>
-                                    <div class="payment-options-grid">
-                                        <button type="button" class="payment-option-btn ${!data.paymentType || data.paymentType === 'One-Time' ? 'active' : ''}" onclick="setPaymentType('One-Time')">
-                                            <strong>One-Time</strong>
-                                            <span>Full Payment</span>
-                                        </button>
-                                        <button type="button" class="payment-option-btn ${data.paymentType === '12-Month' ? 'active' : ''}" onclick="setPaymentType('12-Month')">
-                                            <strong>12 Month</strong>
-                                            <span>Installment</span>
-                                        </button>
-                                        <button type="button" class="payment-option-btn ${data.paymentType === '24-Month' ? 'active' : ''}" onclick="setPaymentType('24-Month')">
-                                            <strong>24 Month</strong>
-                                            <span>Installment</span>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="installment-info-box" id="installmentBox" style="display: ${data.paymentType !== 'One-Time' ? 'block' : 'none'};">
-                                    <div class="installment-stat">
-                                        <span>Grand Total:</span>
-                                        <strong id="instGrandTotal">${formatMYR(grandTotal)}</strong>
-                                    </div>
-                                    <div class="installment-stat">
-                                        <span>Monthly Payment:</span>
-                                        <strong id="instMonthly">${formatMYR(grandTotal / (data.installmentMonths || 12))}</strong>
-                                    </div>
-                                    <div class="form-row" style="margin-top:12px;">
-                                        <div class="form-group-modal" style="margin-bottom:0;">
-                                            <label>Current Cycle</label>
-                                            <input type="number" id="editCycle" value="${data.installmentCycle || 1}" min="1" oninput="updateInvoicePreview()">
-                                        </div>
-                                        <div class="form-group-modal" style="margin-bottom:0;">
-                                            <label>Remaining Balance</label>
-                                            <input type="text" id="remainingBalanceDisplay" readonly value="${formatMYR(grandTotal - (grandTotal / (data.installmentMonths || 12)) * (data.installmentCycle || 1))}" style="background:#f8fafc;">
+                                        <div class="form-group-modal">
+                                            <label>Status</label>
+                                            <select id="editStatus">
+                                                <option value="Draft" ${data.status === 'Draft' ? 'selected' : ''}>Draft</option>
+                                                <option value="Unpaid" ${data.status === 'Unpaid' ? 'selected' : ''}>Unpaid</option>
+                                                <option value="Paid" ${data.status === 'Paid' ? 'selected' : ''}>Paid</option>
+                                                <option value="Activated" ${data.status === 'Activated' ? 'selected' : ''}>Activated</option>
+                                                <option value="Completed" ${data.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                
-                                <div style="margin-top: 16px;">
-                                    <button class="btn btn-whatsapp" style="width: 100%;" onclick="sendPaymentReminder()">
-                                        <i class="ri-whatsapp-line"></i> Send Payment Reminder
-                                    </button>
-                                </div>
+                                    
+                                    ${isWebsiteOrder ? `
+                                        <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                                            <p style="font-size:12px; font-weight:600; margin-bottom:4px;">Website Order Info</p>
+                                            <p style="font-size:13px;">Phone: <strong>${data.customerPhone || 'N/A'}</strong></p>
+                                        </div>
+                                    ` : ''}
 
+                                    <hr style="margin: 16px 0; border-color: var(--border-light);">
+                                    
+                                    <label style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:block;">Items</label>
+                                    <div class="items-editor" id="itemsEditor">
+                                        ${data.items.map((item, idx) => `
+                                            <div class="item-row" data-index="${idx}">
+                                                <input type="text" placeholder="Description" value="${item.description || ''}" onchange="updateItemRow(${idx}, 'description', this.value)">
+                                                <input type="number" placeholder="Amount" value="${item.amount || 0}" onchange="updateItemRow(${idx}, 'amount', this.value)">
+                                                <button class="btn-remove-item" onclick="removeItemRow(${idx})"><i class="ri-delete-bin-line"></i></button>
+                                            </div>
+                                        `).join('')}
+                                        <button class="btn-add-item" onclick="addItemRow()"><i class="ri-add-line"></i> Add Item</button>
+                                    </div>
+
+                                    <div class="form-group-modal" style="margin-top: 16px;">
+                                        <label>Discount (RM)</label>
+                                        <input type="number" id="editDiscount" value="${data.discount || 0}" oninput="updateInvoicePreview()">
+                                    </div>
+
+                                    <hr style="margin: 16px 0; border-color: var(--border-light);">
+                                    
+                                    <div class="form-group-modal">
+                                        <label>Payment Type</label>
+                                        <div class="payment-options-grid">
+                                            <button type="button" class="payment-option-btn ${!data.paymentType || data.paymentType === 'One-Time' ? 'active' : ''}" onclick="setPaymentType('One-Time')">
+                                                <strong>One-Time</strong>
+                                                <span>Full Payment</span>
+                                            </button>
+                                            <button type="button" class="payment-option-btn ${data.paymentType === '12-Month' ? 'active' : ''}" onclick="setPaymentType('12-Month')">
+                                                <strong>12 Month</strong>
+                                                <span>Installment</span>
+                                            </button>
+                                            <button type="button" class="payment-option-btn ${data.paymentType === '24-Month' ? 'active' : ''}" onclick="setPaymentType('24-Month')">
+                                                <strong>24 Month</strong>
+                                                <span>Installment</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="installment-info-box" id="installmentBox" style="display: ${data.paymentType !== 'One-Time' ? 'block' : 'none'};">
+                                        <div class="installment-stat">
+                                            <span>Grand Total:</span>
+                                            <strong id="instGrandTotal">${formatMYR(grandTotal)}</strong>
+                                        </div>
+                                        <div class="installment-stat">
+                                            <span>Monthly Payment:</span>
+                                            <strong id="instMonthly">${formatMYR(grandTotal / (data.installmentMonths || 12))}</strong>
+                                        </div>
+                                        <div class="form-row" style="margin-top:12px;">
+                                            <div class="form-group-modal" style="margin-bottom:0;">
+                                                <label>Current Cycle</label>
+                                                <input type="number" id="editCycle" value="${data.installmentCycle || 1}" min="1" oninput="updateInvoicePreview()">
+                                            </div>
+                                            <div class="form-group-modal" style="margin-bottom:0;">
+                                                <label>Remaining Balance</label>
+                                                <input type="text" id="remainingBalanceDisplay" readonly value="${formatMYR(grandTotal - (grandTotal / (data.installmentMonths || 12)) * (data.installmentCycle || 1))}" style="background:#f8fafc;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="margin-top: 16px;">
+                                        <button class="btn btn-whatsapp" style="width: 100%;" onclick="sendPaymentReminder()">
+                                            <i class="ri-whatsapp-line"></i> Send Payment Reminder
+                                        </button>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -3102,7 +3446,7 @@
             const d = new Date(date);
             const formattedDate = d.toLocaleDateString('en-GB');
 
-            const text = `Hello,\n\nThis is a friendly reminder from DDNEX® regarding your monthly installment payment.\n\nMonthly Payment: ${amount}\nBilling Cycle: Month ${cycle} of ${months}\nDue Date: ${formattedDate}\n\nKindly complete the payment before the due date to ensure your service continues without interruption.\n\nIf payment has already been made, please disregard this message.\n\nThank you.\n\nDDNEX®\nsupport@ddnex.com`;
+            const text = `Hello,\n\nThis is a friendly reminder from DDNEX regarding your monthly installment payment.\n\nMonthly Payment: ${amount}\nBilling Cycle: Month ${cycle} of ${months}\nDue Date: ${formattedDate}\n\nKindly complete the payment before the due date to ensure your service continues without interruption.\n\nIf payment has already been made, please disregard this message.\n\nThank you.\n\nDDNEX\nsupport@ddnex.com`;
 
             const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
             window.open(url, '_blank');
@@ -3139,13 +3483,12 @@
             if(pSubtotal) pSubtotal.textContent = formatMYR(subtotal);
             if(pDiscount) pDiscount.textContent = `-${formatMYR(discount)}`;
 
-            // Update items in preview
             const tbody = document.getElementById('previewItemsBody');
             if(tbody) {
                 const itemsHtml = window.currentItems.map(item => `
                     <tr>
                         <td>${item.description || '-'}</td>
-                        <td style="text-align:right;">${formatMYR(item.amount)}</td>
+                        <td style="text-align:right;">${formatMYR(item.amount || 0)}</td>
                     </tr>
                 `).join('');
                 
@@ -3236,6 +3579,7 @@
                 discount: discount,
                 total: invoiceTotal, 
                 grandTotal: grandTotal, 
+                subtotal: subtotal,
                 paymentType: type,
                 installmentMonths: months,
                 installmentCycle: cycle,
@@ -3243,7 +3587,7 @@
                 updatedAt: new Date()
             };
 
-            showLoading            ("Saving...");
+            showLoading("Saving...");
             await window.dbOperations.setOrder(id, data);
             hideLoading();
             showPopup("Success", "Invoice saved successfully.");
@@ -3265,7 +3609,6 @@
                 };
             }
 
-            // Ensure items array exists
             if(!data.items || !Array.isArray(data.items)) {
                 data.items = [{description: data.description || '', amount: data.subtotal || data.price || 0}];
             }
@@ -3273,7 +3616,6 @@
             const clients = await window.dbOperations.getClients();
             const clientOptions = clients.map(c => `<option value="${c.name}" ${data.clientName === c.name ? 'selected' : ''}>${c.name}</option>`).join('');
             
-            // Calculate subtotal
             const subtotal = data.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
             const discount = parseFloat(data.discount || 0);
             const grandTotal = subtotal - discount;
@@ -3298,7 +3640,7 @@
                         <div class="doc-preview-card">
                             <div class="doc-preview-header">
                                 <div>
-                                    <div class="doc-preview-logo">DDNEX®</div>
+                                    <div class="doc-preview-logo">DDNEX</div>
                                     <p style="font-size:12px; color:#64748b;">Digital Solutions Provider</p>
                                 </div>
                                 <div style="text-align:right;">
@@ -3451,7 +3793,6 @@
             if(document.getElementById('previewClient')) document.getElementById('previewClient').textContent = client || 'Select Client';
             if(document.getElementById('previewDate')) document.getElementById('previewDate').textContent = formatDate(dateVal);
 
-            // Update items in preview
             const tbody = document.getElementById('previewQuotationItemsBody');
             if(tbody) {
                 const itemsHtml = window.currentQuotationItems.map(item => `
@@ -3524,12 +3865,11 @@
                     number: newInvId,
                     type: 'Invoice',
                     source: 'Portal',
-                    status: 'Draft', // Converted invoices start as Draft
+                    status: 'Draft',
                     paymentType: 'One-Time'
                 };
                 await window.dbOperations.setOrder(newInvId, invData);
                 
-                // Update quotation status
                 await window.dbOperations.setQuotation(qId, { status: 'Accepted' });
                 
                 hideLoading();
@@ -3554,52 +3894,219 @@
             }
         };
 
-        // ================== EMAIL TEMPLATE MODAL ==================
+        // ================== EMAIL TEMPLATE MODAL (Updated with Summary) ==================
         window.openEmailTemplateModal = async (id, type) => {
             let doc;
             if (type === 'Quotation') {
                 doc = await window.dbOperations.getQuotation(id);
-                if(!doc) doc = { 
-                    type: 'Quotation', 
-                    number: id, 
-                    clientName: document.getElementById('editQClient')?.value || '', 
-                    items: window.currentQuotationItems, 
-                    discount: parseFloat(document.getElementById('editQDiscount')?.value || 0),
-                    date: document.getElementById('editQDate')?.value 
-                };
             } else {
                 doc = await window.dbOperations.getOrder(id);
-                if(!doc) doc = { 
-                    type: 'Invoice', 
-                    number: id, 
-                    clientName: document.getElementById('editClient')?.value || '', 
-                    domain: document.getElementById('editDomain')?.value || '',
-                    items: window.currentItems, 
-                    discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
-                    paymentType: window.currentPaymentType,
-                    installmentCycle: document.getElementById('editCycle')?.value,
-                    date: document.getElementById('editDate')?.value
-                };
             }
 
-            // Calculate totals for the template
-            if(!doc.items) doc.items = [];
+            if (!doc) {
+                if (type === 'Quotation') {
+                     doc = { 
+                        type: 'Quotation', 
+                        number: id, 
+                        clientName: document.getElementById('editQClient')?.value || '', 
+                        items: window.currentQuotationItems, 
+                        discount: parseFloat(document.getElementById('editQDiscount')?.value || 0),
+                        date: document.getElementById('editQDate')?.value 
+                    };
+                } else {
+                     doc = { 
+                        type: 'Invoice', 
+                        number: id, 
+                        clientName: document.getElementById('editClient')?.value || '', 
+                        domain: document.getElementById('editDomain')?.value || '',
+                        items: window.currentItems, 
+                        discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
+                        paymentType: window.currentPaymentType,
+                        installmentCycle: document.getElementById('editCycle')?.value,
+                        date: document.getElementById('editDate')?.value
+                    };
+                }
+            }
+
+            // FIXED: Ensure items array is properly initialized
+            if(!doc.items || !Array.isArray(doc.items)) {
+                doc.items = [];
+                // Try to get values from legacy fields
+                const fallbackAmount = parseFloat(doc.subtotal || doc.price || doc.total || doc.grandTotal || 0);
+                if (fallbackAmount > 0 || doc.description) {
+                    doc.items = [{
+                        description: doc.description || 'Professional Service',
+                        amount: fallbackAmount
+                    }];
+                }
+            }
+            
             const subtotal = doc.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
             doc.subtotal = subtotal;
             doc.total = subtotal - (doc.discount || 0);
 
-            const htmlContent = generateProfessionalHTML(doc);
+            // Generate BOTH versions
+            const summarizedHTML = generateSummarizedEmailHTML(doc);
+            const fullTemplateHTML = generateFullTemplateHTML(doc);
+            
+            const docTitle = type === 'Quotation' ? 'Quotation' : 'Invoice';
+            const defaultSubject = `Your ${docTitle} from DDNEX - ${doc.number || id}`;
+            
+            let clientEmail = '';
+            if(doc.customerEmail) clientEmail = doc.customerEmail;
+
+            // Build items summary for preview
+            const itemsSummary = doc.items.map(item => `
+                <div class="item-row-summary">
+                    <span>${item.description || '-'}</span>
+                    <strong>${formatMYR(item.amount || 0)}</strong>
+                </div>
+            `).join('');
 
             const content = `
-                <p style="margin-bottom:12px; font-size:13px;">Copy the HTML code below to use in your email client (Gmail, Outlook, etc.).</p>
-                <textarea id="emailCodeTextarea" style="width:100%; height:300px; font-family:monospace; font-size:12px; border:1px solid #e2e8f0; border-radius:8px; padding:12px; resize:vertical;" readonly>${htmlContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
-                <div style="margin-top:12px; display:flex; gap:8px;">
-                    <button class="btn btn-primary" onclick="copyEmailCode()"><i class="ri-clipboard-line"></i> Copy Code</button>
-                    <button class="btn btn-outline" onclick="downloadEmailHTML('${doc.number || id}', '${type}')"><i class="ri-download-line"></i> Download HTML</button>
+                <div class="email-tabs">
+                    <button class="email-tab active" onclick="switchEmailTab('send')">Send Email</button>
+                    <button class="email-tab" onclick="switchEmailTab('download')">Download / Copy</button>
+                </div>
+                
+                <div class="email-modal-grid">
+                    <div>
+                        <!-- SEND EMAIL TAB -->
+                        <div id="emailTabSend">
+                            <div class="form-group-modal">
+                                <label>Recipient Email</label>
+                                <input type="email" id="emailRecipient" value="${clientEmail}" placeholder="client@example.com">
+                            </div>
+                            <div class="form-group-modal">
+                                <label>Subject</label>
+                                <input type="text" id="emailSubject" value="${defaultSubject}">
+                            </div>
+                            
+                            <!-- Email Preview -->
+                            <div style="margin-top:16px;">
+                                <label style="font-size:13px; font-weight:600; color:var(--text-secondary); margin-bottom:8px; display:block;">Email Preview (Summarized)</label>
+                                <div class="email-summary-preview">
+                                    <div style="text-align:center; margin-bottom:20px;">
+                                        <img src="https://i.ibb.co/dsfCkWFT/DDNEX-05.png" alt="DDNEX" style="max-width:100px; margin-bottom:12px;">
+                                        <h3 style="margin:0; font-size:18px; color:#0f172a;">${docTitle} #${doc.number || id}</h3>
+                                    </div>
+                                    <table style="width:100%; font-size:14px; margin-bottom:16px;">
+                                        <tr>
+                                            <td style="color:#64748b;">Client:</td>
+                                            <td style="text-align:right; font-weight:600;">${doc.clientName || 'N/A'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="color:#64748b;">Total:</td>
+                                            <td style="text-align:right; font-weight:700; color:#2563eb; font-size:16px;">${formatMYR(doc.total)}</td>
+                                        </tr>
+                                    </table>
+                                    <div class="item-list">
+                                        ${itemsSummary}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary" style="width:100%; margin-top:16px;" onclick="triggerSendEmail('${id}', '${type}', false)">
+                                <i class="ri-send-plane-fill"></i> Send Summarized Email
+                            </button>
+                            
+                            <div id="emailSendStatus"></div>
+                        </div>
+                        
+                        <!-- DOWNLOAD / COPY TAB -->
+                        <div id="emailTabDownload" style="display:none;">
+                            <div class="email-info-box" style="background:#fef3c7; border-color:#fcd34d;">
+                                <h4 style="color:#92400e;"><i class="ri-information-line"></i> Full Template</h4>
+                                <p style="color:#92400e;">Use this for PDF printing or copying the complete invoice/quotation design.</p>
+                            </div>
+                            
+                            <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="btn btn-outline" onclick="copyEmailCode()"><i class="ri-clipboard-line"></i> Copy Full HTML</button>
+                                <button class="btn btn-outline" onclick="downloadEmailHTML('${doc.number || id}', '${type}')"><i class="ri-download-line"></i> Download HTML</button>
+                                <button class="btn btn-primary" onclick="printDocument('${id}', '${type}')"><i class="ri-printer-line"></i> Print PDF</button>
+                            </div>
+                            
+                            <textarea id="emailCodeTextarea" style="width:100%; height:250px; font-family:monospace; font-size:11px; border:1px solid #e2e8f0; border-radius:8px; padding:12px; resize:vertical; margin-top:16px;" readonly>${fullTemplateHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- RIGHT SIDEBAR -->
+                    <div>
+                        <div class="email-info-box">
+                            <h4><i class="ri-file-text-line"></i> Document Info</h4>
+                            <p><strong>Type:</strong> ${docTitle}</p>
+                            <p><strong>Number:</strong> ${doc.number || id}</p>
+                            <p><strong>Client:</strong> ${doc.clientName || 'N/A'}</p>
+                            <p><strong>Total:</strong> ${formatMYR(doc.total)}</p>
+                        </div>
+                        
+                        <div class="email-info-box">
+                            <h4><i class="ri-information-line"></i> Email Info</h4>
+                            <p style="font-size:12px;">The email sent will be <strong>summarized</strong> with item details.</p>
+                            <p style="font-size:12px; margin-top:8px;">For full PDF receipt, client can contact:</p>
+                            <p style="font-size:16px; font-weight:700; color:#2563eb; margin-top:4px;">+60122600969</p>
+                        </div>
+                        
+                        <div class="email-info-box">
+                            <h4><i class="ri-mail-line"></i> Email Compatibility</h4>
+                            <p style="margin-top:8px;">
+                                <span style="display:inline-block;background:#fef3c7;color:#92400e;padding:4px 8px;border-radius:4px;font-size:11px;margin:2px;">Gmail</span>
+                                <span style="display:inline-block;background:#dbeafe;color:#1e40af;padding:4px 8px;border-radius:4px;font-size:11px;margin:2px;">Outlook</span>
+                                <span style="display:inline-block;background:#e0e7ff;color:#4f46e5;padding:4px 8px;border-radius:4px;font-size:11px;margin:2px;">Yahoo</span>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             `;
 
-            openModal(`Email Template: ${doc.number || id}`, content, closeModal, true);
+            // Store the HTML for later use
+            window.currentEmailHTML = summarizedHTML;
+            window.currentFullHTML = fullTemplateHTML;
+
+            openModal(`Email: ${doc.number || id}`, content, closeModal, true);
+        };
+
+        window.switchEmailTab = (tab) => {
+            document.querySelectorAll('.email-tab').forEach(t => t.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            if(tab === 'send') {
+                document.getElementById('emailTabSend').style.display = 'block';
+                document.getElementById('emailTabDownload').style.display = 'none';
+            } else {
+                document.getElementById('emailTabSend').style.display = 'none';
+                document.getElementById('emailTabDownload').style.display = 'block';
+            }
+        };
+
+        window.triggerSendEmail = async (id, type, forceSend = false) => {
+            const toEmail = document.getElementById('emailRecipient').value;
+            const subject = document.getElementById('emailSubject').value;
+            
+            let doc;
+            if (type === 'Quotation') doc = await window.dbOperations.getQuotation(id);
+            else doc = await window.dbOperations.getOrder(id);
+            
+            // FIXED: Ensure items array is properly handled
+            if(!doc.items || !Array.isArray(doc.items)) {
+                doc.items = [];
+                const fallbackAmount = parseFloat(doc.subtotal || doc.price || doc.total || doc.grandTotal || 0);
+                if (fallbackAmount > 0 || doc.description) {
+                    doc.items = [{
+                        description: doc.description || 'Professional Service',
+                        amount: fallbackAmount
+                    }];
+                }
+            }
+            
+            const subtotal = doc.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+            doc.subtotal = subtotal;
+            doc.total = subtotal - (doc.discount || 0);
+            
+            // Use SUMMARIZED version for email
+            const emailHtml = generateSummarizedEmailHTML(doc);
+            
+            await window.sendEmailDirectly(toEmail, subject, emailHtml, doc.number || id, forceSend);
         };
 
         window.copyEmailCode = () => {
@@ -3608,11 +4115,11 @@
             const rawHtml = doc.documentElement.textContent;
             
             navigator.clipboard.writeText(rawHtml).then(() => {
-                showPopup("Copied!", "HTML code copied to clipboard.");
+                showPopup("Copied!", "Full HTML code copied to clipboard.");
             }).catch(err => {
                 textarea.select();
                 document.execCommand('copy');
-                showPopup("Copied!", "HTML code copied to clipboard.");
+                showPopup("Copied!", "Full HTML code copied to clipboard.");
             });
         };
 
@@ -3632,7 +4139,7 @@
             URL.revokeObjectURL(url);
         };
 
-        // Print Logic
+        // Print Logic - Uses FULL template
         window.printDocument = async (id, type) => {
             let doc;
             if (type === 'Quotation') {
@@ -3660,12 +4167,24 @@
                 };
             }
 
-            if(!doc.items) doc.items = [];
+            // FIXED: Ensure items array is properly handled
+            if(!doc.items || !Array.isArray(doc.items)) {
+                doc.items = [];
+                const fallbackAmount = parseFloat(doc.subtotal || doc.price || doc.total || doc.grandTotal || 0);
+                if (fallbackAmount > 0 || doc.description) {
+                    doc.items = [{
+                        description: doc.description || 'Professional Service',
+                        amount: fallbackAmount
+                    }];
+                }
+            }
+            
             const subtotal = doc.items.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
             doc.subtotal = subtotal;
             doc.total = subtotal - (doc.discount || 0);
             
-            const rawHtml = generateProfessionalHTML(doc);
+            // Use FULL template for printing
+            const rawHtml = generateFullTemplateHTML(doc);
             
             const printArea = document.getElementById('printArea');
             printArea.innerHTML = rawHtml;
@@ -3710,7 +4229,6 @@
         
         async function renderProjectsSection() {
             const projects = await window.dbOperations.getProjects();
-            // Sort by date newest
             projects.sort((a, b) => {
                 const dateA = a.deadline ? new Date(a.deadline) : new Date(0);
                 const dateB = b.deadline ? new Date(b.deadline) : new Date(0);
@@ -3758,7 +4276,6 @@
                 </div>
             `;
             
-            // Simple search filter for projects
             const searchInput = document.getElementById('projectSearchInput');
             searchInput.addEventListener('keyup', (e) => {
                 const term = e.target.value.toLowerCase();
