@@ -83,6 +83,64 @@
         input, select, textarea { font-family: inherit; font-size: 15px; }
 
         /* =========================================
+           SKELETON LOADING STATES
+           ========================================= */
+        .skeleton {
+            background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s infinite;
+            border-radius: 4px;
+            display: inline-block;
+            line-height: 1;
+            color: transparent !important;
+        }
+        .skeleton * { visibility: hidden !important; }
+        .skeleton img { opacity: 0; }
+        .skeleton-circle { border-radius: 50%; }
+        
+        @keyframes skeleton-shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .loading-skeleton-block {
+            height: 1em;
+            margin-bottom: 0.5em;
+        }
+        
+        .loading-skeleton-block.sm { width: 40%; }
+        .loading-skeleton-block.md { width: 70%; }
+        .loading-skeleton-block.lg { width: 90%; }
+        .loading-skeleton-block.xl { width: 100%; height: 2em; }
+
+        /* =========================================
+           INITIAL LOADING OVERLAY (Pre-login check)
+           ========================================= */
+        #initialLoader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-body);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #initialLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        #initialLoader .spinner-large {
+            width: 48px; height: 48px;
+            border: 3px solid var(--border-light);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* =========================================
            LOGIN PAGE
            ========================================= */
         .login-page {
@@ -1105,8 +1163,7 @@
             animation: spin 0.8s linear infinite;
         }
         .loading-text { font-size: 14px; color: var(--text-muted); font-weight: 500; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
+        
         /* =========================================
            POPUP
            ========================================= */
@@ -1339,6 +1396,27 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        
+        /* Team Selection Styles */
+        .team-select-container {
+            margin-top: 8px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .team-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .team-option:last-child { border-bottom: none; }
+        .team-option:hover { background: var(--bg-body); }
+        .team-option input { margin: 0; }
 
         /* Responsive */
         @media(max-width: 768px) {
@@ -1438,8 +1516,14 @@
 </head>
 <body>
 
+    <!-- Initial Loader (Before Auth Check) -->
+    <div id="initialLoader">
+        <div class="spinner-large"></div>
+        <div style="margin-top:16px; font-weight:600; color:var(--text-muted);">Initializing Portal...</div>
+    </div>
+
     <!-- Login Page -->
-    <div class="login-page" id="loginPage">
+    <div class="login-page hidden" id="loginPage">
         <div class="login-bg-grid"></div>
         <div class="login-card">
             <div class="login-logo">
@@ -1585,6 +1669,7 @@
             <!-- Main Content -->
             <main class="main-content" id="mainContent">
                 <!-- Content Injected via JS -->
+                <div class="skeleton" style="width:100%; height: 400px; display:block;"></div>
             </main>
         </div>
     </div>
@@ -1770,6 +1855,16 @@
             updateUser: async (id, data) => await updateDoc(doc(db, 'users_ddnex', id), data),
             deleteUser: async (id) => await deleteDoc(doc(db, 'users_ddnex', id)),
             
+            // Team Operations
+            getTeam: async () => {
+                const q = query(getCol('team'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addTeamMember: async (data) => await addDoc(getCol('team'), data),
+            updateTeamMember: async (id, data) => await updateDoc(doc(db, 'team_ddnex', id), data),
+            deleteTeamMember: async (id) => await deleteDoc(doc(db, 'team_ddnex', id)),
+            
             getClients: async () => {
                 const q = query(getCol('clients'));
                 const snap = await getDocs(q);
@@ -1844,7 +1939,7 @@
 
         // State
         let currentUser = null;
-        let currentRoute = '/login/auth';
+        let currentRoute = '/auth/login';
         let emailLastSentTimestamp = localStorage.getItem('ddnex_last_email_sent') ? parseInt(localStorage.getItem('ddnex_last_email_sent')) : 0;
         
         // Pagination State
@@ -1862,7 +1957,7 @@
         // =========================================
         // EMAIL SENDING FUNCTION (EmailJS)
         // =========================================
-        async function sendEmailViaEmailJS(toEmail, toName, subject, htmlContent) {
+        async function sendEmailViaEmailJS(toEmail, toName, subject, htmlContent, ccEmails = '', bccEmails = '') {
             try {
                 const templateParams = {
                     to_email: toEmail,
@@ -1871,7 +1966,9 @@
                     from_email: 'support@ddnex.com',
                     subject: subject,
                     message_html: htmlContent,
-                    reply_to: 'support@ddnex.com'
+                    reply_to: 'support@ddnex.com',
+                    cc_email: ccEmails,
+                    bcc_email: bccEmails
                 };
 
                 const response = await emailjs.send(
@@ -1898,7 +1995,7 @@
         }
 
         // Global email sending function for modal
-        window.sendEmailDirectly = async function(toEmail, subject, htmlContent, docNumber, forceSend = false) {
+        window.sendEmailDirectly = async function(toEmail, subject, htmlContent, docNumber, forceSend = false, ccEmails = '', bccEmails = '') {
             if (!toEmail) {
                 showPopup("Error", "Please enter a recipient email address.", false);
                 return;
@@ -1932,7 +2029,7 @@
                 statusEl.innerHTML = '<i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Sending email...';
             }
 
-            const result = await sendEmailViaEmailJS(toEmail, 'Client', subject, htmlContent);
+            const result = await sendEmailViaEmailJS(toEmail, 'Client', subject, htmlContent, ccEmails, bccEmails);
 
             if (statusEl) {
                 if (result.success) {
@@ -1949,7 +2046,7 @@
 
         // Router
         function navigateTo(path) {
-            if (!currentUser && path !== '/login/auth') return;
+            if (!currentUser && path !== '/auth/login') return;
             
             window.history.pushState({ path }, '', path);
             currentRoute = path;
@@ -2067,7 +2164,12 @@
             });
 
             const path = window.location.pathname || '/dashboard';
-            navigateTo(path);
+            // If path is login or root, go to dashboard
+            if(path === '/auth/login' || path === '/') {
+                navigateTo('/dashboard');
+            } else {
+                navigateTo(path);
+            }
         };
 
         window.handleLogout = () => {
@@ -2083,7 +2185,7 @@
             document.getElementById('loginPage').classList.remove('hidden');
             document.getElementById('dashboardApp').classList.remove('visible');
             document.getElementById('loginForm').reset();
-            window.history.pushState({ path: '/login/auth' }, '', '/login/auth');
+            window.history.pushState({ path: '/auth/login' }, '', '/auth/login');
         };
 
         // Utility Functions
@@ -2503,6 +2605,7 @@ If you have any questions, please reply to this email.
 
 // =========================================
 // FULL TEMPLATE HTML - For PDF/Download (A4 Full Page - Single Sheet)
+// Updated with Address & Attn To fields
 // =========================================
 const generateFullTemplateHTML = (doc) => {
     const isQuotation = doc.type === 'Quotation';
@@ -2510,6 +2613,8 @@ const generateFullTemplateHTML = (doc) => {
     const clientName = doc.clientName || doc.customerName || 'Client';
     const docNumber = doc.number || doc.id;
     const dateStr = formatDateLong(doc.date || doc.createdAt);
+    const clientAddress = doc.clientAddress || '';
+    const attnTo = doc.attnTo || '';
     
     let validUntil = '-';
     if (isQuotation) {
@@ -2626,6 +2731,9 @@ const generateFullTemplateHTML = (doc) => {
             <li style="margin-bottom:6px;line-height:1.5;font-size:12px;">Full policies and terms are available on the official DDNEX website.</li>
         `;
     }
+    
+    const addressHtml = clientAddress ? clientAddress.replace(/\n/g, '<br>') : 'Malaysia';
+    const attnHtml = attnTo ? `<br>Attn: ${attnTo}` : '';
 
     return `
 <!DOCTYPE html>
@@ -2813,8 +2921,8 @@ const generateFullTemplateHTML = (doc) => {
         <div class="bill-to-section">
             <div class="bill-to-title">Bill To</div>
             <div class="bill-to-details">
-                <strong>${clientName}</strong><br>
-                Malaysia
+                <strong>${clientName}</strong>${attnHtml}<br>
+                ${addressHtml}
                 ${doc.domain ? `<br>Domain: ${doc.domain}` : ''}
             </div>
         </div>
@@ -3361,6 +3469,8 @@ const generateFullTemplateHTML = (doc) => {
                 await window.dbOperations.setOrder(newId, {
                     number: newId,
                     clientName: '',
+                    clientAddress: '',
+                    attnTo: '',
                     date: new Date().toISOString().split('T')[0],
                     status: 'Draft',
                     type: 'Invoice',
@@ -3386,6 +3496,8 @@ const generateFullTemplateHTML = (doc) => {
                 await window.dbOperations.setQuotation(newId, {
                     number: newId,
                     clientName: '',
+                    clientAddress: '',
+                    attnTo: '',
                     date: new Date().toISOString().split('T')[0],
                     status: 'Draft',
                     type: 'Quotation',
@@ -3409,6 +3521,8 @@ const generateFullTemplateHTML = (doc) => {
                 data = {
                     number: id,
                     clientName: '',
+                    clientAddress: '',
+                    attnTo: '',
                     date: new Date().toISOString().split('T')[0],
                     items: [{description: '', amount: 0}],
                     discount: 0,
@@ -3446,6 +3560,7 @@ const generateFullTemplateHTML = (doc) => {
                              <button class="btn btn-success" onclick="saveInvoice('${id}')"><i class="ri-save-line"></i> Save</button>
                              <button class="btn btn-primary" onclick="printDocument('${id}', 'Invoice')"><i class="ri-printer-line"></i> Print</button>
                              <button class="btn btn-outline" onclick="openEmailTemplateModal('${id}', 'Invoice')"><i class="ri-mail-line"></i> Email</button>
+                             <button class="btn btn-danger" onclick="deleteDocGeneric('${id}', 'Invoice')"><i class="ri-delete-bin-line"></i> Delete</button>
                         </div>
                     </div>
                     
@@ -3467,6 +3582,8 @@ const generateFullTemplateHTML = (doc) => {
                                     <div class="doc-preview-meta-item">
                                         <label>Bill To</label>
                                         <p id="previewClient">${data.clientName || data.customerName || 'Select Client'}</p>
+                                        ${data.attnTo ? `<p style="font-size:12px; color:#64748b;">Attn: ${data.attnTo}</p>` : ''}
+                                        <p style="font-size:12px; color:#64748b; white-space: pre-wrap;" id="previewAddress">${data.clientAddress || ''}</p>
                                         ${isWebsiteOrder && data.customerEmail ? `<p style="font-size:12px; color:#64748b;">${data.customerEmail}</p>` : ''}
                                     </div>
                                     <div class="doc-preview-meta-item" style="text-align:right;">
@@ -3535,6 +3652,16 @@ const generateFullTemplateHTML = (doc) => {
                                         <input type="text" id="editClient" value="${data.clientName || data.customerName || ''}" oninput="updateInvoicePreview()" ${isWebsiteOrder ? 'readonly' : ''}>
                                     </div>
                                     
+                                    <div class="form-group-modal">
+                                        <label>Attn To (Optional)</label>
+                                        <input type="text" id="editAttn" value="${data.attnTo || ''}" placeholder="Contact Person Name" oninput="updateInvoicePreview()">
+                                    </div>
+                                    
+                                    <div class="form-group-modal">
+                                        <label>Client Address</label>
+                                        <textarea id="editClientAddress" rows="3" placeholder="Full address..." oninput="updateInvoicePreview()" style="resize:vertical;">${data.clientAddress || ''}</textarea>
+                                    </div>
+
                                     <div class="form-group-modal">
                                         <label>Domain</label>
                                         <input type="text" id="editDomain" value="${data.domain || ''}" placeholder="example.com" oninput="updateInvoicePreview()">
@@ -3703,6 +3830,8 @@ const generateFullTemplateHTML = (doc) => {
 
         window.updateInvoicePreview = () => {
             const client = document.getElementById('editClient')?.value;
+            const address = document.getElementById('editClientAddress')?.value;
+            const attn = document.getElementById('editAttn')?.value;
             const domain = document.getElementById('editDomain')?.value;
             const dateVal = document.getElementById('editDate')?.value;
             const discount = parseFloat(document.getElementById('editDiscount')?.value || 0);
@@ -3711,6 +3840,7 @@ const generateFullTemplateHTML = (doc) => {
             const grandTotal = subtotal - discount;
 
             const pClient = document.getElementById('previewClient');
+            const pAddress = document.getElementById('previewAddress');
             const pDate = document.getElementById('previewDate');
             const pSubtotal = document.getElementById('previewSubtotal');
             const pDiscount = document.getElementById('previewDiscount');
@@ -3721,6 +3851,8 @@ const generateFullTemplateHTML = (doc) => {
             const instMeta = document.getElementById('installmentPreviewMeta');
             
             if(pClient) pClient.textContent = client || 'Select Client';
+            if(pAddress) pAddress.textContent = address || '';
+            
             if(pDate) pDate.textContent = formatDate(dateVal);
             if(pSubtotal) pSubtotal.textContent = formatMYR(subtotal);
             if(pDiscount) pDiscount.textContent = `-${formatMYR(discount)}`;
@@ -3786,13 +3918,55 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
 
+        // FIXED: Commit Invoice - Now auto-saves before changing status
         window.commitInvoice = async (id) => {
-            if(confirm("Commit this invoice? Status will change to 'Unpaid' and can be printed.")) {
-                const data = await window.dbOperations.getOrder(id);
-                if(data) {
-                    await window.dbOperations.setOrder(id, { status: 'Unpaid' });
-                    showPopup("Committed", "Invoice is now ready for client.");
+            if(confirm("Commit this invoice? This will save all changes and change status to 'Unpaid'. The invoice will then be ready for printing and emailing.")) {
+                showLoading("Saving and committing...");
+                
+                // First, gather all current form data
+                const type = window.currentPaymentType || 'One-Time';
+                let months = 1;
+                if(type === '12-Month') months = 12;
+                if(type === '24-Month') months = 24;
+
+                const subtotal = window.currentItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+                const discount = parseFloat(document.getElementById('editDiscount')?.value || 0);
+                const grandTotal = subtotal - discount;
+                const monthlyAmount = grandTotal / months;
+                const cycle = parseInt(document.getElementById('editCycle')?.value || 1);
+
+                const invoiceTotal = (type === 'One-Time') ? grandTotal : monthlyAmount;
+
+                const data = {
+                    number: id,
+                    clientName: document.getElementById('editClient')?.value || '',
+                    clientAddress: document.getElementById('editClientAddress')?.value || '',
+                    attnTo: document.getElementById('editAttn')?.value || '',
+                    domain: document.getElementById('editDomain')?.value || '', 
+                    date: document.getElementById('editDate')?.value || new Date().toISOString().split('T')[0],
+                    status: 'Unpaid', // Set status to Unpaid
+                    items: window.currentItems,
+                    discount: discount,
+                    total: invoiceTotal, 
+                    grandTotal: grandTotal, 
+                    subtotal: subtotal,
+                    paymentType: type,
+                    installmentMonths: months,
+                    installmentCycle: cycle,
+                    type: 'Invoice',
+                    updatedAt: new Date()
+                };
+
+                try {
+                    await window.dbOperations.setOrder(id, data);
+                    hideLoading();
+                    showPopup("Committed", "Invoice has been saved and committed successfully. Status is now 'Unpaid'.");
+                    // Re-render the editor to reflect the new status
                     renderInvoiceEditor(id);
+                } catch (error) {
+                    console.error("Error committing invoice:", error);
+                    hideLoading();
+                    showPopup("Error", "Failed to commit invoice. Please try again.", false);
                 }
             }
         };
@@ -3814,6 +3988,8 @@ const generateFullTemplateHTML = (doc) => {
             const data = {
                 number: id,
                 clientName: document.getElementById('editClient')?.value || '',
+                clientAddress: document.getElementById('editClientAddress')?.value || '',
+                attnTo: document.getElementById('editAttn')?.value || '',
                 domain: document.getElementById('editDomain')?.value || '', 
                 date: document.getElementById('editDate')?.value || new Date().toISOString().split('T')[0],
                 status: document.getElementById('editStatus')?.value || 'Draft',
@@ -3830,18 +4006,26 @@ const generateFullTemplateHTML = (doc) => {
             };
 
             showLoading("Saving...");
-            await window.dbOperations.setOrder(id, data);
-            hideLoading();
-            showPopup("Success", "Invoice saved successfully.");
+            try {
+                await window.dbOperations.setOrder(id, data);
+                hideLoading();
+                showPopup("Success", "Invoice saved successfully.");
+            } catch (error) {
+                console.error("Error saving invoice:", error);
+                hideLoading();
+                showPopup("Error", "Failed to save invoice. Please try again.", false);
+            }
         };
 
-        // --- QUOTATION EDITOR (Updated with Custom Items) ---
+        // --- QUOTATION EDITOR (Updated with Address & Attn) ---
         async function renderQuotationEditor(id) {
             let data = await window.dbOperations.getQuotation(id);
             if (!data) {
                 data = {
                     number: id,
                     clientName: '',
+                    clientAddress: '',
+                    attnTo: '',
                     date: new Date().toISOString().split('T')[0],
                     items: [{description: '', amount: 0}],
                     discount: 0,
@@ -3875,6 +4059,7 @@ const generateFullTemplateHTML = (doc) => {
                              <button class="btn btn-success" onclick="saveQuotation('${id}')"><i class="ri-save-line"></i> Save Quotation</button>
                              <button class="btn btn-primary" onclick="printDocument('${id}', 'Quotation')"><i class="ri-printer-line"></i> Print</button>
                              <button class="btn btn-outline" onclick="openEmailTemplateModal('${id}', 'Quotation')"><i class="ri-mail-line"></i> Email</button>
+                             <button class="btn btn-danger" onclick="deleteDocGeneric('${id}', 'Quotation')"><i class="ri-delete-bin-line"></i> Delete</button>
                         </div>
                     </div>
                     
@@ -3895,6 +4080,8 @@ const generateFullTemplateHTML = (doc) => {
                                 <div class="doc-preview-meta-item">
                                     <label>Bill To</label>
                                     <p id="previewClient">${data.clientName || 'Select Client'}</p>
+                                    ${data.attnTo ? `<p style="font-size:12px; color:#64748b;">Attn: ${data.attnTo}</p>` : ''}
+                                    <p style="font-size:12px; color:#64748b; white-space: pre-wrap;" id="previewAddress">${data.clientAddress || ''}</p>
                                 </div>
                                 <div class="doc-preview-meta-item" style="text-align:right;">
                                     <label>Date</label>
@@ -3941,6 +4128,14 @@ const generateFullTemplateHTML = (doc) => {
                                         <option value="">Select Client</option>
                                         ${clientOptions}
                                     </select>
+                                </div>
+                                <div class="form-group-modal">
+                                    <label>Attn To (Optional)</label>
+                                    <input type="text" id="editQAttn" value="${data.attnTo || ''}" placeholder="Contact Person Name" oninput="updateQuotationPreview()">
+                                </div>
+                                <div class="form-group-modal">
+                                    <label>Client Address</label>
+                                    <textarea id="editQClientAddress" rows="3" placeholder="Full address..." oninput="updateQuotationPreview()" style="resize:vertical;">${data.clientAddress || ''}</textarea>
                                 </div>
                                 <div class="form-group-modal">
                                     <label>Date</label>
@@ -4026,6 +4221,7 @@ const generateFullTemplateHTML = (doc) => {
 
         window.updateQuotationPreview = () => {
             const client = document.getElementById('editQClient')?.value;
+            const address = document.getElementById('editQClientAddress')?.value;
             const dateVal = document.getElementById('editQDate')?.value;
             const discount = parseFloat(document.getElementById('editQDiscount')?.value || 0);
 
@@ -4033,6 +4229,7 @@ const generateFullTemplateHTML = (doc) => {
             const total = subtotal - discount;
 
             if(document.getElementById('previewClient')) document.getElementById('previewClient').textContent = client || 'Select Client';
+            if(document.getElementById('previewAddress')) document.getElementById('previewAddress').textContent = address || '';
             if(document.getElementById('previewDate')) document.getElementById('previewDate').textContent = formatDate(dateVal);
 
             const tbody = document.getElementById('previewQuotationItemsBody');
@@ -4061,13 +4258,41 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
 
+        // FIXED: Commit Quotation - Now auto-saves before changing status
         window.commitQuotation = async (id) => {
-            if(confirm("Commit this quotation? Status will change to 'Pending'.")) {
-                const data = await window.dbOperations.getQuotation(id);
-                if(data) {
-                    await window.dbOperations.setQuotation(id, { status: 'Pending' });
-                    showPopup("Committed", "Quotation is now ready for client.");
+            if(confirm("Commit this quotation? This will save all changes and change status to 'Pending'. The quotation will then be ready for sending to client.")) {
+                showLoading("Saving and committing...");
+                
+                // First, gather all current form data
+                const subtotal = window.currentQuotationItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
+                const discount = parseFloat(document.getElementById('editQDiscount')?.value || 0);
+                const total = subtotal - discount;
+
+                const data = {
+                    number: id,
+                    clientName: document.getElementById('editQClient')?.value || '',
+                    clientAddress: document.getElementById('editQClientAddress')?.value || '',
+                    attnTo: document.getElementById('editQAttn')?.value || '',
+                    date: document.getElementById('editQDate')?.value || new Date().toISOString().split('T')[0],
+                    status: 'Pending', // Set status to Pending
+                    items: window.currentQuotationItems,
+                    discount: discount,
+                    subtotal: subtotal,
+                    total: total,
+                    type: 'Quotation',
+                    updatedAt: new Date()
+                };
+
+                try {
+                    await window.dbOperations.setQuotation(id, data);
+                    hideLoading();
+                    showPopup("Committed", "Quotation has been saved and committed successfully. Status is now 'Pending'.");
+                    // Re-render the editor to reflect the new status
                     renderQuotationEditor(id);
+                } catch (error) {
+                    console.error("Error committing quotation:", error);
+                    hideLoading();
+                    showPopup("Error", "Failed to commit quotation. Please try again.", false);
                 }
             }
         };
@@ -4080,6 +4305,8 @@ const generateFullTemplateHTML = (doc) => {
             const data = {
                 number: id,
                 clientName: document.getElementById('editQClient')?.value || '',
+                clientAddress: document.getElementById('editQClientAddress')?.value || '',
+                attnTo: document.getElementById('editQAttn')?.value || '',
                 date: document.getElementById('editQDate')?.value || new Date().toISOString().split('T')[0],
                 status: document.getElementById('editQStatus')?.value || 'Draft',
                 items: window.currentQuotationItems,
@@ -4091,9 +4318,15 @@ const generateFullTemplateHTML = (doc) => {
             };
 
             showLoading("Saving...");
-            await window.dbOperations.setQuotation(id, data);
-            hideLoading();
-            showPopup("Success", "Quotation saved successfully.");
+            try {
+                await window.dbOperations.setQuotation(id, data);
+                hideLoading();
+                showPopup("Success", "Quotation saved successfully.");
+            } catch (error) {
+                console.error("Error saving quotation:", error);
+                hideLoading();
+                showPopup("Error", "Failed to save quotation. Please try again.", false);
+            }
         };
 
         window.convertToInvoice = async (qId) => {
@@ -4125,18 +4358,33 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
         
+        // FIXED: Delete Document - Now properly deletes and navigates back
         window.deleteDocGeneric = async (id, type) => {
-            if(confirm("Delete this document?")) {
+            if(confirm(`Are you sure you want to delete this ${type}? This action cannot be undone.`)) {
                 showLoading("Deleting...");
-                if(type === 'Quotation') await window.dbOperations.deleteQuotation(id);
-                else await window.dbOperations.deleteOrder(id);
-                hideLoading();
-                if(type === 'Quotation') renderQuotationsSection();
-                else renderCashbillSection();
+                try {
+                    if(type === 'Quotation') {
+                        await window.dbOperations.deleteQuotation(id);
+                        hideLoading();
+                        showPopup("Deleted", "Quotation has been deleted successfully.", true, () => {
+                            navigateTo('/quotations');
+                        });
+                    } else {
+                        await window.dbOperations.deleteOrder(id);
+                        hideLoading();
+                        showPopup("Deleted", "Invoice has been deleted successfully.", true, () => {
+                            navigateTo('/cashbill');
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error deleting document:", error);
+                    hideLoading();
+                    showPopup("Error", "Failed to delete document. Please try again.", false);
+                }
             }
         };
 
-        // ================== EMAIL TEMPLATE MODAL (Updated with Summary) ==================
+        // ================== EMAIL TEMPLATE MODAL (Updated with CC/BCC) ==================
         window.openEmailTemplateModal = async (id, type) => {
             let doc;
             if (type === 'Quotation') {
@@ -4151,6 +4399,7 @@ const generateFullTemplateHTML = (doc) => {
                         type: 'Quotation', 
                         number: id, 
                         clientName: document.getElementById('editQClient')?.value || '', 
+                        clientAddress: document.getElementById('editQClientAddress')?.value || '',
                         items: window.currentQuotationItems, 
                         discount: parseFloat(document.getElementById('editQDiscount')?.value || 0),
                         date: document.getElementById('editQDate')?.value 
@@ -4160,6 +4409,7 @@ const generateFullTemplateHTML = (doc) => {
                         type: 'Invoice', 
                         number: id, 
                         clientName: document.getElementById('editClient')?.value || '', 
+                        clientAddress: document.getElementById('editClientAddress')?.value || '',
                         domain: document.getElementById('editDomain')?.value || '',
                         items: window.currentItems, 
                         discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
@@ -4205,6 +4455,15 @@ const generateFullTemplateHTML = (doc) => {
                 </div>
             `).join('');
 
+            // Fetch Team Members for CC/BCC
+            const teamMembers = await window.dbOperations.getTeam();
+            const teamOptionsHtml = teamMembers.map(m => `
+                <label class="team-option">
+                    <input type="checkbox" value="${m.email}" data-name="${m.name}">
+                    <span>${m.name} <small style="color:#64748b;">(${m.email})</small></span>
+                </label>
+            `).join('');
+
             const content = `
                 <div class="email-tabs">
                     <button class="email-tab active" onclick="switchEmailTab('send')">Send Email</button>
@@ -4219,6 +4478,22 @@ const generateFullTemplateHTML = (doc) => {
                                 <label>Recipient Email</label>
                                 <input type="email" id="emailRecipient" value="${clientEmail}" placeholder="client@example.com">
                             </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group-modal">
+                                    <label>CC Team</label>
+                                    <div class="team-select-container" id="ccTeamContainer">
+                                        ${teamOptionsHtml || '<p style="padding:10px; font-size:13px; color:#64748b;">No team members added yet.</p>'}
+                                    </div>
+                                </div>
+                                <div class="form-group-modal">
+                                    <label>BCC Team</label>
+                                    <div class="team-select-container" id="bccTeamContainer">
+                                         ${teamOptionsHtml || '<p style="padding:10px; font-size:13px; color:#64748b;">No team members added yet.</p>'}
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group-modal">
                                 <label>Subject</label>
                                 <input type="text" id="emailSubject" value="${defaultSubject}">
@@ -4286,6 +4561,7 @@ const generateFullTemplateHTML = (doc) => {
                             <h4><i class="ri-information-line"></i> Email Info</h4>
                             <p style="font-size:12px;">The email sent will be <strong>summarized</strong> with item details.</p>
                             <p style="font-size:12px; margin-top:8px;">Compatible with all major email clients.</p>
+                            <p style="font-size:12px; margin-top:8px;"><strong>CC/BCC:</strong> Select team members on the left to include them.</p>
                         </div>
                         
                         <div class="email-info-box">
@@ -4324,6 +4600,14 @@ const generateFullTemplateHTML = (doc) => {
             const toEmail = document.getElementById('emailRecipient').value;
             const subject = document.getElementById('emailSubject').value;
             
+            // Collect CC Emails
+            const ccCheckboxes = document.querySelectorAll('#ccTeamContainer input:checked');
+            const ccEmails = Array.from(ccCheckboxes).map(cb => cb.value).join(',');
+            
+            // Collect BCC Emails
+            const bccCheckboxes = document.querySelectorAll('#bccTeamContainer input:checked');
+            const bccEmails = Array.from(bccCheckboxes).map(cb => cb.value).join(',');
+            
             let doc;
             if (type === 'Quotation') doc = await window.dbOperations.getQuotation(id);
             else doc = await window.dbOperations.getOrder(id);
@@ -4347,7 +4631,7 @@ const generateFullTemplateHTML = (doc) => {
             // Use SUMMARIZED version for email
             const emailHtml = generateSummarizedEmailHTML(doc);
             
-            await window.sendEmailDirectly(toEmail, subject, emailHtml, doc.number || id, forceSend);
+            await window.sendEmailDirectly(toEmail, subject, emailHtml, doc.number || id, forceSend, ccEmails, bccEmails);
         };
 
         window.copyEmailCode = () => {
@@ -4388,7 +4672,9 @@ const generateFullTemplateHTML = (doc) => {
                 if(!doc) doc = { 
                     type: 'Quotation', 
                     number: id, 
-                    clientName: document.getElementById('editQClient')?.value || '', 
+                    clientName: document.getElementById('editQClient')?.value || '',
+                    clientAddress: document.getElementById('editQClientAddress')?.value || '',
+                    attnTo: document.getElementById('editQAttn')?.value || '',
                     items: window.currentQuotationItems, 
                     discount: parseFloat(document.getElementById('editQDiscount')?.value || 0),
                     date: document.getElementById('editQDate')?.value 
@@ -4398,7 +4684,9 @@ const generateFullTemplateHTML = (doc) => {
                 if(!doc) doc = { 
                     type: 'Invoice', 
                     number: id, 
-                    clientName: document.getElementById('editClient')?.value || '', 
+                    clientName: document.getElementById('editClient')?.value || '',
+                    clientAddress: document.getElementById('editClientAddress')?.value || '',
+                    attnTo: document.getElementById('editAttn')?.value || '',
                     domain: document.getElementById('editDomain')?.value || '',
                     items: window.currentItems, 
                     discount: parseFloat(document.getElementById('editDiscount')?.value || 0),
@@ -4568,6 +4856,8 @@ const generateFullTemplateHTML = (doc) => {
         // --- Settings / User Management ---
         async function renderSettingsSection() {
             let usersHtml = '';
+            let teamHtml = '';
+            
             if (currentUser && currentUser.role === 'SuperAdmin') {
                 const users = await window.dbOperations.getUsers();
                 usersHtml = `
@@ -4604,10 +4894,38 @@ const generateFullTemplateHTML = (doc) => {
                         </div>
                     </div>
                 `;
+
+                const team = await window.dbOperations.getTeam();
+                teamHtml = `
+                    <div class="card" style="margin-bottom:24px;">
+                        <div class="card-header">
+                            <h3>Internal Team (For CC/BCC)</h3>
+                            <button class="btn btn-primary" onclick="openTeamModal()"><i class="ri-team-line"></i> Add Member</button>
+                        </div>
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead><tr><th>Name</th><th>Email</th><th>Actions</th></tr></thead>
+                                <tbody id="teamTableBody">
+                                    ${team.map(m => `
+                                        <tr>
+                                            <td>${m.name}</td>
+                                            <td>${m.email}</td>
+                                            <td>
+                                                <button class="action-btn" onclick="editTeamMember('${m.id}', '${encodeURIComponent(JSON.stringify(m))}')"><i class="ri-edit-line"></i></button>
+                                                <button class="action-btn danger" onclick="deleteTeamMember('${m.id}')"><i class="ri-delete-bin-line"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
             }
 
             document.getElementById('mainContent').innerHTML = `
                 ${usersHtml}
+                ${teamHtml}
                 <div class="settings-section">
                     <div class="settings-section-header"><h3>Preferences</h3><p>System Configuration</p></div>
                     <div class="settings-section-body">
@@ -4754,6 +5072,71 @@ const generateFullTemplateHTML = (doc) => {
             if(confirm("Delete this user?")) {
                 showLoading("Deleting...");
                 await window.dbOperations.deleteUser(id);
+                renderSettingsSection();
+                hideLoading();
+            }
+        };
+
+        // --- TEAM MODAL & ACTIONS ---
+        window.openTeamModal = () => {
+            openModal('Add Team Member', `
+                <div class="form-group-modal">
+                    <label>Name</label>
+                    <input type="text" id="tName" placeholder="John Doe">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email</label>
+                    <input type="email" id="tEmail" placeholder="john@company.com">
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('tName').value,
+                    email: document.getElementById('tEmail').value
+                };
+                
+                if(!data.name || !data.email) {
+                    showPopup("Error", "Name and Email are required.", false);
+                    return;
+                }
+
+                showLoading("Saving...");
+                await window.dbOperations.addTeamMember(data);
+                closeModal();
+                renderSettingsSection(); 
+                hideLoading();
+                showPopup("Success", "Team member added.");
+            });
+        };
+
+        window.editTeamMember = (id, dataStr) => {
+            const m = JSON.parse(decodeURIComponent(dataStr));
+            openModal('Edit Team Member', `
+                <div class="form-group-modal">
+                    <label>Name</label>
+                    <input type="text" id="tName" value="${m.name}">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email</label>
+                    <input type="email" id="tEmail" value="${m.email}">
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('tName').value,
+                    email: document.getElementById('tEmail').value
+                };
+
+                showLoading("Updating...");
+                await window.dbOperations.updateTeamMember(id, data);
+                closeModal();
+                renderSettingsSection();
+                hideLoading();
+            });
+        };
+
+        window.deleteTeamMember = async (id) => {
+            if(confirm("Delete this team member?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteTeamMember(id);
                 renderSettingsSection();
                 hideLoading();
             }
@@ -4965,19 +5348,29 @@ const generateFullTemplateHTML = (doc) => {
             setupNavigation();
             
             const savedUser = localStorage.getItem('ddnex_user');
+            const initialLoader = document.getElementById('initialLoader');
+            
             if (savedUser) {
                 try {
                     const userObj = JSON.parse(savedUser);
+                    // We have a user, show dashboard immediately
+                    initialLoader.classList.add('hidden');
                     window.onUserLoggedIn(userObj);
                 } catch (e) {
                     localStorage.removeItem('ddnex_user');
-                    window.history.pushState({ path: '/login/auth' }, '', '/login/auth');
+                    initialLoader.classList.add('hidden');
+                    document.getElementById('loginPage').classList.remove('hidden');
+                    window.history.pushState({ path: '/auth/login' }, '', '/auth/login');
                 }
             } else {
-                window.history.pushState({ path: '/login/auth' }, '', '/login/auth');
+                // No user, show login after a tiny delay or immediately
+                initialLoader.classList.add('hidden');
+                document.getElementById('loginPage').classList.remove('hidden');
+                window.history.pushState({ path: '/auth/login' }, '', '/auth/login');
             }
         });
 
     </script>
 </body>
 </html>
+```
