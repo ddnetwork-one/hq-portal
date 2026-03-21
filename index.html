@@ -32,6 +32,8 @@
             --accent-slate: #0f172a;
             --accent-green: #10b981;
             --accent-red: #ef4444;
+            --accent-pink: #ec4899;
+            --accent-cyan: #0891b2;
             
             --bg-body: #f1f5f9;
             --bg-surface: #ffffff;
@@ -549,6 +551,8 @@
         .stat-icon.green { background: #f0fdf4; color: #16a34a; }
         .stat-icon.purple { background: #faf5ff; color: #9333ea; }
         .stat-icon.orange { background: #fffbeb; color: #d97706; }
+        .stat-icon.pink { background: #fdf2f8; color: #db2777; }
+        .stat-icon.cyan { background: #ecfeff; color: #0891b2; }
 
         /* Content Grid */
         .content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
@@ -851,6 +855,8 @@
         .btn-success:hover { background: #059669; }
         .btn-warning { background: var(--accent-orange); color: white; }
         .btn-warning:hover { background: #ea580c; }
+        .btn-dark { background: #1f2937; color: white; }
+        .btn-dark:hover { background: #111827; }
 
         /* =========================================
            DOCUMENT EDITOR PAGE (Invoice/Quotation)
@@ -1138,6 +1144,7 @@
         }
         /* Larger Modal for Email */
         .modal-content.large { max-width: 900px; }
+        .modal-content.xlarge { max-width: 1100px; }
         .modal-overlay.active .modal-content { transform: translateY(0) scale(1); }
         .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; }
         .modal-header h3 { font-size: 18px; font-weight: 700; font-family: var(--font-heading); }
@@ -1578,6 +1585,427 @@
             flex-shrink: 0;
         }
 
+        /* =========================================
+           MARKETING EMAIL STYLES
+           ========================================= */
+        .marketing-template-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.3s var(--ease);
+            position: relative;
+        }
+        .marketing-template-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        .marketing-template-card.inactive {
+            opacity: 0.6;
+            background: #f8fafc;
+        }
+        .marketing-template-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .marketing-template-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+        .marketing-template-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .marketing-template-badge {
+            padding: 4px 10px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .marketing-template-badge.html { background: #dbeafe; color: #2563eb; }
+        .marketing-template-badge.text { background: #fef3c7; color: #d97706; }
+        .marketing-template-badge.active { background: #dcfce7; color: #16a34a; }
+        .marketing-template-badge.inactive { background: #f1f5f9; color: #64748b; }
+        
+        .template-preview-iframe {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+        }
+        
+        /* Subscriber Tags */
+        .subscriber-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .subscriber-tag {
+            padding: 4px 10px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        /* Checkbox Grid for Subscribers */
+        .subscriber-checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .subscriber-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .subscriber-checkbox-item:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .subscriber-checkbox-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+        .subscriber-checkbox-item input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .subscriber-checkbox-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .subscriber-checkbox-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .subscriber-checkbox-email {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* =========================================
+           CRM STYLES
+           ========================================= */
+        .crm-pipeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            min-height: 500px;
+        }
+        @media(max-width: 1200px) {
+            .crm-pipeline { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media(max-width: 768px) {
+            .crm-pipeline { grid-template-columns: 1fr; }
+        }
+        
+        .crm-column {
+            background: var(--bg-body);
+            border-radius: var(--radius-lg);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .crm-column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .crm-column-title {
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .crm-column-count {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .crm-cards {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 100px;
+        }
+        
+        .crm-card {
+            background: white;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-light);
+            cursor: grab;
+            transition: all 0.2s var(--ease);
+            box-shadow: var(--shadow-sm);
+        }
+        .crm-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        .crm-card.dragging {
+            opacity: 0.5;
+            transform: rotate(3deg);
+        }
+        .crm-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+        .crm-card-company {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+        .crm-card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .crm-card-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+        .crm-card-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        /* Sender Email Card */
+        .sender-email-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sender-email-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .sender-email-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .sender-email-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .sender-email-address {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* =========================================
+           MARKETING SECTION TABS
+           ========================================= */
+        .marketing-section-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 24px;
+            background: white;
+            padding: 6px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+        .marketing-section-tab {
+            padding: 12px 24px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            background: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .marketing-section-tab:hover { 
+            color: var(--text-main); 
+            background: var(--bg-body);
+        }
+        .marketing-section-tab.active {
+            color: white;
+            background: var(--primary);
+        }
+        .marketing-section-tab i {
+            font-size: 18px;
+        }
+
+        /* Email Editor Styles */
+        .email-editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media(max-width: 900px) {
+            .email-editor-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .email-editor-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            background: #f8fafc;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+        }
+        .email-editor-tab {
+            flex: 1;
+            padding: 10px 16px;
+            font-weight: 500;
+            color: var(--text-muted);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: none;
+            font-size: 13px;
+            text-align: center;
+        }
+        .email-editor-tab:hover { 
+            color: var(--text-main); 
+        }
+        .email-editor-tab.active {
+            color: var(--primary);
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .email-content-editor {
+            width: 100%;
+            min-height: 400px;
+            padding: 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            background: #fafafa;
+        }
+        .email-content-editor:focus {
+            border-color: var(--primary);
+            outline: none;
+            background: white;
+        }
+
+        .email-preview-frame {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            background: white;
+        }
+
+        .quick-fields-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .variable-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: monospace;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .variable-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Campaign Stats Cards */
+        .campaign-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        @media(max-width: 768px) {
+            .campaign-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .campaign-stat-card {
+            background: white;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+        }
+        .campaign-stat-card .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-main);
+            font-family: var(--font-heading);
+        }
+        .campaign-stat-card .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
         /* Responsive */
         @media(max-width: 768px) {
             .sidebar { transform: translateX(-100%); width: var(--sidebar-width); }
@@ -1596,6 +2024,8 @@
             .item-row { grid-template-columns: 1fr; }
             .item-row input { margin-bottom: 4px; }
             .btn-remove-item { justify-self: end; }
+            .crm-pipeline { grid-template-columns: 1fr; }
+            .campaign-stats-grid { grid-template-columns: 1fr; }
         }
         .mobile-menu-btn {
             display: none;
@@ -1727,7 +2157,7 @@
                     <i class="ri-whatsapp-line"></i> Forgot Password? Request Reset via WhatsApp
                 </button>
                 <div style="font-size: 11px; color: var(--text-muted);">
-                    <p>DDNEX Internal Management System v2.5</p>
+                    <p>DDNEX Internal Management System v2.6</p>
                     <p style="margin-top: 4px;">Authorized Personnel Only</p>
                 </div>
             </div>
@@ -1755,6 +2185,10 @@
                     <i class="ri-dashboard-line"></i>
                     <span>Dashboard</span>
                 </div>
+                <div class="nav-item" data-route="/crm">
+                    <i class="ri-contacts-book-line"></i>
+                    <span>CRM Pipeline</span>
+                </div>
                 <div class="nav-item" data-route="/projects">
                     <i class="ri-folder-line"></i>
                     <span>Projects</span>
@@ -1774,6 +2208,16 @@
                 <div class="nav-item" data-route="/quotations">
                     <i class="ri-file-paper-2-line"></i>
                     <span>Quotations</span>
+                </div>
+                
+                <div class="nav-section-title" style="margin-top: 24px;">Marketing</div>
+                <div class="nav-item" data-route="/marketing">
+                    <i class="ri-mail-send-line"></i>
+                    <span>Marketing Emails</span>
+                </div>
+                <div class="nav-item" data-route="/subscribers">
+                    <i class="ri-user-add-line"></i>
+                    <span>Subscribers</span>
                 </div>
                 
                 <div class="nav-section-title" style="margin-top: 24px;">Reference</div>
@@ -1938,6 +2382,18 @@
             } else if (type === 'quotation') {
                 colName = 'quotation';
                 prefix = 'QDNX';
+            } else if (type === 'marketing') {
+                colName = 'marketing_emails';
+                prefix = 'MKT';
+            } else if (type === 'subscriber') {
+                colName = 'subscribers';
+                prefix = 'SUB';
+            } else if (type === 'lead') {
+                colName = 'crm_leads';
+                prefix = 'LD';
+            } else if (type === 'campaign') {
+                colName = 'email_campaigns';
+                prefix = 'CAMP';
             } else {
                 return null;
             }
@@ -2032,8 +2488,7 @@
             }
         };
 
-        // Helper to manually set new password in Firestore (since we can't access Firebase Auth users directly easily without Admin SDK)
-        // This 'reset' essentially sets a known temp password for the user in Firestore
+        // Helper to manually set new password in Firestore
         window.adminResetUserPassword = async (userId, newPassword) => {
             const q = query(getCol('users'), where('userId', '==', userId));
             const snap = await getDocs(q);
@@ -2152,7 +2607,61 @@
                 return snap.exists() ? {id: snap.id, ...snap.data()} : null;
             },
             setQuotation: async (id, data) => await setDoc(doc(db, 'quotation_ddnex', id), data, { merge: true }),
-            deleteQuotation: async (id) => await deleteDoc(doc(db, 'quotation_ddnex', id))
+            deleteQuotation: async (id) => await deleteDoc(doc(db, 'quotation_ddnex', id)),
+
+            // Marketing Email Templates
+            getMarketingTemplates: async () => {
+                const q = query(getCol('marketing_emails'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            getMarketingTemplate: async (id) => {
+                const ref = doc(db, 'marketing_emails_ddnex', id);
+                const snap = await getDoc(ref);
+                return snap.exists() ? {id: snap.id, ...snap.data()} : null;
+            },
+            addMarketingTemplate: async (data) => await addDoc(getCol('marketing_emails'), data),
+            updateMarketingTemplate: async (id, data) => await updateDoc(doc(db, 'marketing_emails_ddnex', id), data),
+            deleteMarketingTemplate: async (id) => await deleteDoc(doc(db, 'marketing_emails_ddnex', id)),
+
+            // Subscribers
+            getSubscribers: async () => {
+                const q = query(getCol('subscribers'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addSubscriber: async (data) => await addDoc(getCol('subscribers'), data),
+            updateSubscriber: async (id, data) => await updateDoc(doc(db, 'subscribers_ddnex', id), data),
+            deleteSubscriber: async (id) => await deleteDoc(doc(db, 'subscribers_ddnex', id)),
+
+            // Sender Emails
+            getSenderEmails: async () => {
+                const q = query(getCol('sender_emails'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addSenderEmail: async (data) => await addDoc(getCol('sender_emails'), data),
+            updateSenderEmail: async (id, data) => await updateDoc(doc(db, 'sender_emails_ddnex', id), data),
+            deleteSenderEmail: async (id) => await deleteDoc(doc(db, 'sender_emails_ddnex', id)),
+
+            // CRM Leads
+            getCRMLeads: async () => {
+                const q = query(getCol('crm_leads'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addCRMLead: async (data) => await addDoc(getCol('crm_leads'), data),
+            updateCRMLead: async (id, data) => await updateDoc(doc(db, 'crm_leads_ddnex', id), data),
+            deleteCRMLead: async (id) => await deleteDoc(doc(db, 'crm_leads_ddnex', id)),
+
+            // Email Campaign History
+            getCampaigns: async () => {
+                const q = query(getCol('email_campaigns'));
+                const snap = await getDocs(q);
+                return snap.docs.map(d => ({id: d.id, ...d.data()}));
+            },
+            addCampaign: async (data) => await addDoc(getCol('email_campaigns'), data),
+            updateCampaign: async (id, data) => await updateDoc(doc(db, 'email_campaigns_ddnex', id), data),
         };
 
     </script>
@@ -2165,7 +2674,7 @@
         const EMAILJS_CONFIG = {
             publicKey: 'dN7qLgPS_8B-K-SSq',
             serviceId: 'service_fkiuk6k',
-            templateId: 'template_7ch5l34'
+            templateId: 'template_ocsljdk'
         };
 
         // Initialize EmailJS when the script loads
@@ -2181,6 +2690,77 @@
         // Pagination State
         let invoicePageState = { page: 1, perPage: 20, filteredData: [] };
         let quotationPageState = { page: 1, perPage: 20, filteredData: [] };
+
+        // Default Marketing Email Template
+        const DEFAULT_MARKETING_TEMPLATE = `<!DOCTYPE html>
+<html>
+<body style="margin:0;background:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td align="center" style="padding:50px 20px;">
+
+<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+
+<!-- HEADER -->
+<tr>
+<td style="padding:28px 40px;border-bottom:1px solid #eeeeee;" align="center">
+<img src="https://i.ibb.co/SD7QzyYw/favicon-white-ddnex.png" width="38">
+</td>
+</tr>
+
+<!-- HERO -->
+<tr>
+<td style="padding:50px 40px;text-align:center;">
+
+<div style="font-size:13px;font-weight:600;color:#ffffff;background:#000000;display:inline-block;padding:6px 14px;border-radius:20px;margin-bottom:18px;">
+MARKETING EMAIL
+</div>
+
+<div style="font-size:32px;font-weight:700;color:#111111;margin-bottom:12px;">
+Your Email Title Here
+</div>
+
+<div style="font-size:16px;color:#4b5563;line-height:1.7;margin-bottom:30px;">
+Your marketing message goes here. Create compelling content that engages your audience.
+</div>
+
+<table align="center">
+<tr>
+<td bgcolor="#000000" style="border-radius:30px;">
+<a href="https://ddnex.com" style="color:#ffffff;text-decoration:none;padding:15px 36px;font-weight:600;display:inline-block;font-size:15px;">
+Call to Action
+</a>
+</td>
+</tr>
+</table>
+
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td style="padding:40px;text-align:center;font-size:13px;color:#9ca3af;line-height:1.7;border-top:1px solid #eeeeee;">
+
+<b>DDNEX®</b><br>
+Digital Network & Web Solutions<br>
+Malaysia
+
+<br><br>
+
+© 2026 DDNEX®. All rights reserved.
+
+</td>
+</tr>
+
+</table>
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>`;
         
         // Constants
         const PACKAGE_PRICES = {
@@ -2201,6 +2781,15 @@
             { id: '18-Month', label: '18 Month', duration: 18 },
             { id: '24-Month', label: '24 Month', duration: 24 },
             { id: 'Custom', label: 'Custom', duration: null }
+        ];
+
+        // CRM Pipeline Stages
+        const CRM_STAGES = [
+            { id: 'new', name: 'New Leads', color: '#64748b' },
+            { id: 'contacted', name: 'Contacted', color: '#f59e0b' },
+            { id: 'qualified', name: 'Qualified', color: '#3b82f6' },
+            { id: 'proposal', name: 'Proposal', color: '#8b5cf6' },
+            { id: 'closed', name: 'Closed Won', color: '#22c55e' }
         ];
 
         // Permission Check Helper
@@ -2254,16 +2843,16 @@
         // =========================================
         // EMAIL SENDING FUNCTION (EmailJS)
         // =========================================
-        async function sendEmailViaEmailJS(toEmail, toName, subject, htmlContent, ccEmails = '', bccEmails = '') {
+        async function sendEmailViaEmailJS(toEmail, toName, subject, htmlContent, ccEmails = '', bccEmails = '', fromName = 'DDNEX', replyTo = 'support@ddnex.com') {
             try {
                 const templateParams = {
                     to_email: toEmail,
                     to_name: toName || 'Client',
-                    from_name: 'DDNEX Billing System',
-                    from_email: 'support@ddnex.com',
+                    from_name: fromName,
+                    from_email: replyTo,
                     subject: subject,
                     message_html: htmlContent,
-                    reply_to: 'support@ddnex.com',
+                    reply_to: replyTo,
                     cc_email: ccEmails,
                     bcc_email: bccEmails
                 };
@@ -2374,11 +2963,14 @@
 
             const titles = {
                 '/dashboard': 'Dashboard',
+                '/crm': 'CRM Pipeline',
                 '/projects': 'Projects',
                 '/clients': 'Clients',
                 '/sales': 'Sales Pipeline',
                 '/cashbill': 'Orders & Invoices',
                 '/quotations': 'Quotations',
+                '/marketing': 'Marketing Emails',
+                '/subscribers': 'Subscribers',
                 '/settings': 'Settings',
                 '/profile': 'My Profile',
                 '/services': 'Services & Pricing'
@@ -2405,11 +2997,14 @@
                 } else {
                     switch(path) {
                         case '/dashboard': renderDashboardSection(); break;
+                        case '/crm': renderCRMSection(); break;
                         case '/projects': renderProjectsSection(); break;
                         case '/clients': renderClientsSection(); break;
                         case '/sales': renderSalesSection(); break;
                         case '/cashbill': renderCashbillSection(); break;
                         case '/quotations': renderQuotationsSection(); break;
+                        case '/marketing': renderMarketingSection(); break;
+                        case '/subscribers': renderSubscribersSection(); break;
                         case '/settings': renderSettingsSection(); break;
                         case '/profile': renderProfileSection(); break;
                         case '/services': renderServicesSection(); break;
@@ -2504,27 +3099,6 @@
             document.getElementById('loginErrorMsg').classList.remove('visible');
             
             window.history.pushState({ path: '/auth/login' }, '', '/auth/login');
-        };
-
-        // Reset Password Modal
-        window.openResetPasswordModal = () => {
-            const content = `
-                <p style="margin-bottom: 16px; font-size: 14px; color: var(--text-secondary);">
-                    If you have forgotten your password, please contact the Super Administrator to reset it for you.
-                </p>
-                <div class="form-group-modal">
-                    <label>Your User ID</label>
-                    <input type="text" id="resetUserId" placeholder="e.g. 001">
-                </div>
-                <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">
-                    Note: This feature is currently manual. Please contact IT Support directly.
-                </p>
-            `;
-            
-            openModal("Password Reset", content, () => {
-                showPopup("Info", "Please contact your Super Administrator or IT Support to reset your password.", true);
-                closeModal();
-            });
         };
 
         // Utility Functions
@@ -2639,14 +3213,15 @@
         }
 
         // MODAL SYSTEM
-        const openModal = (title, content, onSave, isLarge = false) => {
+        const openModal = (title, content, onSave, isLarge = false, isXLarge = false) => {
             document.getElementById('modalTitle').textContent = title;
             document.getElementById('modalBody').innerHTML = content;
             document.getElementById('modal').classList.add('active');
             
             const modalContentEl = document.getElementById('modalContent');
-            if(isLarge) modalContentEl.classList.add('large');
-            else modalContentEl.classList.remove('large');
+            modalContentEl.classList.remove('large', 'xlarge');
+            if(isXLarge) modalContentEl.classList.add('xlarge');
+            else if(isLarge) modalContentEl.classList.add('large');
             
             const saveBtn = document.getElementById('modalSaveBtn');
             saveBtn.onclick = onSave;
@@ -3031,11 +3606,10 @@ If you have any questions, please reply to this email.
 </body>
 </html>
             `;
-        };
+};
 
 // =========================================
 // FULL TEMPLATE HTML - For PDF/Download (A4 Full Page - Single Sheet)
-// Updated with Address & Attn To fields
 // =========================================
 const generateFullTemplateHTML = (doc) => {
     const isQuotation = doc.type === 'Quotation';
@@ -3147,7 +3721,7 @@ const generateFullTemplateHTML = (doc) => {
                 ${isInstallment ? `<br>Payment Plan: ${paymentPlanDisplay} Installment` : ''}
             </div>
         `;
-    }
+    } 
 
     let termsList = '';
     if (isQuotation) {
@@ -3434,10 +4008,13 @@ const generateFullTemplateHTML = (doc) => {
         async function renderDashboardSection() {
             const projects = await window.dbOperations.getProjects();
             const clients = await window.dbOperations.getClients();
-            const orders = await window.dbOperations.getOrders(); 
+            const orders = await window.dbOperations.getOrders();
+            const leads = await window.dbOperations.getCRMLeads();
+            const subscribers = await window.dbOperations.getSubscribers();
             
             const activeProjects = projects.filter(p => p.status === 'active').length;
             const totalRevenue = orders.filter(i => i.status === 'Paid' || i.status === 'Activated' || i.status === 'Completed').reduce((sum, i) => sum + (i.total || i.price || i.finalPrice || 0), 0);
+            const newLeads = leads.filter(l => l.stage === 'new').length;
             
             document.getElementById('mainContent').innerHTML = `
                 <div class="stats-grid">
@@ -3456,6 +4033,14 @@ const generateFullTemplateHTML = (doc) => {
                             <div class="trend up"><i class="ri-arrow-up-line"></i><span>Managed internal</span></div>
                         </div>
                         <div class="stat-icon green"><i class="ri-team-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>New Leads</h3>
+                            <div class="value">${newLeads}</div>
+                            <div class="trend up"><i class="ri-contacts-line"></i><span>In pipeline</span></div>
+                        </div>
+                        <div class="stat-icon pink"><i class="ri-user-heart-line"></i></div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-info">
@@ -3494,8 +4079,14 @@ const generateFullTemplateHTML = (doc) => {
                              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                                 <button class="btn btn-outline" onclick="createNewInvoice()"><i class="ri-file-add-line"></i> New Invoice</button>
                                 <button class="btn btn-outline" onclick="createNewQuotation()"><i class="ri-file-paper-2-line"></i> New Quotation</button>
-                                <button class="btn btn-outline" onclick="navigateTo('/clients')"><i class="ri-user-add-line"></i> Add Client</button>
-                                <button class="btn btn-outline" onclick="navigateTo('/services')"><i class="ri-price-tag-3-line"></i> View Plans</button>
+                                <button class="btn btn-outline" onclick="openCRMLeadModal()"><i class="ri-user-add-line"></i> Add Lead</button>
+                                <button class="btn btn-outline" onclick="navigateTo('/marketing')"><i class="ri-mail-send-line"></i> Marketing</button>
+                             </div>
+                             <div style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border-light);">
+                                <p style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">Subscribers: ${subscribers.length}</p>
+                                <button class="btn btn-primary" style="width:100%;" onclick="openSendMarketingModal()">
+                                    <i class="ri-mail-line"></i> Send Marketing Email
+                                </button>
                              </div>
                         </div>
                     </div>
@@ -3503,7 +4094,1311 @@ const generateFullTemplateHTML = (doc) => {
             `;
         }
 
-        // --- SERVICES & PRICING ---
+        // =========================================
+        // CRM PIPELINE SECTION
+        // =========================================
+        async function renderCRMSection() {
+            const leads = await window.dbOperations.getCRMLeads();
+            
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search leads..." id="crmSearchInput">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <button class="btn btn-primary" onclick="openCRMLeadModal()">
+                        <i class="ri-add-line"></i> Add Lead
+                    </button>
+                </div>
+                <div class="crm-pipeline" id="crmPipeline">
+                    ${CRM_STAGES.map(stage => renderCRMColumn(leads, stage)).join('')}
+                </div>
+            `;
+
+            initCRMDragDrop();
+            
+            const searchInput = document.getElementById('crmSearchInput');
+            searchInput.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                const cards = document.querySelectorAll('.crm-card');
+                cards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    card.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        const renderCRMColumn = (leads, stage) => `
+            <div class="crm-column" data-stage="${stage.id}">
+                <div class="crm-column-header">
+                    <div class="crm-column-title">
+                        <i class="ri-record-circle-fill" style="color: ${stage.color};"></i>
+                        ${stage.name}
+                    </div>
+                    <span class="crm-column-count">${leads.filter(l => l.stage === stage.id).length}</span>
+                </div>
+                <div class="crm-cards" data-stage="${stage.id}">
+                    ${leads.filter(l => l.stage === stage.id).map(lead => `
+                        <div class="crm-card" draggable="true" data-id="${lead.id}">
+                            <div class="crm-card-title">${lead.name}</div>
+                            <div class="crm-card-company">${lead.company || lead.email}</div>
+                            <div class="crm-card-meta">
+                                <span class="crm-card-value">${lead.value ? formatMYR(lead.value) : '-'}</span>
+                                <span class="crm-card-date">${formatDate(lead.createdAt)}</span>
+                            </div>
+                            <div style="margin-top:12px; display:flex; gap:8px;">
+                                <button class="action-btn" onclick="editCRMLead('${lead.id}')" title="Edit"><i class="ri-edit-line"></i></button>
+                                <button class="action-btn danger" onclick="deleteCRMLead('${lead.id}')" title="Delete"><i class="ri-delete-bin-line"></i></button>
+                                ${lead.phone ? `<a href="https://wa.me/${lead.phone.replace(/\D/g, '')}" target="_blank" class="action-btn" style="text-decoration:none;" title="WhatsApp"><i class="ri-whatsapp-line"></i></a>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        function initCRMDragDrop() {
+            const cards = document.querySelectorAll('.crm-card');
+            const columns = document.querySelectorAll('.crm-cards');
+
+            cards.forEach(card => {
+                card.addEventListener('dragstart', (e) => {
+                    card.classList.add('dragging');
+                    e.dataTransfer.setData('text/plain', card.dataset.id);
+                });
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            });
+
+            columns.forEach(column => {
+                column.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    column.style.background = 'rgba(37, 99, 235, 0.05)';
+                });
+                column.addEventListener('dragleave', () => column.style.background = '');
+                column.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    column.style.background = '';
+                    const cardId = e.dataTransfer.getData('text/plain');
+                    const card = document.querySelector(`[data-id="${cardId}"]`);
+                    const newStage = column.dataset.stage;
+                    
+                    if (card) {
+                        column.appendChild(card);
+                        await window.dbOperations.updateCRMLead(cardId, { stage: newStage });
+                        renderCRMSection();
+                    }
+                });
+            });
+        }
+
+        // CRM Lead Modal
+        window.openCRMLeadModal = (id = null) => {
+            const isEdit = id !== null;
+            let leadData = { name: '', email: '', phone: '', company: '', value: '', stage: 'new', notes: '' };
+            
+            const content = `
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Name *</label>
+                        <input type="text" id="leadName" value="${leadData.name}" required>
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Email</label>
+                        <input type="email" id="leadEmail" value="${leadData.email}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Phone</label>
+                        <input type="text" id="leadPhone" value="${leadData.phone}" placeholder="60xxxxxxxxx">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Company</label>
+                        <input type="text" id="leadCompany" value="${leadData.company}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Est. Value (RM)</label>
+                        <input type="number" id="leadValue" value="${leadData.value}" placeholder="0">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Stage</label>
+                        <select id="leadStage">
+                            ${CRM_STAGES.map(s => `<option value="${s.id}" ${leadData.stage === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Notes</label>
+                    <textarea id="leadNotes" rows="3" placeholder="Additional notes...">${leadData.notes}</textarea>
+                </div>
+            `;
+            
+            openModal(isEdit ? 'Edit Lead' : 'Add New Lead', content, async () => {
+                const data = {
+                    name: document.getElementById('leadName').value,
+                    email: document.getElementById('leadEmail').value,
+                    phone: document.getElementById('leadPhone').value,
+                    company: document.getElementById('leadCompany').value,
+                    value: parseFloat(document.getElementById('leadValue').value) || 0,
+                    stage: document.getElementById('leadStage').value,
+                    notes: document.getElementById('leadNotes').value,
+                    updatedAt: new Date()
+                };
+                
+                if(!data.name) {
+                    showPopup("Error", "Name is required.", false);
+                    return;
+                }
+                
+                showLoading("Saving...");
+                if(isEdit) {
+                    await window.dbOperations.updateCRMLead(id, data);
+                } else {
+                    data.createdAt = new Date();
+                    data.number = await window.generateSmartId('lead');
+                    await window.dbOperations.addCRMLead(data);
+                }
+                closeModal();
+                renderCRMSection();
+                hideLoading();
+                showPopup("Success", `Lead ${isEdit ? 'updated' : 'added'} successfully.`);
+            });
+        };
+
+        window.editCRMLead = async (id) => {
+            const leads = await window.dbOperations.getCRMLeads();
+            const lead = leads.find(l => l.id === id);
+            if(!lead) return;
+            
+            const content = `
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Name *</label>
+                        <input type="text" id="leadName" value="${lead.name || ''}" required>
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Email</label>
+                        <input type="email" id="leadEmail" value="${lead.email || ''}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Phone</label>
+                        <input type="text" id="leadPhone" value="${lead.phone || ''}" placeholder="60xxxxxxxxx">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Company</label>
+                        <input type="text" id="leadCompany" value="${lead.company || ''}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Est. Value (RM)</label>
+                        <input type="number" id="leadValue" value="${lead.value || ''}" placeholder="0">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Stage</label>
+                        <select id="leadStage">
+                            ${CRM_STAGES.map(s => `<option value="${s.id}" ${lead.stage === s.id ? 'selected' : ''}>${s.name}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Notes</label>
+                    <textarea id="leadNotes" rows="3" placeholder="Additional notes...">${lead.notes || ''}</textarea>
+                </div>
+            `;
+            
+            openModal('Edit Lead', content, async () => {
+                const data = {
+                    name: document.getElementById('leadName').value,
+                    email: document.getElementById('leadEmail').value,
+                    phone: document.getElementById('leadPhone').value,
+                    company: document.getElementById('leadCompany').value,
+                    value: parseFloat(document.getElementById('leadValue').value) || 0,
+                    stage: document.getElementById('leadStage').value,
+                    notes: document.getElementById('leadNotes').value,
+                    updatedAt: new Date()
+                };
+                
+                if(!data.name) {
+                    showPopup("Error", "Name is required.", false);
+                    return;
+                }
+                
+                showLoading("Updating...");
+                await window.dbOperations.updateCRMLead(id, data);
+                closeModal();
+                renderCRMSection();
+                hideLoading();
+                showPopup("Success", "Lead updated successfully.");
+            });
+        };
+
+        window.deleteCRMLead = async (id) => {
+            if(confirm("Delete this lead?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteCRMLead(id);
+                renderCRMSection();
+                hideLoading();
+            }
+        };
+
+        // =========================================
+        // MARKETING EMAIL SECTION - UPDATED WITH TABS & EDITOR
+        // =========================================
+        async function renderMarketingSection() {
+            const templates = await window.dbOperations.getMarketingTemplates();
+            const campaigns = await window.dbOperations.getCampaigns();
+            const senderEmails = await window.dbOperations.getSenderEmails();
+            const subscribers = await window.dbOperations.getSubscribers();
+            const activeSubscribers = subscribers.filter(s => s.status === 'active');
+            
+            const activeTemplates = templates.filter(t => t.status === 'active');
+            const sentCampaigns = campaigns.filter(c => c.status === 'sent' || c.status === 'completed');
+            const totalRecipients = sentCampaigns.reduce((sum, c) => sum + (c.recipientCount || 0), 0);
+
+            document.getElementById('mainContent').innerHTML = `
+                <!-- Section Tabs -->
+                <div class="marketing-section-tabs">
+                    <button class="marketing-section-tab active" onclick="switchMarketingSection('compose', this)">
+                        <i class="ri-edit-line"></i> Compose Email
+                    </button>
+                    <button class="marketing-section-tab" onclick="switchMarketingSection('templates', this)">
+                        <i class="ri-file-text-line"></i> Templates
+                    </button>
+                    <button class="marketing-section-tab" onclick="switchMarketingSection('senders', this)">
+                        <i class="ri-user-voice-line"></i> Senders
+                    </button>
+                    <button class="marketing-section-tab" onclick="switchMarketingSection('campaigns', this)">
+                        <i class="ri-send-plane-line"></i> Campaigns
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="campaign-stats-grid">
+                    <div class="campaign-stat-card">
+                        <div class="stat-value">${activeSubscribers.length}</div>
+                        <div class="stat-label">Active Subscribers</div>
+                    </div>
+                    <div class="campaign-stat-card">
+                        <div class="stat-value">${activeTemplates.length}</div>
+                        <div class="stat-label">Email Templates</div>
+                    </div>
+                    <div class="campaign-stat-card">
+                        <div class="stat-value">${sentCampaigns.length}</div>
+                        <div class="stat-label">Campaigns Sent</div>
+                    </div>
+                    <div class="campaign-stat-card">
+                        <div class="stat-value">${totalRecipients}</div>
+                        <div class="stat-label">Total Emails Sent</div>
+                    </div>
+                </div>
+
+                <!-- Compose Section -->
+                <div id="marketingSectionCompose" class="section-content active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><i class="ri-mail-edit-line"></i> Compose New Email</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="email-editor-container">
+                                <div>
+                                    <!-- Email Mode Tabs -->
+                                    <div class="email-editor-tabs">
+                                        <button class="email-editor-tab active" onclick="switchEmailEditorMode('template', this)">
+                                            <i class="ri-layout-line"></i> Template
+                                        </button>
+                                        <button class="email-editor-tab" onclick="switchEmailEditorMode('html', this)">
+                                            <i class="ri-code-line"></i> Custom HTML
+                                        </button>
+                                        <button class="email-editor-tab" onclick="switchEmailEditorMode('text', this)">
+                                            <i class="ri-text"></i> Plain Text
+                                        </button>
+                                    </div>
+
+                                    <!-- Quick Fields -->
+                                    <div class="form-group-modal">
+                                        <label>Subject Line *</label>
+                                        <input type="text" id="composeSubject" placeholder="Enter email subject..." oninput="updateEmailPreview()">
+                                    </div>
+
+                                    <!-- Template Selection (shown for template mode) -->
+                                    <div id="templateModeFields">
+                                        <div class="form-row">
+                                            <div class="form-group-modal">
+                                                <label>Use Template</label>
+                                                <select id="composeTemplateSelect" onchange="loadSelectedTemplate()">
+                                                    <option value="">-- Select Template --</option>
+                                                    <option value="_default_">-- Default Marketing Template --</option>
+                                                    ${activeTemplates.map(t => `<option value="${t.id}">${t.name}</option>`).join('')}
+                                                </select>
+                                            </div>
+                                            <div class="form-group-modal">
+                                                <label>Sender Identity</label>
+                                                <select id="composeSenderSelect">
+                                                    <option value="default">DDNEX System (support@ddnex.com)</option>
+                                                    ${senderEmails.map(s => `<option value="${s.id}">${s.name} (${s.email})</option>`).join('')}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <!-- Editable Fields for Template -->
+                                        <div class="form-group-modal">
+                                            <label>Email Title</label>
+                                            <input type="text" id="composeTitle" value="Your Email Title Here" oninput="updateEmailPreview()">
+                                        </div>
+                                        <div class="form-group-modal">
+                                            <label>Badge Text</label>
+                                            <input type="text" id="composeBadge" value="MARKETING EMAIL" oninput="updateEmailPreview()">
+                                        </div>
+                                        <div class="form-group-modal">
+                                            <label>Main Message</label>
+                                            <textarea id="composeMessage" rows="4" oninput="updateEmailPreview()">Your marketing message goes here. Create compelling content that engages your audience.</textarea>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group-modal">
+                                                <label>Button Text</label>
+                                                <input type="text" id="composeButtonText" value="Call to Action" oninput="updateEmailPreview()">
+                                            </div>
+                                            <div class="form-group-modal">
+                                                <label>Button Link</label>
+                                                <input type="text" id="composeButtonLink" value="https://ddnex.com" oninput="updateEmailPreview()">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Custom HTML Editor (hidden by default) -->
+                                    <div id="htmlModeFields" style="display:none;">
+                                        <div class="form-group-modal">
+                                            <label>HTML Code</label>
+                                            <textarea id="composeCustomHTML" class="email-content-editor" placeholder="Paste your HTML code here..." oninput="updateEmailPreview()">${DEFAULT_MARKETING_TEMPLATE}</textarea>
+                                        </div>
+                                        <div style="margin-bottom:16px;">
+                                            <button class="btn-sm btn-outline-sm" onclick="resetCustomHTML()"><i class="ri-refresh-line"></i> Load Default Template</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Plain Text Editor (hidden by default) -->
+                                    <div id="textModeFields" style="display:none;">
+                                        <div class="form-group-modal">
+                                            <label>Plain Text Content</label>
+                                            <textarea id="composePlainText" class="email-content-editor" style="font-family:inherit;" placeholder="Enter your plain text message here..." oninput="updateEmailPreview()">Hello,
+
+Your marketing message goes here.
+
+Visit us at: https://ddnex.com
+
+Best regards,
+DDNEX Team</textarea>
+                                        </div>
+                                    </div>
+
+                                    <!-- Recipients Selection -->
+                                    <div class="form-group-modal">
+                                        <label>Select Recipients (${activeSubscribers.length} available)</label>
+                                        <div style="margin-bottom:8px; display:flex; gap:8px;">
+                                            <button class="btn-sm btn-outline-sm" onclick="selectAllRecipients()"><i class="ri-checkbox-line"></i> Select All</button>
+                                            <button class="btn-sm btn-outline-sm" onclick="deselectAllRecipients()"><i class="ri-checkbox-blank-line"></i> Deselect All</button>
+                                            <span id="selectedRecipientsCount" style="margin-left:auto; font-size:13px; color:var(--text-muted);">0 selected</span>
+                                        </div>
+                                        <div class="subscriber-checkbox-grid" id="composeRecipientsGrid" style="max-height:200px;">
+                                            ${activeSubscribers.map(s => `
+                                                <label class="subscriber-checkbox-item" onclick="updateRecipientCount()">
+                                                    <input type="checkbox" value="${s.id}" data-email="${s.email}" data-name="${s.name || 'Subscriber'}">
+                                                    <div class="subscriber-checkbox-info">
+                                                        <div class="subscriber-checkbox-name">${s.name || 'N/A'}</div>
+                                                        <div class="subscriber-checkbox-email">${s.email}</div>
+                                                    </div>
+                                                </label>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+
+                                    <!-- Send Buttons -->
+                                    <div style="display:flex; gap:12px; margin-top:16px;">
+                                        <button class="btn btn-primary" style="flex:1;" onclick="sendComposedEmail()">
+                                            <i class="ri-send-plane-fill"></i> Send Now
+                                        </button>
+                                        <button class="btn btn-outline" onclick="saveComposedAsTemplate()">
+                                            <i class="ri-save-line"></i> Save as Template
+                                        </button>
+                                    </div>
+                                    <div id="composeSendStatus"></div>
+                                </div>
+
+                                <!-- Preview -->
+                                <div>
+                                    <div class="email-info-box">
+                                        <h4><i class="ri-eye-line"></i> Live Preview</h4>
+                                    </div>
+                                    <iframe id="composePreviewIframe" class="email-preview-frame"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Templates Section -->
+                <div id="marketingSectionTemplates" class="section-content">
+                    <div class="filter-bar">
+                        <div class="search-box" style="flex:1;">
+                            <input type="text" placeholder="Search templates..." id="templateSearchInput">
+                            <i class="ri-search-line"></i>
+                        </div>
+                        <button class="btn btn-primary" onclick="openMarketingTemplateModal()">
+                            <i class="ri-add-line"></i> New Template
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            ${templates.length === 0 ? `
+                                <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                    <i class="ri-mail-line" style="font-size: 48px; margin-bottom: 16px;"></i>
+                                    <p>No templates yet. Create your first marketing email template.</p>
+                                </div>
+                            ` : templates.map(t => `
+                                <div class="marketing-template-card ${t.status === 'inactive' ? 'inactive' : ''}">
+                                    <div class="marketing-template-header">
+                                        <div>
+                                            <div class="marketing-template-title">${t.name}</div>
+                                            <div class="marketing-template-meta">
+                                                <span class="marketing-template-badge ${t.type}">${t.type?.toUpperCase() || 'HTML'}</span>
+                                                <span class="marketing-template-badge ${t.status === 'active' ? 'active' : 'inactive'}">${t.status?.toUpperCase() || 'ACTIVE'}</span>
+                                                <span>Created: ${formatDate(t.createdAt)}</span>
+                                            </div>
+                                        </div>
+                                        <div style="display:flex; gap:8px;">
+                                            <button class="btn-sm btn-outline-sm" onclick="useTemplateForCompose('${t.id}')">
+                                                <i class="ri-send-plane-line"></i> Use
+                                            </button>
+                                            <button class="btn-sm btn-outline-sm" onclick="previewMarketingTemplate('${t.id}')">
+                                                <i class="ri-eye-line"></i> Preview
+                                            </button>
+                                            <button class="btn-sm btn-outline-sm" onclick="editMarketingTemplate('${t.id}')">
+                                                <i class="ri-edit-line"></i> Edit
+                                            </button>
+                                            <button class="btn-sm btn-outline-sm" style="border-color:#fecaca; color:#dc2626;" onclick="deleteMarketingTemplate('${t.id}')">
+                                                <i class="ri-delete-bin-line"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    ${t.subject ? `<p style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;"><strong>Subject:</strong> ${t.subject}</p>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Senders Section -->
+                <div id="marketingSectionSenders" class="section-content">
+                    <div class="filter-bar">
+                        <h3 style="font-size:16px;">Sender Email Accounts</h3>
+                        <button class="btn btn-primary" onclick="openSenderEmailModal()">
+                            <i class="ri-add-line"></i> Add Sender
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+                                Configure custom sender email accounts for your marketing campaigns.
+                            </p>
+                            ${senderEmails.length === 0 ? `
+                                <div style="text-align:center; padding:20px; color:var(--text-muted);">
+                                    <i class="ri-mail-line" style="font-size:32px; margin-bottom:8px;"></i>
+                                    <p>No sender emails configured. Using default DDNEX System email.</p>
+                                </div>
+                            ` : senderEmails.map(s => `
+                                <div class="sender-email-card">
+                                    <div class="sender-email-info">
+                                        <div class="sender-email-icon"><i class="ri-mail-line"></i></div>
+                                        <div>
+                                            <div class="sender-email-name">${s.name}</div>
+                                            <div class="sender-email-address">${s.email}</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="action-btn" onclick="editSenderEmail('${s.id}')"><i class="ri-edit-line"></i></button>
+                                        <button class="action-btn danger" onclick="deleteSenderEmail('${s.id}')"><i class="ri-delete-bin-line"></i></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaigns Section -->
+                <div id="marketingSectionCampaigns" class="section-content">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Campaign History</h3>
+                        </div>
+                        <div class="card-body no-padding">
+                            ${campaigns.length === 0 ? `
+                                <div style="text-align:center; padding:40px; color:var(--text-muted);">
+                                    <i class="ri-send-plane-line" style="font-size:48px; margin-bottom:16px;"></i>
+                                    <p>No campaigns sent yet. Compose your first email!</p>
+                                </div>
+                            ` : `
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Subject</th>
+                                            <th>Recipients</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${campaigns.slice(0, 20).map(c => `
+                                            <tr>
+                                                <td>${formatDate(c.sentAt)}</td>
+                                                <td>${c.subject || 'No Subject'}</td>
+                                                <td>${c.recipientCount || 0}</td>
+                                                <td><span class="status completed">${c.status || 'Sent'}</span></td>
+                                                <td>
+                                                    <button class="action-btn" onclick="viewCampaignDetails('${c.id}')" title="View Details"><i class="ri-eye-line"></i></button>
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize preview
+            updateEmailPreview();
+        }
+
+        // =========================================
+        // MARKETING SECTION TAB SWITCHER
+        // =========================================
+        window.switchMarketingSection = (section, btn) => {
+            document.querySelectorAll('.marketing-section-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.querySelectorAll('.section-content').forEach(s => s.classList.remove('active'));
+            document.getElementById('marketingSection' + section.charAt(0).toUpperCase() + section.slice(1)).classList.add('active');
+        };
+
+        // =========================================
+        // EMAIL EDITOR MODE SWITCHER
+        // =========================================
+        window.switchEmailEditorMode = (mode, btn) => {
+            document.querySelectorAll('.email-editor-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('templateModeFields').style.display = mode === 'template' ? 'block' : 'none';
+            document.getElementById('htmlModeFields').style.display = mode === 'html' ? 'block' : 'none';
+            document.getElementById('textModeFields').style.display = mode === 'text' ? 'block' : 'none';
+            
+            window.currentEditorMode = mode;
+            updateEmailPreview();
+        };
+
+        // =========================================
+        // LIVE EMAIL PREVIEW
+        // =========================================
+        window.updateEmailPreview = () => {
+            const iframe = document.getElementById('composePreviewIframe');
+            if (!iframe) return;
+            
+            const mode = window.currentEditorMode || 'template';
+            let htmlContent = '';
+            
+            if (mode === 'template') {
+                const title = document.getElementById('composeTitle')?.value || 'Your Email Title Here';
+                const badge = document.getElementById('composeBadge')?.value || 'MARKETING EMAIL';
+                const message = document.getElementById('composeMessage')?.value || 'Your marketing message goes here.';
+                const buttonText = document.getElementById('composeButtonText')?.value || 'Call to Action';
+                const buttonLink = document.getElementById('composeButtonLink')?.value || 'https://ddnex.com';
+                
+                htmlContent = DEFAULT_MARKETING_TEMPLATE
+                    .replace('Your Email Title Here', title)
+                    .replace('MARKETING EMAIL', badge)
+                    .replace('Your marketing message goes here. Create compelling content that engages your audience.', message)
+                    .replace('Call to Action', buttonText)
+                    .replace('https://ddnex.com', buttonLink);
+            } else if (mode === 'html') {
+                htmlContent = document.getElementById('composeCustomHTML')?.value || '';
+            } else if (mode === 'text') {
+                const textContent = document.getElementById('composePlainText')?.value || '';
+                htmlContent = `
+                    <div style="padding: 40px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; white-space: pre-wrap; line-height: 1.7; color: #333;">
+                        ${textContent.replace(/\n/g, '<br>')}
+                    </div>
+                `;
+            }
+            
+            const doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write(htmlContent);
+            doc.close();
+        };
+
+        window.loadSelectedTemplate = async () => {
+            const select = document.getElementById('composeTemplateSelect');
+            const value = select.value;
+            
+            if (value === '_default_') {
+                document.getElementById('composeTitle').value = 'Your Email Title Here';
+                document.getElementById('composeBadge').value = 'MARKETING EMAIL';
+                document.getElementById('composeMessage').value = 'Your marketing message goes here. Create compelling content that engages your audience.';
+                document.getElementById('composeButtonText').value = 'Call to Action';
+                document.getElementById('composeButtonLink').value = 'https://ddnex.com';
+            } else if (value) {
+                const template = await window.dbOperations.getMarketingTemplate(value);
+                if (template) {
+                    // Extract values from template content if possible
+                    document.getElementById('composeTitle').value = template.title || template.name;
+                    document.getElementById('composeSubject').value = template.subject || '';
+                    // For custom templates, switch to HTML mode
+                    document.getElementById('composeCustomHTML').value = template.content || '';
+                    switchEmailEditorMode('html', document.querySelector('.email-editor-tab:nth-child(2)'));
+                }
+            }
+            updateEmailPreview();
+        };
+
+        window.resetCustomHTML = () => {
+            document.getElementById('composeCustomHTML').value = DEFAULT_MARKETING_TEMPLATE;
+            updateEmailPreview();
+        };
+
+        // =========================================
+        // RECIPIENT SELECTION
+        // =========================================
+        window.selectAllRecipients = () => {
+            document.querySelectorAll('#composeRecipientsGrid input[type="checkbox"]').forEach(cb => {
+                cb.checked = true;
+                cb.closest('.subscriber-checkbox-item').classList.add('selected');
+            });
+            updateRecipientCount();
+        };
+
+        window.deselectAllRecipients = () => {
+            document.querySelectorAll('#composeRecipientsGrid input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+                cb.closest('.subscriber-checkbox-item').classList.remove('selected');
+            });
+            updateRecipientCount();
+        };
+
+        window.updateRecipientCount = () => {
+            const selected = document.querySelectorAll('#composeRecipientsGrid input[type="checkbox"]:checked');
+            const countEl = document.getElementById('selectedRecipientsCount');
+            if (countEl) {
+                countEl.textContent = `${selected.length} selected`;
+            }
+        };
+
+        // =========================================
+        // SEND COMPOSED EMAIL
+        // =========================================
+        window.sendComposedEmail = async () => {
+            const subject = document.getElementById('composeSubject').value;
+            const selectedCheckboxes = document.querySelectorAll('#composeRecipientsGrid input[type="checkbox"]:checked');
+            const mode = window.currentEditorMode || 'template';
+            
+            if (!subject) {
+                showPopup("Error", "Please enter a subject line.", false);
+                return;
+            }
+            
+            if (selectedCheckboxes.length === 0) {
+                showPopup("Error", "Please select at least one recipient.", false);
+                return;
+            }
+
+            let htmlContent = '';
+            if (mode === 'template') {
+                const title = document.getElementById('composeTitle')?.value || 'Your Email Title Here';
+                const badge = document.getElementById('composeBadge')?.value || 'MARKETING EMAIL';
+                const message = document.getElementById('composeMessage')?.value || '';
+                const buttonText = document.getElementById('composeButtonText')?.value || 'Call to Action';
+                const buttonLink = document.getElementById('composeButtonLink')?.value || 'https://ddnex.com';
+                
+                htmlContent = DEFAULT_MARKETING_TEMPLATE
+                    .replace('Your Email Title Here', title)
+                    .replace('MARKETING EMAIL', badge)
+                    .replace('Your marketing message goes here. Create compelling content that engages your audience.', message)
+                    .replace('Call to Action', buttonText)
+                    .replace('https://ddnex.com', buttonLink);
+            } else if (mode === 'html') {
+                htmlContent = document.getElementById('composeCustomHTML')?.value || '';
+            } else if (mode === 'text') {
+                const textContent = document.getElementById('composePlainText')?.value || '';
+                htmlContent = `<div style="font-family:-apple-system,BlinkMacSystemFont,sans-serif; white-space:pre-wrap; padding:20px;">${textContent.replace(/\n/g, '<br>')}</div>`;
+            }
+
+            const senderSelect = document.getElementById('composeSenderSelect');
+            const senderEmails = await window.dbOperations.getSenderEmails();
+            let sender = { name: 'DDNEX System', email: 'support@ddnex.com' };
+            if (senderSelect.value !== 'default') {
+                const found = senderEmails.find(s => s.id === senderSelect.value);
+                if (found) sender = found;
+            }
+
+            const statusEl = document.getElementById('composeSendStatus');
+            statusEl.innerHTML = `<div class="email-status-indicator sending"><i class="ri-loader-4-line" style="animation: spin 1s linear infinite;"></i> Sending emails...</div>`;
+
+            let sent = 0;
+            let failed = 0;
+            const recipients = [];
+
+            for (const cb of selectedCheckboxes) {
+                const email = cb.dataset.email;
+                const name = cb.dataset.name;
+                
+                const result = await sendEmailViaEmailJS(
+                    email,
+                    name,
+                    subject,
+                    htmlContent,
+                    '',
+                    '',
+                    sender.name,
+                    sender.email
+                );
+                
+                if (result.success) {
+                    sent++;
+                    recipients.push(email);
+                } else {
+                    failed++;
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            // Save campaign record
+            await window.dbOperations.addCampaign({
+                subject: subject,
+                recipientCount: sent,
+                recipients: recipients,
+                sender: sender,
+                sentAt: new Date(),
+                status: 'completed',
+                mode: mode
+            });
+
+            if (failed === 0) {
+                statusEl.innerHTML = `<div class="email-status-indicator success"><i class="ri-checkbox-circle-fill"></i> Successfully sent to ${sent} recipients!</div>`;
+                showPopup("Campaign Complete", `Marketing email sent to ${sent} recipients.`);
+            } else {
+                statusEl.innerHTML = `<div class="email-status-indicator error"><i class="ri-error-warning-fill"></i> Sent: ${sent}, Failed: ${failed}</div>`;
+                showPopup("Partial Success", `Sent to ${sent} recipients. ${failed} failed.`, false);
+            }
+        };
+
+        // =========================================
+        // SAVE COMPOSED AS TEMPLATE
+        // =========================================
+        window.saveComposedAsTemplate = async () => {
+            const subject = document.getElementById('composeSubject').value;
+            const mode = window.currentEditorMode || 'template';
+            
+            if (!subject) {
+                showPopup("Error", "Please enter a subject line.", false);
+                return;
+            }
+
+            let htmlContent = '';
+            if (mode === 'template') {
+                const title = document.getElementById('composeTitle')?.value || 'Your Email Title Here';
+                const badge = document.getElementById('composeBadge')?.value || 'MARKETING EMAIL';
+                const message = document.getElementById('composeMessage')?.value || '';
+                const buttonText = document.getElementById('composeButtonText')?.value || 'Call to Action';
+                const buttonLink = document.getElementById('composeButtonLink')?.value || 'https://ddnex.com';
+                
+                htmlContent = DEFAULT_MARKETING_TEMPLATE
+                    .replace('Your Email Title Here', title)
+                    .replace('MARKETING EMAIL', badge)
+                    .replace('Your marketing message goes here. Create compelling content that engages your audience.', message)
+                    .replace('Call to Action', buttonText)
+                    .replace('https://ddnex.com', buttonLink);
+            } else if (mode === 'html') {
+                htmlContent = document.getElementById('composeCustomHTML')?.value || '';
+            } else if (mode === 'text') {
+                htmlContent = document.getElementById('composePlainText')?.value || '';
+            }
+
+            const content = `
+                <div class="form-group-modal">
+                    <label>Template Name</label>
+                    <input type="text" id="saveTemplateName" placeholder="e.g., Monthly Newsletter">
+                </div>
+                <div class="form-group-modal">
+                    <label>Type</label>
+                    <select id="saveTemplateType">
+                        <option value="html">HTML Email</option>
+                        <option value="text">Plain Text</option>
+                    </select>
+                </div>
+            `;
+
+            openModal('Save as Template', content, async () => {
+                const name = document.getElementById('saveTemplateName').value;
+                const type = document.getElementById('saveTemplateType').value;
+                
+                if (!name) {
+                    showPopup("Error", "Please enter a template name.", false);
+                    return;
+                }
+
+                showLoading("Saving...");
+                await window.dbOperations.addMarketingTemplate({
+                    name: name,
+                    subject: subject,
+                    type: type,
+                    status: 'active',
+                    content: htmlContent,
+                    createdAt: new Date()
+                });
+                closeModal();
+                renderMarketingSection();
+                hideLoading();
+                showPopup("Success", "Template saved successfully.");
+            });
+        };
+
+        // Use template for compose
+        window.useTemplateForCompose = (id) => {
+            document.getElementById('composeTemplateSelect').value = id;
+            loadSelectedTemplate();
+            switchMarketingSection('compose', document.querySelector('.marketing-section-tab'));
+        };
+
+        // Preview template
+        window.previewMarketingTemplate = async (id) => {
+            const template = await window.dbOperations.getMarketingTemplate(id);
+            if (!template) return;
+
+            const content = `
+                <div style="margin-bottom: 16px;">
+                    <strong>Subject:</strong> ${template.subject || 'No subject'}
+                </div>
+                <div style="border: 1px solid var(--border-light); border-radius: var(--radius-sm); overflow: hidden;">
+                    <iframe id="templatePreviewIframe" style="width: 100%; height: 500px; border: none;"></iframe>
+                </div>
+            `;
+            
+            openModal('Preview: ' + template.name, content, closeModal, true);
+            
+            setTimeout(() => {
+                const iframe = document.getElementById('templatePreviewIframe');
+                if (iframe) {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    doc.open();
+                    doc.write(template.content || '');
+                    doc.close();
+                }
+            }, 100);
+        };
+
+        // Edit template
+        window.editMarketingTemplate = async (id) => {
+            const template = await window.dbOperations.getMarketingTemplate(id);
+            if (!template) return;
+
+            const content = `
+                <div class="form-group-modal">
+                    <label>Template Name</label>
+                    <input type="text" id="editTemplateName" value="${template.name || ''}">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email Subject</label>
+                    <input type="text" id="editTemplateSubject" value="${template.subject || ''}">
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Type</label>
+                        <select id="editTemplateType">
+                            <option value="html" ${template.type === 'html' ? 'selected' : ''}>HTML Email</option>
+                            <option value="text" ${template.type === 'text' ? 'selected' : ''}>Plain Text</option>
+                        </select>
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Status</label>
+                        <select id="editTemplateStatus">
+                            <option value="active" ${template.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="inactive" ${template.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Email Content</label>
+                    <textarea id="editTemplateContent" rows="15" style="font-family: monospace; font-size: 12px;">${template.content || ''}</textarea>
+                </div>
+            `;
+            
+            openModal('Edit Template', content, async () => {
+                const data = {
+                    name: document.getElementById('editTemplateName').value,
+                    subject: document.getElementById('editTemplateSubject').value,
+                    type: document.getElementById('editTemplateType').value,
+                    status: document.getElementById('editTemplateStatus').value,
+                    content: document.getElementById('editTemplateContent').value,
+                    updatedAt: new Date()
+                };
+                
+                showLoading("Updating...");
+                await window.dbOperations.updateMarketingTemplate(id, data);
+                closeModal();
+                renderMarketingSection();
+                hideLoading();
+                showPopup("Success", "Template updated successfully.");
+            }, false, true);
+        };
+
+        window.deleteMarketingTemplate = async (id) => {
+            if (confirm("Delete this template?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteMarketingTemplate(id);
+                renderMarketingSection();
+                hideLoading();
+            }
+        };
+
+        // Open Marketing Template Modal
+        window.openMarketingTemplateModal = () => {
+            const content = `
+                <div class="form-group-modal">
+                    <label>Template Name</label>
+                    <input type="text" id="newTemplateName" placeholder="e.g., Monthly Newsletter">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email Subject</label>
+                    <input type="text" id="newTemplateSubject" placeholder="Email subject line">
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Type</label>
+                        <select id="newTemplateType">
+                            <option value="html">HTML Email</option>
+                            <option value="text">Plain Text</option>
+                        </select>
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Status</label>
+                        <select id="newTemplateStatus">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Email Content (HTML)</label>
+                    <textarea id="newTemplateContent" rows="15" style="font-family: monospace; font-size: 12px;" placeholder="Enter HTML or plain text...">${DEFAULT_MARKETING_TEMPLATE}</textarea>
+                </div>
+            `;
+            
+            openModal('Create Email Template', content, async () => {
+                const data = {
+                    name: document.getElementById('newTemplateName').value,
+                    subject: document.getElementById('newTemplateSubject').value,
+                    type: document.getElementById('newTemplateType').value,
+                    status: document.getElementById('newTemplateStatus').value,
+                    content: document.getElementById('newTemplateContent').value,
+                    createdAt: new Date(),
+                    updatedAt: new Date()
+                };
+                
+                if (!data.name || !data.content) {
+                    showPopup("Error", "Name and content are required.", false);
+                    return;
+                }
+                
+                showLoading("Saving...");
+                await window.dbOperations.addMarketingTemplate(data);
+                closeModal();
+                renderMarketingSection();
+                hideLoading();
+                showPopup("Success", "Template created successfully.");
+            });
+        };
+
+        // =========================================
+        // SUBSCRIBERS SECTION
+        // =========================================
+        async function renderSubscribersSection() {
+            const subscribers = await window.dbOperations.getSubscribers();
+            const activeSubs = subscribers.filter(s => s.status === 'active');
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search subscribers..." id="subscriberSearchInput">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <button class="btn btn-outline" onclick="openImportSubscribersModal()">
+                        <i class="ri-upload-line"></i> Import
+                    </button>
+                    <button class="btn btn-primary" onclick="openSubscriberModal()">
+                        <i class="ri-add-line"></i> Add Subscriber
+                    </button>
+                </div>
+                
+                <div class="stats-grid" style="margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Total Subscribers</h3>
+                            <div class="value">${subscribers.length}</div>
+                        </div>
+                        <div class="stat-icon cyan"><i class="ri-user-heart-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Active</h3>
+                            <div class="value">${activeSubs.length}</div>
+                        </div>
+                        <div class="stat-icon green"><i class="ri-user-follow-line"></i></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-info">
+                            <h3>Inactive</h3>
+                            <div class="value">${subscribers.length - activeSubs.length}</div>
+                        </div>
+                        <div class="stat-icon pink"><i class="ri-user-unfollow-line"></i></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Source</th>
+                                    <th>Status</th>
+                                    <th>Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscribersTableBody">
+                                ${subscribers.map(s => `
+                                    <tr>
+                                        <td><strong>${s.name || 'N/A'}</strong></td>
+                                        <td>${s.email}</td>
+                                        <td>${s.phone || '-'}</td>
+                                        <td>${s.source || 'Manual'}</td>
+                                        <td><span class="status ${s.status === 'active' ? 'active' : 'suspended'}">${s.status || 'active'}</span></td>
+                                        <td>${formatDate(s.createdAt)}</td>
+                                        <td>
+                                            <button class="action-btn" onclick="editSubscriber('${s.id}')"><i class="ri-edit-line"></i></button>
+                                            <button class="action-btn danger" onclick="deleteSubscriber('${s.id}')"><i class="ri-delete-bin-line"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            const searchInput = document.getElementById('subscriberSearchInput');
+            searchInput.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#subscribersTableBody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        // Subscriber Modal
+        window.openSubscriberModal = () => {
+            const content = `
+                <div class="form-group-modal">
+                    <label>Name</label>
+                    <input type="text" id="subName" placeholder="Subscriber name">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email *</label>
+                    <input type="email" id="subEmail" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group-modal">
+                    <label>Phone</label>
+                    <input type="text" id="subPhone" placeholder="60xxxxxxxxx">
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Source</label>
+                        <input type="text" id="subSource" placeholder="e.g., Website, Event">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Status</label>
+                        <select id="subStatus">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="subTags" placeholder="client, prospect, partner">
+                </div>
+            `;
+            
+            openModal('Add Subscriber', content, async () => {
+                const data = {
+                    name: document.getElementById('subName').value,
+                    email: document.getElementById('subEmail').value,
+                    phone: document.getElementById('subPhone').value,
+                    source: document.getElementById('subSource').value,
+                    status: document.getElementById('subStatus').value,
+                    tags: document.getElementById('subTags').value.split(',').map(t => t.trim()).filter(t => t),
+                    createdAt: new Date()
+                };
+                
+                if (!data.email) {
+                    showPopup("Error", "Email is required.", false);
+                    return;
+                }
+                
+                showLoading("Saving...");
+                await window.dbOperations.addSubscriber(data);
+                closeModal();
+                renderSubscribersSection();
+                hideLoading();
+                showPopup("Success", "Subscriber added successfully.");
+            });
+        };
+
+        window.editSubscriber = async (id) => {
+            const subscribers = await window.dbOperations.getSubscribers();
+            const sub = subscribers.find(s => s.id === id);
+            if (!sub) return;
+
+            const content = `
+                <div class="form-group-modal">
+                    <label>Name</label>
+                    <input type="text" id="subName" value="${sub.name || ''}">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email *</label>
+                    <input type="email" id="subEmail" value="${sub.email || ''}" required>
+                </div>
+                <div class="form-group-modal">
+                    <label>Phone</label>
+                    <input type="text" id="subPhone" value="${sub.phone || ''}">
+                </div>
+                <div class="form-row">
+                    <div class="form-group-modal">
+                        <label>Source</label>
+                        <input type="text" id="subSource" value="${sub.source || ''}">
+                    </div>
+                    <div class="form-group-modal">
+                        <label>Status</label>
+                        <select id="subStatus">
+                            <option value="active" ${sub.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="inactive" ${sub.status === 'inactive' ? 'selected' : ''}>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group-modal">
+                    <label>Tags (comma separated)</label>
+                    <input type="text" id="subTags" value="${(sub.tags || []).join(', ')}">
+                </div>
+            `;
+            
+            openModal('Edit Subscriber', content, async () => {
+                const data = {
+                    name: document.getElementById('subName').value,
+                    email: document.getElementById('subEmail').value,
+                    phone: document.getElementById('subPhone').value,
+                    source: document.getElementById('subSource').value,
+                    status: document.getElementById('subStatus').value,
+                    tags: document.getElementById('subTags').value.split(',').map(t => t.trim()).filter(t => t),
+                    updatedAt: new Date()
+                };
+                
+                showLoading("Updating...");
+                await window.dbOperations.updateSubscriber(id, data);
+                closeModal();
+                renderSubscribersSection();
+                hideLoading();
+            });
+        };
+
+        window.deleteSubscriber = async (id) => {
+            if (confirm("Delete this subscriber?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteSubscriber(id);
+                renderSubscribersSection();
+                hideLoading();
+            }
+        };
+
+        // Import Subscribers Modal
+        window.openImportSubscribersModal = () => {
+            const content = `
+                <div style="margin-bottom: 16px; padding: 16px; background: #f0f9ff; border-radius: var(--radius-sm); border: 1px solid #bae6fd;">
+                    <p style="font-size: 13px; color: #0369a1; margin-bottom: 8px;"><strong>Format:</strong></p>
+                    <code style="font-size: 12px; background: white; padding: 8px; display: block; border-radius: 4px;">
+                        Name, Email, Phone<br>
+                        John Doe, john@example.com, 60123456789
+                    </code>
+                </div>
+                <div class="form-group-modal">
+                    <label>Paste CSV Data</label>
+                    <textarea id="importData" rows="10" placeholder="Name, Email, Phone&#10;John Doe, john@example.com, 60123456789"></textarea>
+                </div>
+            `;
+            
+            openModal('Import Subscribers', content, async () => {
+                const data = document.getElementById('importData').value;
+                const lines = data.trim().split('\n');
+                
+                showLoading("Importing...");
+                let imported = 0;
+                
+                for (const line of lines) {
+                    const parts = line.split(',').map(p => p.trim());
+                    if (parts.length >= 2 && parts[1].includes('@')) {
+                        await window.dbOperations.addSubscriber({
+                            name: parts[0],
+                            email: parts[1],
+                            phone: parts[2] || '',
+                            source: 'Import',
+                            status: 'active',
+                            createdAt: new Date()
+                        });
+                        imported++;
+                    }
+                }
+                
+                closeModal();
+                renderSubscribersSection();
+                hideLoading();
+                showPopup("Success", `Imported ${imported} subscribers.`);
+            });
+        };
+
+        // =========================================
+        // SEND MARKETING EMAIL MODAL (Quick Send from Dashboard)
+        // =========================================
+        window.openSendMarketingModal = async () => {
+            navigateTo('/marketing');
+            setTimeout(() => {
+                switchMarketingSection('compose', document.querySelector('.marketing-section-tab'));
+            }, 100);
+        };
+
+        // =========================================
+        // REMAINING SECTIONS (Services, Clients, etc.)
+        // =========================================
+        
+        // --- Services & Pricing ---
         function renderServicesSection() {
             document.getElementById('mainContent').innerHTML = `
                 <div style="text-align:center; margin-bottom: 32px;">
@@ -3552,7 +5447,7 @@ const generateFullTemplateHTML = (doc) => {
                         <div class="pricing-features">
                             <ul>
                                 <li><i class="ri-time-line"></i> Delivery: 4-7 Days</li>
-                            <li><i class="ri-pages-line"></i> Up to 5 Pages</li>
+                                <li><i class="ri-pages-line"></i> Up to 5 Pages</li>
                                 <li><i class="ri-cellphone-line"></i> Mobile Responsive</li>
                             </ul>
                         </div>
@@ -4501,7 +6396,7 @@ const generateFullTemplateHTML = (doc) => {
         };
 
         // =========================================
-        // QUOTATION EDITOR - UPDATED WITH PAYMENT OPTIONS
+        // QUOTATION EDITOR
         // =========================================
         async function renderQuotationEditor(id) {
             let data = await window.dbOperations.getQuotation(id);
@@ -4535,7 +6430,6 @@ const generateFullTemplateHTML = (doc) => {
             const discount = parseFloat(data.discount || 0);
             const grandTotal = subtotal - discount;
 
-            // Generate payment options HTML for quotation
             const paymentOptionsHtml = PAYMENT_PLANS.map(plan => `
                 <button type="button" class="payment-option-btn ${data.paymentType === plan.id ? 'active' : ''}" onclick="setQuotationPaymentType('${plan.id}')">
                     <strong>${plan.label}</strong>
@@ -4687,7 +6581,6 @@ const generateFullTemplateHTML = (doc) => {
                                     </div>
                                 </div>
 
-                                <!-- Custom Duration Input for Quotation -->
                                 <div class="custom-duration-input" id="customDurationInputQ" style="display: ${showCustomInput ? 'block' : 'none'};">
                                     <div class="form-group-modal" style="margin-bottom:0;">
                                         <label>Custom Duration (Months)</label>
@@ -4799,7 +6692,6 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
 
-        // FIXED: Commit Quotation
         window.commitQuotation = async (id) => {
             if(confirm("Commit this quotation? This will save all changes and change status to 'Pending'.")) {
                 showLoading("Saving and committing...");
@@ -4841,7 +6733,6 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
 
-        // UPDATED: saveQuotation with payment options
         window.saveQuotation = async (id) => {
             const subtotal = window.currentQuotationItems.reduce((sum, item) => sum + parseFloat(item.amount || 0), 0);
             const discount = parseFloat(document.getElementById('editQDiscount')?.value || 0);
@@ -4909,7 +6800,6 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
         
-        // FIXED: Delete Document
         window.deleteDocGeneric = async (id, type) => {
             if(confirm(`Are you sure you want to delete this ${type}? This action cannot be undone.`)) {
                 showLoading("Deleting...");
@@ -4935,7 +6825,7 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
 
-        // ================== EMAIL TEMPLATE MODAL - FIXED ==================
+        // ================== EMAIL TEMPLATE MODAL ==================
         window.openEmailTemplateModal = async (id, type) => {
             let doc;
             if (type === 'Quotation') {
@@ -4998,13 +6888,6 @@ const generateFullTemplateHTML = (doc) => {
             let clientEmail = '';
             if(doc.customerEmail) clientEmail = doc.customerEmail;
 
-            const itemsSummary = doc.items.map(item => `
-                <div class="item-row-summary">
-                    <span>${item.description || '-'}</span>
-                    <strong>${formatMYR(item.amount || 0)}</strong>
-                </div>
-            `).join('');
-
             const teamMembers = await window.dbOperations.getTeam();
             const teamOptionsHtml = teamMembers.map(m => `
                 <label class="team-option">
@@ -5013,14 +6896,13 @@ const generateFullTemplateHTML = (doc) => {
                 </label>
             `).join('');
 
-            // Payment plan display
             const paymentPlanDisplay = getPaymentPlanDisplay(doc.paymentType, doc.customMonths);
             const isInstallment = doc.paymentType && doc.paymentType !== 'One-Time';
 
             const content = `
                 <div class="email-tabs">
-                    <button class="email-tab active" onclick="window.switchEmailTab('send')">Send Email</button>
-                    <button class="email-tab" onclick="window.switchEmailTab('download')">Download / Copy</button>
+                    <button class="email-tab active" onclick="window.switchEmailTab('send', this)">Send Email</button>
+                    <button class="email-tab" onclick="window.switchEmailTab('download', this)">Download / Copy</button>
                 </div>
                 
                 <div class="email-modal-grid">
@@ -5074,9 +6956,6 @@ const generateFullTemplateHTML = (doc) => {
                                         </tr>
                                         ` : ''}
                                     </table>
-                                    <div class="item-list">
-                                        ${itemsSummary}
-                                    </div>
                                 </div>
                             </div>
                             
@@ -5112,11 +6991,6 @@ const generateFullTemplateHTML = (doc) => {
                             <p><strong>Total:</strong> ${formatMYR(doc.total)}</p>
                             ${isInstallment ? `<p><strong>Payment Plan:</strong> ${paymentPlanDisplay}</p>` : ''}
                         </div>
-                        
-                        <div class="email-info-box">
-                            <h4><i class="ri-information-line"></i> Email Info</h4>
-                            <p style="font-size:12px;">The email sent will be <strong>summarized</strong>.</p>
-                        </div>
                     </div>
                 </div>
             `;
@@ -5127,7 +7001,6 @@ const generateFullTemplateHTML = (doc) => {
             openModal(`Email: ${doc.number || id}`, content, closeModal, true);
         };
 
-        // FIXED: switchEmailTab - using btn parameter instead of event.currentTarget
         window.switchEmailTab = (tab, btn) => {
             document.querySelectorAll('.email-tab').forEach(t => t.classList.remove('active'));
             if(btn) btn.classList.add('active');
@@ -5141,7 +7014,6 @@ const generateFullTemplateHTML = (doc) => {
             }
         };
 
-        // FIXED: triggerSendEmail - exposed to window for onclick handlers
         window.triggerSendEmail = async (id, type, forceSend = false) => {
             const toEmail = document.getElementById('emailRecipient').value;
             const subject = document.getElementById('emailSubject').value;
@@ -5206,7 +7078,7 @@ const generateFullTemplateHTML = (doc) => {
             URL.revokeObjectURL(url);
         };
 
-        // Print Logic - Uses FULL template
+        // Print Logic
         window.printDocument = async (id, type) => {
             let doc;
             if (type === 'Quotation') {
@@ -5262,155 +7134,23 @@ const generateFullTemplateHTML = (doc) => {
             printArea.innerHTML = rawHtml;
             printArea.style.display = 'block';
 
-            // Set the document title to the ID for PDF naming
             const originalTitle = document.title;
             document.title = doc.number || id;
 
             window.print();
             
-            // Restore original title
             document.title = originalTitle;
 
             printArea.style.display = 'none';
         };
 
-        // --- Project Actions ---
-        window.openProjectModal = () => {
-            openModal('Add Project', `
-                <div class="form-group-modal"><label>Project Name</label><input type="text" id="pName"></div>
-                <div class="form-group-modal"><label>Client Name</label><input type="text" id="pClient"></div>
-                <div class="form-row">
-                     <div class="form-group-modal"><label>Status</label><select id="pStatus"><option value="active">Active</option><option value="pending">Pending</option><option value="completed">Completed</option></select></div>
-                     <div class="form-group-modal"><label>Deadline</label><input type="date" id="pDate"></div>
-                </div>
-            `, async () => {
-                const data = {
-                    name: document.getElementById('pName').value,
-                    client: document.getElementById('pClient').value,
-                    status: document.getElementById('pStatus').value,
-                    deadline: document.getElementById('pDate').value,
-                    value: 0
-                };
-                showLoading("Saving...");
-                await window.dbOperations.addProject(data);
-                closeModal();
-                renderProjectsSection();
-                hideLoading();
-            });
-        };
-
-        window.deleteProject = async (id) => {
-             if(confirm("Delete project?") && hasPermission('delete_project')) {
-                 showLoading("Deleting...");
-                 await window.dbOperations.deleteProject(id);
-                 renderProjectsSection();
-                 hideLoading();
-             }
-        };
-        
-        async function renderProjectsSection() {
-            const projects = await window.dbOperations.getProjects();
-            projects.sort((a, b) => {
-                const dateA = a.deadline ? new Date(a.deadline) : new Date(0);
-                const dateB = b.deadline ? new Date(b.deadline) : new Date(0);
-                return dateB - dateA;
-            });
-            
-            const canDelete = hasPermission('delete_project');
-
-            document.getElementById('mainContent').innerHTML = `
-                <div class="filter-bar">
-                    <div class="search-box" style="flex: 1;">
-                        <input type="text" placeholder="Search projects..." id="projectSearchInput">
-                        <i class="ri-search-line"></i>
-                    </div>
-                    <button class="btn btn-primary" onclick="openProjectModal()">
-                        <i class="ri-add-line"></i> Add Project
-                    </button>
-                </div>
-                <div class="card">
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Project Name</th>
-                                    <th>Client</th>
-                                    <th>Status</th>
-                                    <th>Deadline</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="projectTableBody">
-                                ${projects.map(p => `
-                                    <tr id="project-row-${p.id}">
-                                        <td><strong>${p.name}</strong></td>
-                                        <td>${p.client}</td>
-                                        <td><span class="status ${p.status}"><i class="ri-checkbox-blank-circle-fill"></i> ${p.status}</span></td>
-                                        <td>${formatDate(p.deadline)}</td>
-                                        <td>
-                                            <button class="action-btn" title="Edit" onclick="editProject('${p.id}')"><i class="ri-edit-line"></i></button>
-                                            ${canDelete ? `<button class="action-btn danger" title="Delete" onclick="deleteProject('${p.id}')"><i class="ri-delete-bin-line"></i></button>` : ''}
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `;
-            
-            const searchInput = document.getElementById('projectSearchInput');
-            searchInput.addEventListener('keyup', (e) => {
-                const term = e.target.value.toLowerCase();
-                const rows = document.querySelectorAll('#projectTableBody tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(term) ? '' : 'none';
-                });
-            });
-        }
-
-        // --- Sales Pipeline ---
-        async function renderSalesSection() {
-            const deals = await window.dbOperations.getDeals();
-            document.getElementById('mainContent').innerHTML = `
-                <div class="filter-bar">
-                    <button class="btn btn-primary" onclick="openDealModal()">
-                        <i class="ri-add-line"></i> Add Deal
-                    </button>
-                </div>
-                <div class="kanban-board">
-                    ${renderKanbanColumn(deals, 'leads', 'Leads', '#64748b')}
-                    ${renderKanbanColumn(deals, 'progress', 'In Progress', '#2563eb')}
-                    ${renderKanbanColumn(deals, 'closed', 'Closed', '#16a34a')}
-                </div>
-            `;
-            initKanban();
-        }
-
-        const renderKanbanColumn = (deals, stage, title, color) => `
-            <div class="kanban-column" data-column="${stage}">
-                <div class="kanban-header">
-                    <h4><i class="ri-record-circle-line" style="color: ${color};"></i> ${title} <span class="count">${deals.filter(d => d.stage === stage).length}</span></h4>
-                </div>
-                <div class="kanban-cards" data-column="${stage}">
-                    ${deals.filter(d => d.stage === stage).map(d => `
-                        <div class="kanban-card" draggable="true" data-id="${d.id}">
-                            <h5>${d.name}</h5>
-                            <p>${d.client}</p>
-                            <div class="meta">
-                                <span class="value">${formatMYR(d.value)}</span>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
-
-        // --- Settings / User Management ---
+        // =========================================
+        // SETTINGS SECTION WITH SENDER EMAILS
+        // =========================================
         async function renderSettingsSection() {
             let usersHtml = '';
             let teamHtml = '';
+            let senderEmailsHtml = '';
             const isSuperAdmin = currentUser && currentUser.role === 'SuperAdmin';
             
             if (isSuperAdmin) {
@@ -5477,11 +7217,47 @@ const generateFullTemplateHTML = (doc) => {
                         </div>
                     </div>
                 `;
+
+                const senderEmails = await window.dbOperations.getSenderEmails();
+                senderEmailsHtml = `
+                    <div class="card" style="margin-bottom:24px;">
+                        <div class="card-header">
+                            <h3>Sender Email Accounts</h3>
+                            <button class="btn btn-primary" onclick="openSenderEmailModal()"><i class="ri-mail-add-line"></i> Add Sender</button>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">
+                                Configure email accounts to use as sender for marketing campaigns.
+                            </p>
+                            ${senderEmails.length === 0 ? `
+                                <div style="text-align:center; padding:20px; color:var(--text-muted);">
+                                    <i class="ri-mail-line" style="font-size:32px; margin-bottom:8px;"></i>
+                                    <p>No sender emails configured.</p>
+                                </div>
+                            ` : senderEmails.map(s => `
+                                <div class="sender-email-card">
+                                    <div class="sender-email-info">
+                                        <div class="sender-email-icon"><i class="ri-mail-line"></i></div>
+                                        <div>
+                                            <div class="sender-email-name">${s.name}</div>
+                                            <div class="sender-email-address">${s.email}</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="action-btn" onclick="editSenderEmail('${s.id}')"><i class="ri-edit-line"></i></button>
+                                        <button class="action-btn danger" onclick="deleteSenderEmail('${s.id}')"><i class="ri-delete-bin-line"></i></button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
             }
 
             document.getElementById('mainContent').innerHTML = `
                 ${usersHtml}
                 ${teamHtml}
+                ${senderEmailsHtml}
                 <div class="settings-section">
                     <div class="settings-section-header"><h3>Preferences</h3><p>System Configuration</p></div>
                     <div class="settings-section-body">
@@ -5506,107 +7282,92 @@ const generateFullTemplateHTML = (doc) => {
             }
         }
 
-        // =========================================
-        // SUPERADMIN: RESET USER PASSWORD WITH RANDOM GENERATOR
-        // =========================================
-        window.openResetUserPasswordModal = (userId, userName) => {
-            const randomPassword = window.generateRandomPassword(12);
-            
+        // Sender Email Modal
+        window.openSenderEmailModal = () => {
             const content = `
-                <p style="margin-bottom: 16px; font-size: 14px; color: var(--text-secondary);">
-                    Generate a new random password for user: <strong>${userName}</strong> (ID: ${userId})
-                </p>
-                
-                <div class="password-display-box">
-                    <p style="font-size: 13px; color: #166534; margin-bottom: 8px;">Generated Password:</p>
-                    <div class="password-value" id="generatedPasswordValue">${randomPassword}</div>
-                    <button class="copy-btn" id="copyPasswordBtn" onclick="copyGeneratedPassword()">
-                        <i class="ri-file-copy-line"></i> Copy Password
-                    </button>
+                <div class="form-group-modal">
+                    <label>Sender Name</label>
+                    <input type="text" id="senderName" placeholder="e.g., DDNEX Sales">
                 </div>
-                
-                <div class="password-warning">
-                    <i class="ri-alert-line"></i>
-                    <div>
-                        <strong>Important:</strong> This password can only be viewed once. Please copy and share it securely with the user. They should change it after first login.
-                    </div>
+                <div class="form-group-modal">
+                    <label>Email Address</label>
+                    <input type="email" id="senderEmail" placeholder="email@example.com">
                 </div>
-                
-                <input type="hidden" id="resetTargetUserId" value="${userId}">
+                <div class="form-group-modal">
+                    <label>Description (Optional)</label>
+                    <textarea id="senderDesc" rows="2" placeholder="Purpose of this email account..."></textarea>
+                </div>
             `;
             
-            window.currentGeneratedPassword = randomPassword;
-            
-            openModal("Reset User Password", content, async () => {
-                const targetUserId = document.getElementById('resetTargetUserId').value;
-                const newPassword = document.getElementById('generatedPasswordValue').textContent;
+            openModal('Add Sender Email', content, async () => {
+                const data = {
+                    name: document.getElementById('senderName').value,
+                    email: document.getElementById('senderEmail').value,
+                    description: document.getElementById('senderDesc').value,
+                    createdAt: new Date()
+                };
                 
-                showLoading("Resetting password...");
-                const success = await window.adminResetUserPassword(targetUserId, newPassword);
-                hideLoading();
-                
-                if(success) {
-                    showPopup("Success", `Password has been reset for user ID: ${targetUserId}`);
-                    closeModal();
-                } else {
-                    showPopup("Error", "Failed to reset password. Please try again.", false);
-                }
-            });
-        };
-
-        window.copyGeneratedPassword = () => {
-            const password = document.getElementById('generatedPasswordValue').textContent;
-            const copyBtn = document.getElementById('copyPasswordBtn');
-            
-            navigator.clipboard.writeText(password).then(() => {
-                copyBtn.innerHTML = '<i class="ri-check-line"></i> Copied!';
-                copyBtn.classList.add('copied');
-                showPopup("Copied!", "Password copied to clipboard.");
-            }).catch(err => {
-                // Fallback
-                const textArea = document.createElement('textarea');
-                textArea.value = password;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                
-                copyBtn.innerHTML = '<i class="ri-check-line"></i> Copied!';
-                copyBtn.classList.add('copied');
-                showPopup("Copied!", "Password copied to clipboard.");
-            });
-        };
-
-        // Admin Password Reset (Old method - keep for reference)
-        window.adminResetPassword = (userId) => {
-            openModal('Reset User Password', `
-                <p style="margin-bottom:16px; font-size:14px; color:var(--text-secondary);">
-                    Set a new password for user ID: <strong>${userId}</strong>.
-                </p>
-                <div class="form-group-modal">
-                    <label>New Password</label>
-                    <input type="text" id="newAdminPassword" placeholder="Enter new password">
-                </div>
-            `, async () => {
-                const newPass = document.getElementById('newAdminPassword').value;
-                if(!newPass) {
-                    showPopup("Error", "Password cannot be empty.", false);
+                if(!data.name || !data.email) {
+                    showPopup("Error", "Name and email are required.", false);
                     return;
                 }
-                showLoading("Resetting...");
-                const success = await window.adminResetUserPassword(userId, newPass);
+                
+                showLoading("Saving...");
+                await window.dbOperations.addSenderEmail(data);
+                closeModal();
+                renderSettingsSection();
                 hideLoading();
-                if(success) {
-                    showPopup("Success", "Password reset successfully.");
-                    closeModal();
-                } else {
-                    showPopup("Error", "Failed to reset password.", false);
-                }
+                showPopup("Success", "Sender email added.");
             });
+        };
+
+        window.editSenderEmail = async (id) => {
+            const senders = await window.dbOperations.getSenderEmails();
+            const sender = senders.find(s => s.id === id);
+            if(!sender) return;
+
+            const content = `
+                <div class="form-group-modal">
+                    <label>Sender Name</label>
+                    <input type="text" id="senderName" value="${sender.name || ''}">
+                </div>
+                <div class="form-group-modal">
+                    <label>Email Address</label>
+                    <input type="email" id="senderEmail" value="${sender.email || ''}">
+                </div>
+                <div class="form-group-modal">
+                    <label>Description</label>
+                    <textarea id="senderDesc" rows="2">${sender.description || ''}</textarea>
+                </div>
+            `;
+            
+            openModal('Edit Sender Email', content, async () => {
+                const data = {
+                    name: document.getElementById('senderName').value,
+                    email: document.getElementById('senderEmail').value,
+                    description: document.getElementById('senderDesc').value,
+                    updatedAt: new Date()
+                };
+                
+                showLoading("Updating...");
+                await window.dbOperations.updateSenderEmail(id, data);
+                closeModal();
+                renderSettingsSection();
+                hideLoading();
+            });
+        };
+
+        window.deleteSenderEmail = async (id) => {
+            if(confirm("Delete this sender email?")) {
+                showLoading("Deleting...");
+                await window.dbOperations.deleteSenderEmail(id);
+                renderSettingsSection();
+                hideLoading();
+            }
         };
 
         // =========================================
-        // PROFILE SECTION WITH CHANGE PASSWORD
+        // PROFILE SECTION
         // =========================================
         async function renderProfileSection() {
             let userData = currentUser;
@@ -5660,7 +7421,6 @@ const generateFullTemplateHTML = (doc) => {
             `;
         }
 
-        // Handle Change Password
         window.handleChangePassword = async () => {
             const currentPassword = document.getElementById('currentPasswordInput').value;
             const newPassword = document.getElementById('newPasswordInput').value;
@@ -5687,7 +7447,6 @@ const generateFullTemplateHTML = (doc) => {
             
             if(result.success) {
                 showPopup("Success", "Password updated successfully.");
-                // Clear the form
                 document.getElementById('currentPasswordInput').value = '';
                 document.getElementById('newPasswordInput').value = '';
                 document.getElementById('confirmPasswordInput').value = '';
@@ -6046,38 +7805,143 @@ const generateFullTemplateHTML = (doc) => {
         };
 
         // --- Project Modal Logic ---
-        window.editProject = async (id) => {
-            const projects = await window.dbOperations.getProjects();
-            const p = projects.find(x => x.id === id);
-            if(!p) return;
-
-            openModal('Edit Project', `
-                <div class="form-group-modal"><label>Project Name</label><input type="text" id="pName" value="${p.name}"></div>
-                <div class="form-group-modal"><label>Client Name</label><input type="text" id="pClient" value="${p.client}"></div>
+        window.openProjectModal = () => {
+            openModal('Add Project', `
+                <div class="form-group-modal"><label>Project Name</label><input type="text" id="pName"></div>
+                <div class="form-group-modal"><label>Client Name</label><input type="text" id="pClient"></div>
                 <div class="form-row">
                      <div class="form-group-modal"><label>Status</label>
                         <select id="pStatus">
-                            <option value="active" ${p.status === 'active' ? 'selected' : ''}>Active</option>
-                            <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
-                            <option value="completed" ${p.status === 'completed' ? 'selected' : ''}>Completed</option>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
                         </select>
                      </div>
-                     <div class="form-group-modal"><label>Deadline</label><input type="date" id="pDate" value="${p.deadline}"></div>
+                     <div class="form-group-modal"><label>Deadline</label><input type="date" id="pDate"></div>
                 </div>
             `, async () => {
                 const data = {
                     name: document.getElementById('pName').value,
                     client: document.getElementById('pClient').value,
                     status: document.getElementById('pStatus').value,
-                    deadline: document.getElementById('pDate').value
+                    deadline: document.getElementById('pDate').value,
+                    value: 0
                 };
-                showLoading("Updating...");
-                await window.dbOperations.updateProject(id, data);
+                showLoading("Saving...");
+                await window.dbOperations.addProject(data);
                 closeModal();
                 renderProjectsSection();
                 hideLoading();
             });
         };
+
+        window.deleteProject = async (id) => {
+             if(confirm("Delete project?") && hasPermission('delete_project')) {
+                 showLoading("Deleting...");
+                 await window.dbOperations.deleteProject(id);
+                 renderProjectsSection();
+                 hideLoading();
+             }
+        };
+        
+        async function renderProjectsSection() {
+            const projects = await window.dbOperations.getProjects();
+            projects.sort((a, b) => {
+                const dateA = a.deadline ? new Date(a.deadline) : new Date(0);
+                const dateB = b.deadline ? new Date(b.deadline) : new Date(0);
+                return dateB - dateA;
+            });
+            
+            const canDelete = hasPermission('delete_project');
+
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <div class="search-box" style="flex: 1;">
+                        <input type="text" placeholder="Search projects..." id="projectSearchInput">
+                        <i class="ri-search-line"></i>
+                    </div>
+                    <button class="btn btn-primary" onclick="openProjectModal()">
+                        <i class="ri-add-line"></i> Add Project
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Client</th>
+                                    <th>Status</th>
+                                    <th>Deadline</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="projectTableBody">
+                                ${projects.map(p => `
+                                    <tr id="project-row-${p.id}">
+                                        <td><strong>${p.name}</strong></td>
+                                        <td>${p.client}</td>
+                                        <td><span class="status ${p.status}"><i class="ri-checkbox-blank-circle-fill"></i> ${p.status}</span></td>
+                                        <td>${formatDate(p.deadline)}</td>
+                                        <td>
+                                            <button class="action-btn" title="Edit" onclick="editProject('${p.id}')"><i class="ri-edit-line"></i></button>
+                                            ${canDelete ? `<button class="action-btn danger" title="Delete" onclick="deleteProject('${p.id}')"><i class="ri-delete-bin-line"></i></button>` : ''}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            
+            const searchInput = document.getElementById('projectSearchInput');
+            searchInput.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                const rows = document.querySelectorAll('#projectTableBody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(term) ? '' : 'none';
+                });
+            });
+        }
+
+        // --- Sales Pipeline ---
+        async function renderSalesSection() {
+            const deals = await window.dbOperations.getDeals();
+            document.getElementById('mainContent').innerHTML = `
+                <div class="filter-bar">
+                    <button class="btn btn-primary" onclick="openDealModal()">
+                        <i class="ri-add-line"></i> Add Deal
+                    </button>
+                </div>
+                <div class="kanban-board">
+                    ${renderKanbanColumn(deals, 'leads', 'Leads', '#64748b')}
+                    ${renderKanbanColumn(deals, 'progress', 'In Progress', '#2563eb')}
+                    ${renderKanbanColumn(deals, 'closed', 'Closed', '#16a34a')}
+                </div>
+            `;
+            initKanban();
+        }
+
+        const renderKanbanColumn = (deals, stage, title, color) => `
+            <div class="kanban-column" data-column="${stage}">
+                <div class="kanban-header">
+                    <h4><i class="ri-record-circle-line" style="color: ${color};"></i> ${title} <span class="count">${deals.filter(d => d.stage === stage).length}</span></h4>
+                </div>
+                <div class="kanban-cards" data-column="${stage}">
+                    ${deals.filter(d => d.stage === stage).map(d => `
+                        <div class="kanban-card" draggable="true" data-id="${d.id}">
+                            <h5>${d.name}</h5>
+                            <p>${d.client}</p>
+                            <div class="meta">
+                                <span class="value">${formatMYR(d.value)}</span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
 
         // --- Deal Modal Logic ---
         window.openDealModal = () => {
@@ -6136,7 +8000,109 @@ const generateFullTemplateHTML = (doc) => {
             });
         }
 
-        // Init
+        window.editProject = async (id) => {
+            const projects = await window.dbOperations.getProjects();
+            const p = projects.find(x => x.id === id);
+            if(!p) return;
+
+            openModal('Edit Project', `
+                <div class="form-group-modal"><label>Project Name</label><input type="text" id="pName" value="${p.name}"></div>
+                <div class="form-group-modal"><label>Client Name</label><input type="text" id="pClient" value="${p.client}"></div>
+                <div class="form-row">
+                     <div class="form-group-modal"><label>Status</label>
+                        <select id="pStatus">
+                            <option value="active" ${p.status === 'active' ? 'selected' : ''}>Active</option>
+                            <option value="pending" ${p.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="completed" ${p.status === 'completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                     </div>
+                     <div class="form-group-modal"><label>Deadline</label><input type="date" id="pDate" value="${p.deadline}"></div>
+                </div>
+            `, async () => {
+                const data = {
+                    name: document.getElementById('pName').value,
+                    client: document.getElementById('pClient').value,
+                    status: document.getElementById('pStatus').value,
+                    deadline: document.getElementById('pDate').value
+                };
+                showLoading("Updating...");
+                await window.dbOperations.updateProject(id, data);
+                closeModal();
+                renderProjectsSection();
+                hideLoading();
+            });
+        };
+
+        window.openResetUserPasswordModal = (userId, userName) => {
+            const randomPassword = window.generateRandomPassword(12);
+            
+            const content = `
+                <p style="margin-bottom: 16px; font-size: 14px; color: var(--text-secondary);">
+                    Generate a new random password for user: <strong>${userName}</strong> (ID: ${userId})
+                </p>
+                
+                <div class="password-display-box">
+                    <p style="font-size: 13px; color: #166534; margin-bottom: 8px;">Generated Password:</p>
+                    <div class="password-value" id="generatedPasswordValue">${randomPassword}</div>
+                    <button class="copy-btn" id="copyPasswordBtn" onclick="copyGeneratedPassword()">
+                        <i class="ri-file-copy-line"></i> Copy Password
+                    </button>
+                </div>
+                
+                <div class="password-warning">
+                    <i class="ri-alert-line"></i>
+                    <div>
+                        <strong>Important:</strong> This password can only be viewed once. Please copy and share it securely with the user. They should change it after first login.
+                    </div>
+                </div>
+                
+                <input type="hidden" id="resetTargetUserId" value="${userId}">
+            `;
+            
+            window.currentGeneratedPassword = randomPassword;
+            
+            openModal("Reset User Password", content, async () => {
+                const targetUserId = document.getElementById('resetTargetUserId').value;
+                const newPassword = document.getElementById('generatedPasswordValue').textContent;
+                
+                showLoading("Resetting password...");
+                const success = await window.adminResetUserPassword(targetUserId, newPassword);
+                hideLoading();
+                
+                if(success) {
+                    showPopup("Success", `Password has been reset for user ID: ${targetUserId}`);
+                    closeModal();
+                } else {
+                    showPopup("Error", "Failed to reset password. Please try again.", false);
+                }
+            });
+        };
+
+        window.copyGeneratedPassword = () => {
+            const password = document.getElementById('generatedPasswordValue').textContent;
+            const copyBtn = document.getElementById('copyPasswordBtn');
+            
+            navigator.clipboard.writeText(password).then(() => {
+                copyBtn.innerHTML = '<i class="ri-check-line"></i> Copied!';
+                copyBtn.classList.add('copied');
+                showPopup("Copied!", "Password copied to clipboard.");
+            }).catch(err => {
+                const textArea = document.createElement('textarea');
+                textArea.value = password;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                copyBtn.innerHTML = '<i class="ri-check-line"></i> Copied!';
+                copyBtn.classList.add('copied');
+                showPopup("Copied!", "Password copied to clipboard.");
+            });
+        };
+        
+        // =========================================
+        // INITIALIZATION
+        // =========================================
         window.addEventListener('load', () => {
             setupNavigation();
             
